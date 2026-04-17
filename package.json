@@ -1,0 +1,15 @@
+{
+  "name": "ai-creator-h5",
+  "version": "1.0.0",
+  "description": "AI Creator H5 - AI 图片/音乐/语音生成平台",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

@@ -1,0 +1,101 @@
+/**
+ * TTS 语音合成服务 (H5 Version)
+ */
+
+import { MiniMaxTTSAdapter } from '../adapter/MiniMaxAdapter.js';
+import { storage, showLoading, hideLoading, createInnerAudioContext } from '../adapter/web-api.js';
+
+const HISTORY_KEY = 'history_tts';
+
+/**
+ * 获取 API 配置
+ */
+function getConfig() {
+  return {
+    apiKey: storage.get('minimax_api_key') || '',
+    groupId: storage.get('minimax_group_id') || '',
+  };
+}
+
+/**
+ * 生成语音
+ */
+export async function generateTTS({ input, voice = 'female-shaonv', speed = 1.0, format = 'mp3' }) {
+  const { apiKey, groupId } = getConfig();
+
+  if (!apiKey || !groupId) {
+    throw new Error('请先在"我的"页面配置 API Key 和 Group ID');
+  }
+
+  const adapter = new MiniMaxTTSAdapter(apiKey, groupId);
+
+  showLoading({ title: '语音合成中...' });
+  try {
+    const result = await adapter.generate({ input, voice, speed, format });
+
+    // 如果返回的是 base64，转换为可播放的 URL
+    let audioUrl = result.url;
+    if (result.b64_audio) {
+      audioUrl = 'data:audio/mp3;base64,' + result.b64_audio;
+      // 保存到历史
+      addToHistory({
+        input,
+        voice,
+        speed,
+        format,
+        url: audioUrl,
+      });
+    }
+
+    hideLoading();
+    return { ...result, url: audioUrl };
+  } catch (err) {
+    hideLoading();
+    throw err;
+  }
+}
+
+/**
+ * 播放 TTS 音频
+ */
+export function playTTS(audioUrl) {
+  const audioCtx = createInnerAudioContext();
+  audioCtx.src = audioUrl;
+  audioCtx.play();
+  return audioCtx;
+}
+
+/**
+ * 添加到历史记录
+ */
+function addToHistory(item) {
+  const history = getHistory();
+  history.unshift({
+    ...item,
+    id: Date.now(),
+    createdAt: new Date().toISOString(),
+  });
+  if (history.length > 50) history.pop();
+  storage.set(HISTORY_KEY, history);
+}
+
+/**
+ * 获取历史记录
+ */
+export function getHistory() {
+  return storage.get(HISTORY_KEY) || [];
+}
+
+/**
+ * 清空历史记录
+ */
+export function clearHistory() {
+  storage.remove(HISTORY_KEY);
+}
+
+/**
+ * 获取支持的音色列表
+ */
+export function getVoiceList() {
+  return MiniMaxTTSAdapter.VOICE_LIST;
+}
