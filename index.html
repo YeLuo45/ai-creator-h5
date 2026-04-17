@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="AI Creator - AI图片、AI音乐、AI语音一站式创作平台">
+  <title>AI Creator</title>
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="lib/router.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Tab Bar -->
+    <nav class="tab-bar" id="tabBar">
+      <a href="#pages/index.html" class="tab-item active" data-page="index">
+        <span class="tab-icon">🏠</span>
+        <span class="tab-text">首页</span>
+      </a>
+      <a href="#pages/history.html" class="tab-item" data-page="history">
+        <span class="tab-icon">📜</span>
+        <span class="tab-text">历史</span>
+      </a>
+      <a href="#pages/my.html" class="tab-item" data-page="my">
+        <span class="tab-icon">👤</span>
+        <span class="tab-text">我的</span>
+      </a>
+    </nav>
+
+    <!-- Page Container -->
+    <div id="pageContainer"></div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="loading-box">
+      <div class="loading-spinner"></div>
+      <span class="loading-text">加载中...</span>
+    </div>
+  </div>
+
+  <!-- Modal Container -->
+  <div id="modalContainer" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-content" id="modalContent"></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+
+  <script src="lib/wx-api.js"></script>
+  <script src="lib/storage.js"></script>
+  <script src="lib/app.js"></script>
+  <script src="lib/router.js"></script>
+</body>
+</html>

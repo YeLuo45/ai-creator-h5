@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Creator - 生成</title>
+  <style>
+    .page {
+      padding: 16px;
+      min-height: 100vh;
+      background: #f5f5f5;
+      padding-bottom: 80px;
+    }
+
+    /* Result Container */
+    .result-container {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-image {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .revised-prompt {
+      padding: 8px 12px;
+      background: #f0f4ff;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .revised-prompt .label {
+      color: #1A73E8;
+      font-weight: 500;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 12px 0;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Music Result */
+    .music-result {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .music-cover {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cover-placeholder {
+      font-size: 32px;
+    }
+
+    .music-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .music-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .music-desc {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .btn-play {
+      width: 80px;
+      padding: 8px 0;
+      background: #1A73E8;
+      color: #fff;
+      border-radius: 16px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .lyrics-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .lyrics-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    /* TTS Result */
+    .tts-result {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .tts-icon {
+      font-size: 40px;
+    }
+
+    .tts-text {
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* Form Card */
+    .form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .type-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .credits-info {
+      font-size: 12px;
+      color: #1A73E8;
+      font-weight: 400;
+    }
+
+    .prompt-input {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      resize: vertical;
+    }
+
+    .param-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .param-label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .param-select {
+      font-size: 14px;
+      color: #1A73E8;
+      padding: 4px 0;
+      appearance: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .error-tip {
+      padding: 8px 12px;
+      background: #fff0f0;
+      border-radius: 6px;
+      color: #e53e3e;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 14px 0;
+      background: linear-gradient(135deg, #1A73E8, #4facfe);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 500;
+      border: none;
+      margin-top: 16px;
+      cursor: pointer;
+    }
+
+    .btn-generate.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-back {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: #1A73E8;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <span class="btn-back" onclick="window.history.back()">← 返回</span>
+
+    <!-- Result View -->
+    <div id="resultView" style="display:none;"></div>
+
+    <!-- Form View -->
+    <div id="formView">
+      <div class="form-card">
+        <div class="type-label">
+          <span id="typeLabel">🖼️ 图片生成</span>
+          <span class="credits-info" id="creditsInfo">剩余 0 积分</span>
+        </div>
+
+        <textarea
+          id="promptInput"
+          class="prompt-input"
+          placeholder="描述你想要的图片，例如：一只穿西装的猫在弹钢琴"
+          maxlength="2000"
+        ></textarea>
+
+        <!-- Image Params -->
+        <div id="imageParams">
+          <div class="param-section">
+            <span class="param-label">风格</span>
+            <select id="styleSelect" class="param-select">
+              <option value="vivid">写实</option>
+              <option value="natural">自然</option>
+            </select>
+          </div>
+          <div class="param-section">
+            <span class="param-label">比例</span>
+            <select id="sizeSelect" class="param-select">
+              <option value="1024x1024">1:1</option>
+              <option value="1024x1792">9:16</option>
+              <option value="1792x1024">16:9</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Music Params -->
+        <div id="musicParams" style="display:none;">
+          <div class="param-section">
+            <span class="param-label">风格</span>
+            <select id="genreSelect" class="param-select">
+              <option value="pop">流行</option>
+              <option value="rock">摇滚</option>
+              <option value="jazz">爵士</option>
+              <option value="classical">古典</option>
+              <option value="electronic">电子</option>
+              <option value="folk">民谣</option>
+            </select>
+          </div>
+          <div class="param-section">
+            <span class="param-label">时长</span>
+            <select id="durationSelect" class="param-select">
+              <option value="30">30秒</option>
+              <option value="60">60秒</option>
+              <option value="120">2分钟</option>
+              <option value="180">3分钟</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TTS Params -->
+        <div id="ttsParams" style="display:none;">
+          <div class="param-section">
+            <span class="param-label">音色</span>
+            <select id="voiceSelect" class="param-select">
+              <option value="female-shaonv">少女声音</option>
+              <option value="male-qn-qingse">青年男声</option>
+              <option value="female-yujie">御姐声音</option>
+              <option value="male-qn-jingxing">激情男声</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="errorTip" class="error-tip" style="display:none;"></div>
+
+        <button id="generateBtn" class="btn-generate" onclick="onGenerate()">
+          🚀 开始生成
+        </button>
+      </div>
+    </div>
+
+    <!-- Audio element for TTS playback -->
+    <audio id="ttsAudio" style="display:none;"></audio>
+  </div>
+
+  <script>
+    const state = {
+      type: 'image',
+      prompt: '',
+      imageStyle: 'vivid',
+      imageSize: '1024x1024',
+      musicGenre: 'pop',
+      musicDuration: 60,
+      ttsVoice: 'female-shaonj',
+      isGenerating: false,
+      result: null,
+    };
+
+    const typeLabels = {
+      image: '🖼️ 图片生成',
+      music: '🎵 音乐生成',
+      tts: '🎤 语音合成',
+    };
+
+    const placeholders = {
+      image: '描述你想要的图片，例如：一只穿西装的猫在弹钢琴',
+      music: '描述你想要的音乐风格，例如：欢快的夏日海滩派对音乐',
+      tts: '输入要转换的文字内容',
+    };
+
+    window.pageInit = function(params) {
+      state.type = params.type || 'image';
+
+      document.getElementById('typeLabel').textContent = typeLabels[state.type];
+      document.getElementById('promptInput').placeholder = placeholders[state.type];
+
+      // Show/hide param sections
+      document.getElementById('imageParams').style.display = state.type === 'image' ? 'block' : 'none';
+      document.getElementById('musicParams').style.display = state.type === 'music' ? 'block' : 'none';
+      document.getElementById('ttsParams').style.display = state.type === 'tts' ? 'block' : 'none';
+
+      // Update type-specific label
+      const label = document.getElementById('typeLabel');
+      if (state.type === 'image') label.textContent = '🖼️ 图片生成';
+      else if (state.type === 'music') label.textContent = '🎵 音乐生成';
+      else if (state.type === 'tts') label.textContent = '🎤 语音合成';
+
+      refreshCredits();
+      hideResult();
+    };
+
+    function refreshCredits() {
+      const app = getApp();
+      document.getElementById('creditsInfo').textContent = '剩余 ' + Number(app.globalData.credits) + ' 积分';
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('errorTip');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function clearError() {
+      document.getElementById('errorTip').style.display = 'none';
+    }
+
+    function showResult(result) {
+      state.result = result;
+      document.getElementById('formView').style.display = 'none';
+      const container = document.getElementById('resultView');
+      container.style.display = 'block';
+
+      if (state.type === 'image') {
+        container.innerHTML = `
+          <div class="result-container">
+            <img src="${result.url}" class="result-image" onclick="previewImage(['${result.url}'])">
+            ${result.revised_prompt ? `<div class="revised-prompt"><span class="label">优化后描述：</span>${result.revised_prompt}</div>` : ''}
+            <div class="result-actions">
+              <button class="btn-action" onclick="onSave()">💾 保存</button>
+              <button class="btn-action" onclick="onShare()">📤 分享</button>
+              <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
+            </div>
+          </div>
+        `;
+      } else if (state.type === 'music') {
+        container.innerHTML = `
+          <div class="result-container">
+            <div class="music-result">
+              <div class="music-cover">
+                ${result.coverUrl ? `<img src="${result.coverUrl}" class="cover-img">` : '<span class="cover-placeholder">🎵</span>'}
+              </div>
+              <div class="music-info">
+                <span class="music-title">AI 创作音乐</span>
+                <span class="music-desc">时长：${result.duration}秒</span>
+                <button class="btn-play" onclick="playMusic()">▶ 播放</button>
+              </div>
+            </div>
+            ${result.lyrics ? `<div class="lyrics-section"><span class="section-title">歌词</span><span class="lyrics-text">${result.lyrics}</span></div>` : ''}
+            <div class="result-actions">
+              <button class="btn-action" onclick="onSaveMusic()">💾 保存</button>
+              <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
+            </div>
+          </div>
+        `;
+      } else if (state.type === 'tts') {
+        container.innerHTML = `
+          <div class="result-container">
+            <div class="tts-result">
+              <span class="tts-icon">🎤</span>
+              <span class="tts-text">${document.getElementById('promptInput').value}</span>
+              <button class="btn-play" onclick="playTTS()">▶ 播放</button>
+            </div>
+            <div class="result-actions">
+              <button class="btn-action" onclick="onSaveTTS()">💾 保存</button>
+              <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function hideResult() {
+      document.getElementById('resultView').style.display = 'none';
+      document.getElementById('formView').style.display = 'block';
+      state.result = null;
+    }
+
+    async function onGenerate() {
+      const prompt = document.getElementById('promptInput').value.trim();
+      if (!prompt) { showError('请输入内容描述'); return; }
+      clearError();
+
+      if (!contentModeration(prompt)) {
+        showError('输入内容包含敏感词，请修改后重试');
+        return;
+      }
+
+      const app = getApp();
+      if (Number(app.globalData.credits) <= 0) {
+        showModal({
+          title: '积分不足',
+          content: '您的积分不足，请先充值',
+          confirmText: '充值',
+        }).then(res => { if (res.confirm) window.location.hash = '/pages/my.html'; });
+        return;
+      }
+
+      state.isGenerating = true;
+      const btn = document.getElementById('generateBtn');
+      btn.textContent = '生成中...';
+      btn.classList.add('disabled');
+
+      try {
+        let result;
+        if (state.type === 'image') {
+          result = await doGenerateImage(prompt);
+        } else if (state.type === 'music') {
+          result = await doGenerateMusic(prompt);
+        } else if (state.type === 'tts') {
+          result = await doGenerateTTS(prompt);
+        }
+        showResult(result);
+      } catch (e) {
+        showError(e.message || '生成失败');
+      } finally {
+        state.isGenerating = false;
+        btn.textContent = '🚀 开始生成';
+        btn.classList.remove('disabled');
+        refreshCredits();
+      }
+    }
+
+    async function doGenerateImage(prompt) {
+      showLoading('AI 创作中...');
+      try {
+        const { generateImage, saveImageHistory } = await import('../services/imageService.js');
+        const style = document.getElementById('styleSelect').value;
+        const size = document.getElementById('sizeSelect').value;
+        const res = await generateImage({ prompt, style, size });
+        const url = res.data?.[0]?.url;
+        if (!url) throw new Error('未获取到生成结果');
+        saveImageHistory({ prompt, url, style, size });
+        getApp().updateCredits(-1);
+        return { url, revised_prompt: res.data?.[0]?.revised_prompt };
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function doGenerateMusic(prompt) {
+      showLoading('音乐生成中（可能需要30-60秒）...');
+      try {
+        const { generateFullMusic, saveMusicHistory } = await import('../services/musicService.js');
+        const genre = document.getElementById('genreSelect').value;
+        const duration = parseInt(document.getElementById('durationSelect').value);
+        const res = await generateFullMusic({ prompt, genre, duration });
+        saveMusicHistory({
+          prompt,
+          musicUrl: res.musicUrl,
+          coverUrl: res.coverUrl,
+          lyrics: res.lyrics,
+          duration: res.duration,
+        });
+        getApp().updateCredits(-5);
+        return res;
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function doGenerateTTS(prompt) {
+      showLoading('语音合成中...');
+      try {
+        const { generateSpeech, saveB64AudioAsDataUrl, saveTTSHistory } = await import('../services/ttsService.js');
+        const voice = document.getElementById('voiceSelect').value;
+        const res = await generateSpeech({ input: prompt, voice, format: 'mp3' });
+        if (!res.b64_audio) throw new Error('未获取到音频数据');
+        const dataUrl = saveB64AudioAsDataUrl(res.b64_audio, 'mp3');
+        const voiceName = { 'female-shaonv': '少女声音', 'male-qn-qingse': '青年男声', 'female-yujie': '御姐声音', 'male-qn-jingxing': '激情男声' }[voice] || voice;
+        saveTTSHistory({ input: prompt, voice, voiceName, filePath: dataUrl, format: 'mp3' });
+        getApp().updateCredits(-1);
+        return { filePath: dataUrl };
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function playTTS() {
+      if (state.result && state.result.filePath) {
+        const audio = document.getElementById('ttsAudio');
+        audio.src = state.result.filePath;
+        audio.play();
+      }
+    }
+
+    function playMusic() {
+      if (state.result && state.result.musicUrl) {
+        const audio = document.getElementById('ttsAudio');
+        audio.src = state.result.musicUrl;
+        audio.play();
+      }
+    }
+
+    async function onSave() {
+      if (!state.result || !state.result.url) return;
+      try {
+        await saveImageToAlbum(state.result.url);
+        showToast('已保存', 'success');
+      } catch (e) {
+        handleError(e, '保存失败');
+      }
+    }
+
+    async function onSaveMusic() {
+      if (!state.result || !state.result.musicUrl) return;
+      try {
+        await saveFile(state.result.musicUrl);
+        showToast('已保存', 'success');
+      } catch (e) {
+        handleError(e, '保存失败');
+      }
+    }
+
+    function onSaveTTS() {
+      showToast('音频已保存到历史记录', 'success');
+    }
+
+    function onShare() {
+      if (navigator.share) {
+        navigator.share({ title: 'AI Creator', text: '看看我创作的图片', url: window.location.href });
+      } else {
+        showToast('已准备分享', 'success');
+      }
+    }
+
+    function onRegenerate() {
+      hideResult();
+    }
+
+    // Input listener
+    document.getElementById('promptInput').addEventListener('input', function() {
+      state.prompt = this.value;
+      clearError();
+    });
+  </script>
+</body>
+</html>

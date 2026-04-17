@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Creator - 历史</title>
+  <style>
+    .page {
+      min-height: 100vh;
+      background: #f5f5f5;
+      padding-bottom: 80px;
+    }
+
+    /* Tab Bar */
+    .tab-bar-history {
+      display: flex;
+      background: #fff;
+      padding: 0 16px;
+      border-bottom: 1px solid #f0f0f0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .tab-item-history {
+      flex: 1;
+      text-align: center;
+      padding: 14px 0;
+      font-size: 14px;
+      color: #999;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .tab-item-history.active {
+      color: #1A73E8;
+      font-weight: 600;
+    }
+
+    .tab-item-history.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 2px;
+      background: #1A73E8;
+      border-radius: 1px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 24px;
+      gap: 8px;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-text {
+      font-size: 16px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .empty-desc {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 16px;
+    }
+
+    .btn-goto {
+      padding: 10px 32px;
+      background: #1A73E8;
+      color: #fff;
+      border-radius: 16px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* History List */
+    .history-list {
+      padding: 8px 16px;
+    }
+
+    .history-item {
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .item-thumb {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      object-fit: cover;
+    }
+
+    .thumb-placeholder {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-size: 24px;
+    }
+
+    .item-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .item-prompt {
+      font-size: 14px;
+      color: #333;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 4px;
+    }
+
+    .item-meta {
+      font-size: 11px;
+      color: #999;
+    }
+
+    .btn-delete {
+      font-size: 18px;
+      padding: 8px;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    /* Bottom Actions */
+    .bottom-actions {
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-clear {
+      padding: 10px 32px;
+      background: #fff;
+      color: #e53e3e;
+      border: 1px solid #e53e3e;
+      border-radius: 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Tab Bar -->
+    <div class="tab-bar-history" id="tabBar">
+      <div class="tab-item-history active" data-type="all" onclick="onTabChange('all')">全部</div>
+      <div class="tab-item-history" data-type="image" onclick="onTabChange('image')">图片</div>
+      <div class="tab-item-history" data-type="music" onclick="onTabChange('music')">音乐</div>
+      <div class="tab-item-history" data-type="audio" onclick="onTabChange('audio')">语音</div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <span class="empty-icon">📭</span>
+      <span class="empty-text">暂无历史记录</span>
+      <span class="empty-desc">快去创作你的第一份作品吧</span>
+      <button class="btn-goto" onclick="goToIndex()">去创作</button>
+    </div>
+
+    <!-- History List -->
+    <div id="historyList" class="history-list"></div>
+
+    <!-- Clear All -->
+    <div id="bottomActions" class="bottom-actions" style="display:none;">
+      <button class="btn-clear" onclick="onClearAll()">清空全部历史</button>
+    </div>
+  </div>
+
+  <script>
+    let currentTab = 'all';
+    let allHistory = [];
+
+    window.pageInit = function() {
+      loadHistory();
+    };
+
+    function loadHistory() {
+      allHistory = window.getAllHistory() || [];
+      filterHistory(currentTab);
+    }
+
+    function filterHistory(type) {
+      currentTab = type;
+      let list = allHistory;
+      if (type !== 'all') {
+        const typeMap = { image: 'image', music: 'music', audio: 'audio' };
+        list = allHistory.filter(item => item.type === typeMap[type]);
+      }
+
+      // Update tab active
+      document.querySelectorAll('.tab-item-history').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.type === type);
+      });
+
+      const emptyState = document.getElementById('emptyState');
+      const historyList = document.getElementById('historyList');
+      const bottomActions = document.getElementById('bottomActions');
+
+      if (list.length === 0) {
+        emptyState.style.display = 'flex';
+        historyList.style.display = 'none';
+        bottomActions.style.display = 'none';
+      } else {
+        emptyState.style.display = 'none';
+        historyList.style.display = 'block';
+        bottomActions.style.display = allHistory.length > 0 ? 'flex' : 'none';
+        renderList(list);
+      }
+    }
+
+    function onTabChange(type) {
+      filterHistory(type);
+    }
+
+    function renderList(list) {
+      const container = document.getElementById('historyList');
+      container.innerHTML = list.map(item => {
+        if (item.type === 'image') {
+          return `
+            <div class="history-item" onclick="previewImage(['${item.url}'])">
+              <img src="${item.url}" class="item-thumb">
+              <div class="item-info">
+                <span class="item-prompt">${item.prompt}</span>
+                <span class="item-meta">图片 · ${new Date(item.createdAt).toLocaleDateString()}</span>
+              </div>
+              <span class="btn-delete" onclick="event.stopPropagation(); onDelete('${item.id}', '${item.type}')">🗑️</span>
+            </div>
+          `;
+        } else if (item.type === 'music') {
+          return `
+            <div class="history-item" onclick="onMusicItem('${item.musicUrl}')">
+              <div class="thumb-placeholder">🎵</div>
+              <div class="item-info">
+                <span class="item-prompt">${item.prompt}</span>
+                <span class="item-meta">音乐 · ${item.duration}秒</span>
+              </div>
+              <span class="btn-delete" onclick="event.stopPropagation(); onDelete('${item.id}', '${item.type}')">🗑️</span>
+            </div>
+          `;
+        } else if (item.type === 'audio') {
+          return `
+            <div class="history-item" onclick="playAudioItem('${item.filePath}')">
+              <div class="thumb-placeholder">🎤</div>
+              <div class="item-info">
+                <span class="item-prompt">${item.input}</span>
+                <span class="item-meta">语音 · ${item.voiceName}</span>
+              </div>
+              <span class="btn-delete" onclick="event.stopPropagation(); onDelete('${item.id}', '${item.type}')">🗑️</span>
+            </div>
+          `;
+        }
+        return '';
+      }).join('');
+    }
+
+    function playAudioItem(url) {
+      window.playAudio(url);
+    }
+
+    function onMusicItem(url) {
+      window.playAudio(url);
+    }
+
+    async function onDelete(id, type) {
+      const res = await showModal({
+        title: '确认删除',
+        content: '删除后无法恢复',
+        confirmColor: '#e53e3e',
+        showCancel: true,
+      });
+      if (!res.confirm) return;
+
+      const typeMap = { image: 'history_images', music: 'history_music', audio: 'history_tts' };
+      const key = typeMap[type];
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      const newList = list.filter(item => item.id !== id);
+      localStorage.setItem(key, JSON.stringify(newList));
+      loadHistory();
+      showToast('已删除', 'success');
+    }
+
+    async function onClearAll() {
+      const res = await showModal({
+        title: '确认清空',
+        content: '清空后无法恢复',
+        confirmColor: '#e53e3e',
+        showCancel: true,
+      });
+      if (!res.confirm) return;
+
+      window.clearAllHistory();
+      loadHistory();
+      showToast('已清空', 'success');
+    }
+
+    function goToIndex() {
+      window.location.hash = '/pages/index.html';
+    }
+
+    // Refresh on page show
+    window.addEventListener('hashchange', loadHistory);
+  </script>
+</body>
+</html>

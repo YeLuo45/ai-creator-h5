@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Creator - 我的</title>
+  <style>
+    .page {
+      padding: 16px;
+      padding-bottom: 80px;
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+
+    /* User Card */
+    .user-card {
+      background: linear-gradient(135deg, #1A73E8, #4facfe);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .avatar-wrap {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-placeholder {
+      font-size: 24px;
+    }
+
+    .nickname {
+      font-size: 17px;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .login-tip {
+      opacity: 0.8;
+    }
+
+    .user-desc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .credits-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .credits-num {
+      font-size: 28px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .credits-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .btn-recharge {
+      padding: 8px 20px;
+      background: #fff;
+      color: #1A73E8;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Section Card */
+    .section-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      flex: 1;
+    }
+
+    .status-badge {
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .status-badge.success {
+      background: #e6f7e6;
+      color: #52c41a;
+    }
+
+    .status-badge.warning {
+      background: #fff7e6;
+      color: #fa8c16;
+    }
+
+    .config-tip {
+      padding: 8px 12px;
+      background: #f0f4ff;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .input-label {
+      width: 70px;
+      font-size: 14px;
+      color: #666;
+      flex-shrink: 0;
+    }
+
+    .input-field {
+      flex: 1;
+      font-size: 14px;
+      color: #333;
+      border: none;
+      background: transparent;
+      outline: none;
+    }
+
+    .btn-toggle {
+      font-size: 18px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .api-guide {
+      margin-top: 12px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 6px;
+    }
+
+    .guide-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1A73E8;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .guide-text {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.8;
+      display: block;
+    }
+
+    .btn-save {
+      width: 100%;
+      padding: 12px 0;
+      background: #1A73E8;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+
+    /* Menu List */
+    .menu-list {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 12px;
+      border-bottom: 1px solid #f5f5f5;
+      cursor: pointer;
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-icon {
+      font-size: 18px;
+      margin-right: 10px;
+    }
+
+    .menu-text {
+      flex: 1;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .menu-arrow {
+      font-size: 20px;
+      color: #ccc;
+      font-weight: 300;
+    }
+
+    /* Footer */
+    .footer-tip {
+      text-align: center;
+      font-size: 11px;
+      color: #ccc;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- User Card -->
+    <div class="user-card">
+      <div class="user-section" id="userSection" onclick="onLogin()">
+        <div class="avatar-wrap" id="avatarWrap">
+          <span class="avatar-placeholder" id="avatarPlaceholder">👤</span>
+        </div>
+        <div class="user-detail">
+          <span class="nickname login-tip" id="nickname">点击登录</span>
+          <span class="user-desc">AI Creator 用户</span>
+        </div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-info">
+          <span class="credits-num" id="creditsNum">0</span>
+          <span class="credits-label">可用积分</span>
+        </div>
+        <button class="btn-recharge" onclick="onRecharge()">充值积分</button>
+      </div>
+    </div>
+
+    <!-- API Key Config -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">🔑 API Key 配置</span>
+        <span class="status-badge warning" id="apiStatusBadge">未配置</span>
+      </div>
+
+      <div class="config-tip">
+        配置你的 MiniMax API Key，即可开始创作。Key 仅存储在本地，不会上传至任何服务器。
+      </div>
+
+      <div class="input-group">
+        <span class="input-label">API Key</span>
+        <input class="input-field" id="apiKeyInput" type="text" placeholder="sk-xxxxxxxx" />
+      </div>
+
+      <div class="input-group">
+        <span class="input-label">Group ID</span>
+        <input class="input-field" id="groupIdInput" type="text" placeholder="1234567890" />
+      </div>
+
+      <div class="api-guide">
+        <span class="guide-title">如何获取？</span>
+        <span class="guide-text">
+          1. 访问 MiniMax 开放平台 (api.minimax.chat)<br>
+          2. 注册并创建应用<br>
+          3. 在「API Key」页面复制 Key 和 Group ID<br>
+          4. 粘贴到上方并保存
+        </span>
+      </div>
+
+      <button class="btn-save" onclick="onSaveApiKey()">保存配置</button>
+    </div>
+
+    <!-- Menu List -->
+    <div class="menu-list">
+      <div class="menu-item" onclick="onShare()">
+        <span class="menu-icon">📤</span>
+        <span class="menu-text">分享给好友</span>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="onFeedback()">
+        <span class="menu-icon">💬</span>
+        <span class="menu-text">意见反馈</span>
+        <span class="menu-arrow">›</span>
+      </div>
+      <div class="menu-item" onclick="onAbout()">
+        <span class="menu-icon">ℹ️</span>
+        <span class="menu-text">关于我们</span>
+        <span class="menu-arrow">›</span>
+      </div>
+    </div>
+
+    <div class="footer-tip">
+      <span>AI Creator v1.0.0</span>
+      <span>·</span>
+      <span>本地存储 · 隐私优先</span>
+    </div>
+  </div>
+
+  <script>
+    window.pageInit = function() {
+      refresh();
+    };
+
+    function refresh() {
+      const app = getApp();
+      const userInfo = app.globalData.userInfo;
+      const credits = Number(app.globalData.credits);
+      const apiKey = app.globalData.apiKey || '';
+      const groupId = app.globalData.groupId || '';
+      const hasApiKey = !!(apiKey && groupId);
+
+      // User info
+      if (userInfo) {
+        const nickname = document.getElementById('nickname');
+        nickname.textContent = userInfo.nickname || 'H5用户';
+        nickname.classList.remove('login-tip');
+        if (userInfo.avatarUrl) {
+          document.getElementById('avatarWrap').innerHTML = `<img src="${userInfo.avatarUrl}" class="avatar">`;
+        }
+      }
+
+      document.getElementById('creditsNum').textContent = credits;
+
+      // API Key status
+      const badge = document.getElementById('apiStatusBadge');
+      if (hasApiKey) {
+        badge.textContent = '已配置';
+        badge.className = 'status-badge success';
+      } else {
+        badge.textContent = '未配置';
+        badge.className = 'status-badge warning';
+      }
+    }
+
+    async function onLogin() {
+      const app = getApp();
+      try {
+        if (!app.globalData.openid) {
+          await app.doLogin();
+        }
+        const userInfo = await app.getUserProfile();
+        refresh();
+        showToast('登录成功', 'success');
+      } catch (e) {
+        handleError(e, '登录失败');
+      }
+    }
+
+    function maskKey(key) {
+      if (!key || key.length <= 8) return '****';
+      return key.substring(0, 4) + '****' + key.substring(key.length - 4);
+    }
+
+    function onSaveApiKey() {
+      const apiKey = document.getElementById('apiKeyInput').value.trim();
+      const groupId = document.getElementById('groupIdInput').value.trim();
+
+      if (!apiKey) { showToast('请输入 API Key', 'none'); return; }
+      if (!groupId) { showToast('请输入 Group ID', 'none'); return; }
+
+      const app = getApp();
+      app.setApiKey(apiKey, groupId);
+
+      // Clear inputs
+      document.getElementById('apiKeyInput').value = '';
+      document.getElementById('groupIdInput').value = '';
+
+      refresh();
+      showToast('配置已保存', 'success');
+    }
+
+    async function onRecharge() {
+      const res = await showActionSheet({
+        itemList: ['10 积分 ¥1', '100 积分 ¥8', '500 积分 ¥30', '1000 积分 ¥50'],
+      });
+
+      if (res.tapIndex >= 0) {
+        const amounts = [10, 100, 500, 1000];
+        const amount = amounts[res.tapIndex];
+
+        showLoading('充值中...');
+        await new Promise(r => setTimeout(r, 1500));
+
+        const app = getApp();
+        const newCredits = app.updateCredits(amount);
+        document.getElementById('creditsNum').textContent = newCredits;
+        hideLoading();
+        showToast(`充值成功 +${amount} 积分`, 'success');
+      }
+    }
+
+    function onShare() {
+      showShareMenu({
+        title: 'AI Creator - 创作你的想象',
+        desc: 'AI图片、AI音乐、AI语音一站式创作平台',
+      });
+      showToast('请选择分享方式', 'none');
+    }
+
+    function onFeedback() {
+      showModal({
+        title: '意见反馈',
+        content: '如有产品建议或问题，请联系：support@aicreator.com',
+        showCancel: false,
+      });
+    }
+
+    function onAbout() {
+      showModal({
+        title: '关于 AI Creator',
+        content: '版本：1.0.0\n\nAI Creator 是一款 AI 内容生成工具，支持图片、音乐、语音等多种创作能力。\n\n本产品不存储用户的 API Key，所有请求由用户设备直接发送至模型服务商。',
+        showCancel: false,
+      });
+    }
+  </script>
+</body>
+</html>
