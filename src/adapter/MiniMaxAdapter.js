@@ -1,13 +1,13 @@
 /**
  * MiniMaxAdapter.js (H5 Version - Token Plan)
- * MiniMax 模型适配器实现 - Web 版
- * 使用 MiniMax Token Plan API (Anthropic 兼容端点)
- * Base URL: https://api.minimaxi.com/anthropic/v1
- * 无需 Group ID
+ * MiniMax 模型适配器实现
+ *
+ * 注意：Token Plan 的 Anthropic 兼容端点 (/anthropic/v1) 仅适用于 M2.7 文本对话
+ * 图片、音乐、TTS 仍使用旧版 API 端点 (/v1)
  */
 
-// MiniMax Token Plan API 端点 (Anthropic 兼容)
-const API_BASE = 'https://api.minimaxi.com/anthropic/v1';
+// MiniMax API 端点
+const API_BASE = 'https://api.minimaxi.com/v1';
 
 // MiniMax 模型 ID 映射
 export const MINIMAX_MODELS = {
@@ -16,21 +16,19 @@ export const MINIMAX_MODELS = {
   MUSIC_26: 'music-2.6',
   LYRICS: 'lyrics_generation',
   MUSIC_COVER: 'music-cover',
-  TTS_HD: 'speech-02-hd',  // Token Plan 使用 speech-02-hd
+  TTS_HD: 'speech-2.8-hd',
   TTS: 'speech-02',
 };
 
 export class MiniMaxAdapter {
-  constructor(apiKey, model = MINIMAX_MODELS.TTS_HD) {
+  constructor(apiKey) {
     this.apiKey = apiKey;
-    this.model = model;
     this.provider = 'minimax';
     this.capabilities = ['image', 'text', 'music', 'audio'];
   }
 
   /**
    * 通用 HTTP 请求 (fetch 版)
-   * Token Plan 使用 Anthropic 兼容格式
    */
   async request(endpoint, params = {}, method = 'POST') {
     const url = `${API_BASE}${endpoint}`;
@@ -40,7 +38,6 @@ export class MiniMaxAdapter {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.apiKey}`,
-        // Token Plan 不需要 MM-Group-Id
       },
     };
 
@@ -49,6 +46,18 @@ export class MiniMaxAdapter {
     }
 
     const response = await fetch(url, options);
+
+    // TTS 返回二进制音频
+    if (endpoint === '/t2a_v2') {
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(`MiniMax API Error: ${response.status} - ${err}`);
+      }
+      const buffer = await response.arrayBuffer();
+      const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+      return { audio: base64 };
+    }
+
     const data = await response.json();
 
     if (!response.ok) {
@@ -63,11 +72,11 @@ export class MiniMaxAdapter {
    */
   async healthCheck() {
     try {
-      // Token Plan 使用 messages API 做健康检查
-      await this.request('/messages', {
-        model: 'MiniMax-M2.7',
-        max_tokens: 1,
-        messages: [{ role: 'user', content: 'hi' }]
+      await this.request('/image_generation', {
+        model: MINIMAX_MODELS.IMAGE_01,
+        prompt: 'test',
+        n: 1,
+        aspect_ratio: '1:1',
       });
       return true;
     } catch {
@@ -78,10 +87,12 @@ export class MiniMaxAdapter {
 
 /**
  * MiniMax 图片生成适配器
+ * POST /v1/image_generation
  */
 export class MiniMaxImageAdapter extends MiniMaxAdapter {
   constructor(apiKey) {
-    super(apiKey, MINIMAX_MODELS.IMAGE_01);
+    super(apiKey);
+    this.model = MINIMAX_MODELS.IMAGE_01;
   }
 
   async generate(params) {
@@ -89,87 +100,108 @@ export class MiniMaxImageAdapter extends MiniMaxAdapter {
       model: params.model || this.model,
       prompt: params.prompt,
       n: params.n || 1,
-      size: params.size || '1024x1024',
-      style: params.style || 'vivid',
+      aspect_ratio: this.sizeToAspectRatio(params.size || '1024x1024'),
       response_format: params.response_format || 'url',
+      prompt_optimizer: true,
     };
 
-    return this.request('/images/generations', payload);
+    return this.request('/image_generation', payload);
+  }
+
+  sizeToAspectRatio(size) {
+    switch (size) {
+      case '1024x1792': return '9:16';
+      case '1792x1024': return '16:9';
+      default: return '1:1';
+    }
   }
 }
 
 /**
  * MiniMax 音乐生成适配器
+ * POST /v1/music_generation
  */
 export class MiniMaxMusicAdapter extends MiniMaxAdapter {
   constructor(apiKey) {
-    super(apiKey, MINIMAX_MODELS.MUSIC_26);
+    super(apiKey);
+    this.model = MINIMAX_MODELS.MUSIC_26;
   }
 
   async generate(params) {
     const payload = {
       model: params.model || this.model,
       prompt: params.prompt,
-      duration: params.duration || 180,
-      instrumental: params.instrumental || false,
+      lyrics: params.lyrics || '',
+      audio_setting: {
+        sample_rate: 44100,
+        bitrate: 256000,
+        format: 'mp3',
+      },
     };
 
-    return this.request('/audio/generations', payload);
+    if (params.duration) {
+      // duration in seconds, convert to ms for extra_info
+    }
+
+    return this.request('/music_generation', payload);
   }
 }
 
 /**
  * MiniMax 歌词生成适配器
+ * POST /v1/lyrics_generation
  */
 export class MiniMaxLyricsAdapter extends MiniMaxAdapter {
   constructor(apiKey) {
-    super(apiKey, MINIMAX_MODELS.LYRICS);
+    super(apiKey);
+    this.model = MINIMAX_MODELS.LYRICS;
   }
 
   async generate(params) {
-    // Token Plan 使用 M2.7 生成歌词
     const payload = {
-      model: 'MiniMax-M2.7',
-      max_tokens: 500,
-      messages: [
-        {
-          role: 'user',
-          content: `请为以下主题创作歌词（只需歌词，不需要其他说明）：${params.prompt}\n\n风格：${params.genre || 'pop'}\n主题：${params.theme || 'love'}`,
-        },
-      ],
+      model: this.model,
+      prompt: params.prompt,
+      genre: params.genre || 'pop',
+      theme: params.theme || 'love',
     };
 
-    return this.request('/messages', payload);
+    return this.request('/lyrics_generation', payload);
   }
 }
 
 /**
  * MiniMax 音乐封面生成适配器
+ * 使用图片生成 API
  */
 export class MiniMaxMusicCoverAdapter extends MiniMaxAdapter {
   constructor(apiKey) {
-    super(apiKey, MINIMAX_MODELS.MUSIC_COVER);
+    super(apiKey);
   }
 
   async generate(params) {
     const payload = {
-      model: params.model || this.model,
+      model: MINIMAX_MODELS.IMAGE_01,
       prompt: params.prompt,
+      n: 1,
+      aspect_ratio: '1:1',
+      response_format: 'url',
     };
 
-    return this.request('/images/generations', payload);
+    return this.request('/image_generation', payload);
   }
 }
 
 /**
- * MiniMax TTS HD 适配器 (Token Plan)
+ * MiniMax TTS HD 适配器
+ * POST /v1/t2a_v2
  */
 export class MiniMaxTTSAdapter extends MiniMaxAdapter {
   constructor(apiKey) {
-    super(apiKey, MINIMAX_MODELS.TTS_HD);
+    super(apiKey);
+    this.model = MINIMAX_MODELS.TTS_HD;
   }
 
-  // Token Plan Speech 2.8 音色列表
+  // 音色列表 (speech-2.8-hd)
   static VOICE_LIST = [
     { id: 'male-qn-qingse', name: '青年男声', lang: 'zh' },
     { id: 'female-shaonv', name: '少女声音', lang: 'zh' },
@@ -182,18 +214,42 @@ export class MiniMaxTTSAdapter extends MiniMaxAdapter {
   async generate(params) {
     const payload = {
       model: params.model || this.model,
-      input: params.input,
-      voice: params.voice || 'female-shaonv',
-      speed: params.speed || 1.0,
-      format: params.format || 'mp3',
+      text: params.input || params.text,
+      stream: false,
+      voice_setting: {
+        voice_id: params.voice || 'female-shaonv',
+        speed: params.speed || 1,
+        vol: 1,
+        pitch: 0,
+        emotion: params.emotion || 'happy',
+      },
+      audio_setting: {
+        sample_rate: 32000,
+        bitrate: 128000,
+        format: 'mp3',
+        channel: 1,
+      },
     };
 
-    // Token Plan TTS 返回的是 base64 音频
-    const res = await this.request('/audio/speech', payload);
+    // TTS 返回二进制，需要特殊处理
+    const url = `${API_BASE}/t2a_v2`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
-    return {
-      b64_audio: res?.audio,
-    };
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(`MiniMax API Error: ${response.status} - ${err}`);
+    }
+
+    const buffer = await response.arrayBuffer();
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    return { b64_audio: base64 };
   }
 }
 

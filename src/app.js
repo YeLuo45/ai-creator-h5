@@ -236,15 +236,17 @@ function showResult(type, result) {
 
   let html = '<div class="card"><div class="form-label">生成结果</div>';
 
-  if (type === 'image' && result.data?.[0]?.url) {
-    html += `<img src="${result.data[0].url}" class="preview-image" alt="生成图片">`;
+  // Token Plan API 返回格式更新
+  if (type === 'image' && result.data?.image_urls?.[0]) {
+    const imgUrl = result.data.image_urls[0];
+    html += `<img src="${imgUrl}" class="preview-image" alt="生成图片">`;
     html += `<div style="margin-top:12px;display:flex;gap:8px;">`;
-    html += `<button class="btn" onclick="window.open('${result.data[0].url}', '_blank')">在新窗口打开</button>`;
+    html += `<button class="btn" onclick="window.open('${imgUrl}', '_blank')">在新窗口打开</button>`;
     html += `</div>`;
-  } else if (type === 'music' && result.data?.[0]?.url) {
-    html += `<audio src="${result.data[0].url}" controls class="audio-player"></audio>`;
+  } else if (type === 'music' && result.url) {
+    html += `<audio src="${result.url}" controls class="audio-player"></audio>`;
     html += `<div style="margin-top:12px;">`;
-    html += `<button class="btn" onclick="window.open('${result.data[0].url}', '_blank')">下载音乐</button>`;
+    html += `<button class="btn" onclick="window.open('${result.url}', '_blank')">下载音乐</button>`;
     html += `</div>`;
   } else if (type === 'tts' && result.url) {
     html += `<audio src="${result.url}" controls class="audio-player"></audio>`;
@@ -253,6 +255,8 @@ function showResult(type, result) {
     html += `</div>`;
   } else {
     html += '<p>生成完成，但未返回有效数据</p>';
+    // Debug: 显示原始结果
+    html += `<pre style="font-size:10px;overflow:auto;max-height:100px;">${JSON.stringify(result, null, 2)}</pre>`;
   }
 
   html += '</div>';

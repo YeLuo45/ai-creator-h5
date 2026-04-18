@@ -19,7 +19,7 @@ function getConfig() {
 /**
  * 生成语音
  */
-export async function generateTTS({ input, voice = 'female-shaonv', speed = 1.0, format = 'mp3' }) {
+export async function generateTTS({ input, voice = 'female-shaonv', speed = 1.0 }) {
   const { apiKey } = getConfig();
 
   if (!apiKey) {
@@ -30,18 +30,17 @@ export async function generateTTS({ input, voice = 'female-shaonv', speed = 1.0,
 
   showLoading({ title: '语音合成中...' });
   try {
-    const result = await adapter.generate({ input, voice, speed, format });
+    const result = await adapter.generate({ input, voice, speed });
 
-    // 如果返回的是 base64，转换为可播放的 URL
-    let audioUrl = result.url;
+    let audioUrl = '';
     if (result.b64_audio) {
+      // 转换为 data URL
       audioUrl = 'data:audio/mp3;base64,' + result.b64_audio;
       // 保存到历史
       addToHistory({
         input,
         voice,
         speed,
-        format,
         url: audioUrl,
       });
     }
@@ -93,7 +92,7 @@ export function clearHistory() {
 }
 
 /**
- * 获取支持的音色列表 (Token Plan Speech 2.8)
+ * 获取支持的音色列表 (speech-2.8-hd)
  */
 export function getVoiceList() {
   return MiniMaxTTSAdapter.VOICE_LIST;

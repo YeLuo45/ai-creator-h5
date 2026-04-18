@@ -8,6 +8,18 @@ import { storage, showLoading, hideLoading } from '../adapter/web-api.js';
 const HISTORY_KEY = 'history_music';
 
 /**
+ * Hex 字符串转 Base64
+ */
+function hexToBase64(hex) {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+  }
+  const bin = String.fromCharCode(...bytes);
+  return btoa(bin);
+}
+
+/**
  * 获取 API 配置
  */
 function getConfig() {
@@ -33,13 +45,17 @@ export async function generateMusic({ prompt, duration = 180, instrumental = fal
     const result = await adapter.generate({ prompt, duration, instrumental });
 
     // 保存到历史
-    if (result.data?.[0]?.url) {
+    if (result.data?.audio) {
+      // music_generation 返回的是 hex 编码的音频，需要转换为 base64
+      const audioUrl = 'data:audio/mp3;base64,' + hexToBase64(result.data.audio);
       addToHistory({
         prompt,
         duration,
         instrumental,
-        url: result.data[0].url,
+        url: audioUrl,
       });
+      hideLoading();
+      return { ...result, url: audioUrl };
     }
 
     hideLoading();
@@ -51,7 +67,7 @@ export async function generateMusic({ prompt, duration = 180, instrumental = fal
 }
 
 /**
- * 生成歌词 (使用 M2.7)
+ * 生成歌词
  */
 export async function generateLyrics({ prompt, genre = 'pop', theme = 'love' }) {
   const { apiKey } = getConfig();

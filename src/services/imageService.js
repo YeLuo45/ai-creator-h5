@@ -32,15 +32,16 @@ export async function generateImage({ prompt, style = 'vivid', size = '1024x1024
   try {
     const result = await adapter.generate({ prompt, style, size });
 
-    // 保存到历史
-    if (result.data?.[0]?.url) {
+    // Token Plan 图片 API 返回 { data: { image_urls: [...] } }
+    if (result.data?.image_urls?.length > 0) {
       addToHistory({
         prompt,
         style,
         size,
-        url: result.data[0].url,
-        revised_prompt: result.data[0].revised_prompt || '',
+        url: result.data.image_urls[0],
+        revised_prompt: result.revised_prompt || '',
       });
+      return result;
     }
 
     hideLoading();
