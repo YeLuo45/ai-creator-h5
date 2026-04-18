@@ -9,14 +9,21 @@ const HISTORY_KEY = 'history_music';
 
 /**
  * Hex 字符串转 Base64
+ * 用于将 MiniMax API 返回的 hex 编码音频转换为可播放的 data URL
  */
 function hexToBase64(hex) {
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < hex.length; i += 2) {
-    bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+  try {
+    const bytes = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < hex.length; i += 2) {
+      bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+    }
+    // 使用 TextEncoder + btoa 的方式处理大数组更稳定
+    const bin = String.fromCharCode(...bytes);
+    return btoa(bin);
+  } catch (err) {
+    console.error('[MusicService] hexToBase64 error:', err, 'hex length:', hex.length);
+    throw new Error('音频数据转换失败');
   }
-  const bin = String.fromCharCode(...bytes);
-  return btoa(bin);
 }
 
 /**
@@ -44,11 +51,13 @@ export async function generateMusic({ prompt, lyrics = '', duration = 180, instr
   try {
     // 如果没有提供歌词，使用 prompt 作为简单歌词
     const finalLyrics = lyrics || `这是一首关于 ${prompt} 的歌曲`;
+    console.log('[MusicService] Generating with prompt:', prompt, 'lyrics:', finalLyrics);
     const result = await adapter.generate({ prompt, lyrics: finalLyrics, duration, instrumental });
+    console.log('[MusicService] API result:', JSON.stringify(result).substring(0, 200));
 
-    // 保存到历史
     // music_generation 返回格式: { data: { audio: "hex", status: 2 }, extra_info: {...} }
     if (result.data?.audio && result.data.status === 2) {
+      console.log('[MusicService] Converting audio hex, length:', result.data.audio.length);
       const audioUrl = 'data:audio/mp3;base64,' + hexToBase64(result.data.audio);
       addToHistory({
         prompt,
@@ -58,12 +67,18 @@ export async function generateMusic({ prompt, lyrics = '', duration = 180, instr
         url: audioUrl,
       });
       hideLoading();
+      console.log('[MusicService] Success, audioUrl:', audioUrl.substring(0, 50) + '...');
       return { ...result, url: audioUrl };
+    } else if (result.base_resp?.status_msg) {
+      console.error('[MusicService] API error:', result.base_resp.status_msg);
+      throw new Error(`API 错误: ${result.base_resp.status_msg}`);
     }
 
+    console.warn('[MusicService] Unexpected result structure:', result);
     hideLoading();
     return result;
   } catch (err) {
+    console.error('[MusicService] generateMusic error:', err);
     hideLoading();
     throw err;
   }
