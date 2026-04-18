@@ -1,5 +1,5 @@
 /**
- * 音乐生成服务 (H5 Version)
+ * 音乐生成服务 (H5 Version - Token Plan)
  */
 
 import { MiniMaxMusicAdapter, MiniMaxLyricsAdapter, MiniMaxMusicCoverAdapter } from '../adapter/MiniMaxAdapter.js';
@@ -13,7 +13,6 @@ const HISTORY_KEY = 'history_music';
 function getConfig() {
   return {
     apiKey: storage.get('minimax_api_key') || '',
-    groupId: storage.get('minimax_group_id') || '',
   };
 }
 
@@ -21,13 +20,13 @@ function getConfig() {
  * 生成音乐
  */
 export async function generateMusic({ prompt, duration = 180, instrumental = false }) {
-  const { apiKey, groupId } = getConfig();
+  const { apiKey } = getConfig();
 
-  if (!apiKey || !groupId) {
-    throw new Error('请先在"我的"页面配置 API Key 和 Group ID');
+  if (!apiKey) {
+    throw new Error('请先在"我的"页面配置 MiniMax API Key');
   }
 
-  const adapter = new MiniMaxMusicAdapter(apiKey, groupId);
+  const adapter = new MiniMaxMusicAdapter(apiKey);
 
   showLoading({ title: '音乐生成中（可能需要30-60秒）...' });
   try {
@@ -52,16 +51,16 @@ export async function generateMusic({ prompt, duration = 180, instrumental = fal
 }
 
 /**
- * 生成歌词
+ * 生成歌词 (使用 M2.7)
  */
 export async function generateLyrics({ prompt, genre = 'pop', theme = 'love' }) {
-  const { apiKey, groupId } = getConfig();
+  const { apiKey } = getConfig();
 
-  if (!apiKey || !groupId) {
-    throw new Error('请先在"我的"页面配置 API Key 和 Group ID');
+  if (!apiKey) {
+    throw new Error('请先在"我的"页面配置 MiniMax API Key');
   }
 
-  const adapter = new MiniMaxLyricsAdapter(apiKey, groupId);
+  const adapter = new MiniMaxLyricsAdapter(apiKey);
 
   showLoading({ title: '歌词生成中...' });
   try {
@@ -78,13 +77,13 @@ export async function generateLyrics({ prompt, genre = 'pop', theme = 'love' }) 
  * 生成音乐封面
  */
 export async function generateMusicCover({ prompt, musicUrl }) {
-  const { apiKey, groupId } = getConfig();
+  const { apiKey } = getConfig();
 
-  if (!apiKey || !groupId) {
-    throw new Error('请先在"我的"页面配置 API Key 和 Group ID');
+  if (!apiKey) {
+    throw new Error('请先在"我的"页面配置 MiniMax API Key');
   }
 
-  const adapter = new MiniMaxMusicCoverAdapter(apiKey, groupId);
+  const adapter = new MiniMaxMusicCoverAdapter(apiKey);
 
   showLoading({ title: '封面生成中...' });
   try {

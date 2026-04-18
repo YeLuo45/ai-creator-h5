@@ -1,5 +1,5 @@
 /**
- * 图片生成服务 (H5 Version)
+ * 图片生成服务 (H5 Version - Token Plan)
  */
 
 import { MiniMaxImageAdapter } from '../adapter/MiniMaxAdapter.js';
@@ -13,7 +13,6 @@ const HISTORY_KEY = 'history_images';
 function getConfig() {
   return {
     apiKey: storage.get('minimax_api_key') || '',
-    groupId: storage.get('minimax_group_id') || '',
   };
 }
 
@@ -21,13 +20,13 @@ function getConfig() {
  * 生成图片
  */
 export async function generateImage({ prompt, style = 'vivid', size = '1024x1024' }) {
-  const { apiKey, groupId } = getConfig();
+  const { apiKey } = getConfig();
 
-  if (!apiKey || !groupId) {
-    throw new Error('请先在"我的"页面配置 API Key 和 Group ID');
+  if (!apiKey) {
+    throw new Error('请先在"我的"页面配置 MiniMax API Key');
   }
 
-  const adapter = new MiniMaxImageAdapter(apiKey, groupId);
+  const adapter = new MiniMaxImageAdapter(apiKey);
 
   showLoading({ title: '图片生成中...' });
   try {

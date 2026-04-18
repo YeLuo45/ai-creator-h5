@@ -369,26 +369,22 @@ async function showHistoryDetail(type, id) {
 
 // 我的页事件绑定
 function bindMyEvents() {
-  // 加载配置
+  // 加载配置 (Token Plan 只需 API Key)
   const apiKey = storage.get('minimax_api_key') || '';
-  const groupId = storage.get('minimax_group_id') || '';
-  const credits = storage.get('credits') || 0;
 
   const apiKeyInput = document.getElementById('api-key-input');
-  const groupIdInput = document.getElementById('group-id-input');
 
   if (apiKeyInput) apiKeyInput.value = apiKey;
-  if (groupIdInput) groupIdInput.value = groupId;
 
   // 保存按钮
   const saveBtn = document.getElementById('save-config-btn');
   if (saveBtn) {
     saveBtn.addEventListener('click', async () => {
       const newApiKey = document.getElementById('api-key-input')?.value || '';
-      const newGroupId = document.getElementById('group-id-input')?.value || '';
 
       storage.set('minimax_api_key', newApiKey);
-      storage.set('minimax_group_id', newGroupId);
+      // 清除旧的 Group ID（如果存在）
+      storage.remove('minimax_group_id');
 
       showToast({ title: '配置已保存' });
     });

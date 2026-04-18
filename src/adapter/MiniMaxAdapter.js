@@ -1,11 +1,13 @@
 /**
- * MiniMaxAdapter.js (H5 Version)
+ * MiniMaxAdapter.js (H5 Version - Token Plan)
  * MiniMax 模型适配器实现 - Web 版
- * 用 fetch 替代 wx.request
+ * 使用 MiniMax Token Plan API (Anthropic 兼容端点)
+ * Base URL: https://api.minimaxi.com/anthropic/v1
+ * 无需 Group ID
  */
 
-// MiniMax API 端点
-const API_BASE = 'https://api.minimax.chat/v1';
+// MiniMax Token Plan API 端点 (Anthropic 兼容)
+const API_BASE = 'https://api.minimaxi.com/anthropic/v1';
 
 // MiniMax 模型 ID 映射
 export const MINIMAX_MODELS = {
@@ -14,14 +16,13 @@ export const MINIMAX_MODELS = {
   MUSIC_26: 'music-2.6',
   LYRICS: 'lyrics_generation',
   MUSIC_COVER: 'music-cover',
-  TTS_HD: 'TTS-HD',
+  TTS_HD: 'speech-02-hd',  // Token Plan 使用 speech-02-hd
   TTS: 'speech-02',
 };
 
 export class MiniMaxAdapter {
-  constructor(apiKey, groupId, model = MINIMAX_MODELS.TTS_HD) {
+  constructor(apiKey, model = MINIMAX_MODELS.TTS_HD) {
     this.apiKey = apiKey;
-    this.groupId = groupId;
     this.model = model;
     this.provider = 'minimax';
     this.capabilities = ['image', 'text', 'music', 'audio'];
@@ -29,6 +30,7 @@ export class MiniMaxAdapter {
 
   /**
    * 通用 HTTP 请求 (fetch 版)
+   * Token Plan 使用 Anthropic 兼容格式
    */
   async request(endpoint, params = {}, method = 'POST') {
     const url = `${API_BASE}${endpoint}`;
@@ -38,7 +40,7 @@ export class MiniMaxAdapter {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.apiKey}`,
-        'MM-Group-Id': this.groupId,
+        // Token Plan 不需要 MM-Group-Id
       },
     };
 
@@ -61,7 +63,12 @@ export class MiniMaxAdapter {
    */
   async healthCheck() {
     try {
-      await this.request('/models', {}, 'GET');
+      // Token Plan 使用 messages API 做健康检查
+      await this.request('/messages', {
+        model: 'MiniMax-M2.7',
+        max_tokens: 1,
+        messages: [{ role: 'user', content: 'hi' }]
+      });
       return true;
     } catch {
       return false;
@@ -73,8 +80,8 @@ export class MiniMaxAdapter {
  * MiniMax 图片生成适配器
  */
 export class MiniMaxImageAdapter extends MiniMaxAdapter {
-  constructor(apiKey, groupId) {
-    super(apiKey, groupId, MINIMAX_MODELS.IMAGE_01);
+  constructor(apiKey) {
+    super(apiKey, MINIMAX_MODELS.IMAGE_01);
   }
 
   async generate(params) {
@@ -95,8 +102,8 @@ export class MiniMaxImageAdapter extends MiniMaxAdapter {
  * MiniMax 音乐生成适配器
  */
 export class MiniMaxMusicAdapter extends MiniMaxAdapter {
-  constructor(apiKey, groupId) {
-    super(apiKey, groupId, MINIMAX_MODELS.MUSIC_26);
+  constructor(apiKey) {
+    super(apiKey, MINIMAX_MODELS.MUSIC_26);
   }
 
   async generate(params) {
@@ -115,28 +122,24 @@ export class MiniMaxMusicAdapter extends MiniMaxAdapter {
  * MiniMax 歌词生成适配器
  */
 export class MiniMaxLyricsAdapter extends MiniMaxAdapter {
-  constructor(apiKey, groupId) {
-    super(apiKey, groupId, MINIMAX_MODELS.LYRICS);
+  constructor(apiKey) {
+    super(apiKey, MINIMAX_MODELS.LYRICS);
   }
 
   async generate(params) {
+    // Token Plan 使用 M2.7 生成歌词
     const payload = {
-      model: params.model || this.model,
-      prompt: params.prompt,
-      genre: params.genre || 'pop',
-      theme: params.theme || 'love',
-    };
-
-    return this.request('/chat/completions', {
-      model: payload.model,
+      model: 'MiniMax-M2.7',
+      max_tokens: 500,
       messages: [
         {
           role: 'user',
-          content: `请为以下主题创作歌词：${params.prompt}`,
+          content: `请为以下主题创作歌词（只需歌词，不需要其他说明）：${params.prompt}\n\n风格：${params.genre || 'pop'}\n主题：${params.theme || 'love'}`,
         },
       ],
-      max_tokens: 500,
-    });
+    };
+
+    return this.request('/messages', payload);
   }
 }
 
@@ -144,8 +147,8 @@ export class MiniMaxLyricsAdapter extends MiniMaxAdapter {
  * MiniMax 音乐封面生成适配器
  */
 export class MiniMaxMusicCoverAdapter extends MiniMaxAdapter {
-  constructor(apiKey, groupId) {
-    super(apiKey, groupId, MINIMAX_MODELS.MUSIC_COVER);
+  constructor(apiKey) {
+    super(apiKey, MINIMAX_MODELS.MUSIC_COVER);
   }
 
   async generate(params) {
@@ -159,18 +162,21 @@ export class MiniMaxMusicCoverAdapter extends MiniMaxAdapter {
 }
 
 /**
- * MiniMax TTS HD 适配器
+ * MiniMax TTS HD 适配器 (Token Plan)
  */
 export class MiniMaxTTSAdapter extends MiniMaxAdapter {
-  constructor(apiKey, groupId) {
-    super(apiKey, groupId, MINIMAX_MODELS.TTS_HD);
+  constructor(apiKey) {
+    super(apiKey, MINIMAX_MODELS.TTS_HD);
   }
 
+  // Token Plan Speech 2.8 音色列表
   static VOICE_LIST = [
     { id: 'male-qn-qingse', name: '青年男声', lang: 'zh' },
     { id: 'female-shaonv', name: '少女声音', lang: 'zh' },
     { id: 'male-qn-jingxing', name: '激情男声', lang: 'zh' },
     { id: 'female-yujie', name: '御姐声音', lang: 'zh' },
+    { id: 'female-tianmei', name: '甜妹声音', lang: 'zh' },
+    { id: 'male-yunyang', name: '云扬声音', lang: 'zh' },
   ];
 
   async generate(params) {
@@ -179,15 +185,14 @@ export class MiniMaxTTSAdapter extends MiniMaxAdapter {
       input: params.input,
       voice: params.voice || 'female-shaonv',
       speed: params.speed || 1.0,
-      pitch: params.pitch || 0,
       format: params.format || 'mp3',
     };
 
-    // MiniMax TTS 返回的是 base64 音频
+    // Token Plan TTS 返回的是 base64 音频
     const res = await this.request('/audio/speech', payload);
 
     return {
-      b64_audio: res?.data?.audio,
+      b64_audio: res?.audio,
     };
   }
 }
@@ -195,22 +200,22 @@ export class MiniMaxTTSAdapter extends MiniMaxAdapter {
 /**
  * 工厂函数
  */
-export function createMiniMaxImageAdapter(apiKey, groupId) {
-  return new MiniMaxImageAdapter(apiKey, groupId);
+export function createMiniMaxImageAdapter(apiKey) {
+  return new MiniMaxImageAdapter(apiKey);
 }
 
-export function createMiniMaxMusicAdapter(apiKey, groupId) {
-  return new MiniMaxMusicAdapter(apiKey, groupId);
+export function createMiniMaxMusicAdapter(apiKey) {
+  return new MiniMaxMusicAdapter(apiKey);
 }
 
-export function createMiniMaxLyricsAdapter(apiKey, groupId) {
-  return new MiniMaxLyricsAdapter(apiKey, groupId);
+export function createMiniMaxLyricsAdapter(apiKey) {
+  return new MiniMaxLyricsAdapter(apiKey);
 }
 
-export function createMiniMaxMusicCoverAdapter(apiKey, groupId) {
-  return new MiniMaxMusicCoverAdapter(apiKey, groupId);
+export function createMiniMaxMusicCoverAdapter(apiKey) {
+  return new MiniMaxMusicCoverAdapter(apiKey);
 }
 
-export function createMiniMaxTTSAdapter(apiKey, groupId) {
-  return new MiniMaxTTSAdapter(apiKey, groupId);
+export function createMiniMaxTTSAdapter(apiKey) {
+  return new MiniMaxTTSAdapter(apiKey);
 }

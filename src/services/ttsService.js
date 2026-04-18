@@ -1,5 +1,5 @@
 /**
- * TTS 语音合成服务 (H5 Version)
+ * TTS 语音合成服务 (H5 Version - Token Plan)
  */
 
 import { MiniMaxTTSAdapter } from '../adapter/MiniMaxAdapter.js';
@@ -13,7 +13,6 @@ const HISTORY_KEY = 'history_tts';
 function getConfig() {
   return {
     apiKey: storage.get('minimax_api_key') || '',
-    groupId: storage.get('minimax_group_id') || '',
   };
 }
 
@@ -21,13 +20,13 @@ function getConfig() {
  * 生成语音
  */
 export async function generateTTS({ input, voice = 'female-shaonv', speed = 1.0, format = 'mp3' }) {
-  const { apiKey, groupId } = getConfig();
+  const { apiKey } = getConfig();
 
-  if (!apiKey || !groupId) {
-    throw new Error('请先在"我的"页面配置 API Key 和 Group ID');
+  if (!apiKey) {
+    throw new Error('请先在"我的"页面配置 MiniMax API Key');
   }
 
-  const adapter = new MiniMaxTTSAdapter(apiKey, groupId);
+  const adapter = new MiniMaxTTSAdapter(apiKey);
 
   showLoading({ title: '语音合成中...' });
   try {
@@ -94,7 +93,7 @@ export function clearHistory() {
 }
 
 /**
- * 获取支持的音色列表
+ * 获取支持的音色列表 (Token Plan Speech 2.8)
  */
 export function getVoiceList() {
   return MiniMaxTTSAdapter.VOICE_LIST;
