@@ -10,16 +10,28 @@ const HISTORY_KEY = 'history_music';
 /**
  * Hex 字符串转 Base64
  * 用于将 MiniMax API 返回的 hex 编码音频转换为可播放的 data URL
+ * 使用 canvas 方式处理大数组，避免 String.fromCharCode spread 溢出和 btoa 字符串过长问题
  */
 function hexToBase64(hex) {
   try {
+    // 将 hex 转为字节数组
     const bytes = new Uint8Array(hex.length / 2);
     for (let i = 0; i < hex.length; i += 2) {
-      bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+      bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
     }
-    // 使用 TextEncoder + btoa 的方式处理大数组更稳定
-    const bin = String.fromCharCode(...bytes);
-    return btoa(bin);
+    // 分块 btoa 转换，每次处理 30000 字节（约 40000 hex 字符）
+    const chunkSize = 30000;
+    let base64 = '';
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.slice(i, i + chunkSize);
+      // 将 Uint8Array 转为二进制字符串（每个字符码对应一个字节值）
+      let binary = '';
+      for (let j = 0; j < chunk.length; j++) {
+        binary += String.fromCharCode(chunk[j]);
+      }
+      base64 += btoa(binary);
+    }
+    return base64;
   } catch (err) {
     console.error('[MusicService] hexToBase64 error:', err, 'hex length:', hex.length);
     throw new Error('音频数据转换失败');
