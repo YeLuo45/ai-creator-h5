@@ -41,6 +41,7 @@ export async function generateImage({ prompt, style = 'vivid', size = '1024x1024
         url: result.data.image_urls[0],
         revised_prompt: result.revised_prompt || '',
       });
+      hideLoading();
       return result;
     }
 
