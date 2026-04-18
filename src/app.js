@@ -162,6 +162,10 @@ function updateGenerateForm(type) {
         <div class="form-label">音乐描述 (Prompt)</div>
         <textarea class="input" id="prompt-input" placeholder="描述你想要生成的音乐，例如：欢快的流行音乐，适合派对"></textarea>
         <div style="margin-top:12px;">
+          <div class="form-label">歌词（可选）</div>
+          <textarea class="input" id="lyrics-input" placeholder="输入歌词，如不填则自动生成" style="min-height:60px;"></textarea>
+        </div>
+        <div style="margin-top:12px;">
           <div class="form-label">时长（秒）</div>
           <input type="number" class="input" id="duration-input" value="180" min="30" max="300">
         </div>
@@ -213,7 +217,8 @@ async function handleGenerate() {
     } else if (type === 'music') {
       const { generateMusic } = await import('./services/musicService.js');
       const duration = parseInt(document.getElementById('duration-input')?.value || '180');
-      result = await generateMusic({ prompt: promptInput.value, duration });
+      const lyrics = document.getElementById('lyrics-input')?.value || '';
+      result = await generateMusic({ prompt: promptInput.value, lyrics, duration });
       showResult('music', result);
     } else if (type === 'tts') {
       const { generateTTS } = await import('./services/ttsService.js');

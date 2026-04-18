@@ -31,7 +31,7 @@ function getConfig() {
 /**
  * 生成音乐
  */
-export async function generateMusic({ prompt, duration = 180, instrumental = false }) {
+export async function generateMusic({ prompt, lyrics = '', duration = 180, instrumental = false }) {
   const { apiKey } = getConfig();
 
   if (!apiKey) {
@@ -42,14 +42,17 @@ export async function generateMusic({ prompt, duration = 180, instrumental = fal
 
   showLoading({ title: '音乐生成中（可能需要30-60秒）...' });
   try {
-    const result = await adapter.generate({ prompt, duration, instrumental });
+    // 如果没有提供歌词，使用 prompt 作为简单歌词
+    const finalLyrics = lyrics || `这是一首关于 ${prompt} 的歌曲`;
+    const result = await adapter.generate({ prompt, lyrics: finalLyrics, duration, instrumental });
 
     // 保存到历史
-    if (result.data?.audio) {
-      // music_generation 返回的是 hex 编码的音频，需要转换为 base64
+    // music_generation 返回格式: { data: { audio: "hex", status: 2 }, extra_info: {...} }
+    if (result.data?.audio && result.data.status === 2) {
       const audioUrl = 'data:audio/mp3;base64,' + hexToBase64(result.data.audio);
       addToHistory({
         prompt,
+        lyrics: finalLyrics,
         duration,
         instrumental,
         url: audioUrl,
