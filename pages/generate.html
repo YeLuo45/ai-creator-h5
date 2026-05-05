@@ -517,12 +517,16 @@
       showLoading('AI 创作中...');
       try {
         const { generateImage, saveImageHistory } = await import('../services/imageService.js');
+        const { recordImageGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
         const style = document.getElementById('styleSelect').value;
         const size = document.getElementById('sizeSelect').value;
         const res = await generateImage({ prompt, style, size });
         const url = res.data?.[0]?.url;
         if (!url) throw new Error('未获取到生成结果');
         saveImageHistory({ prompt, url, style, size });
+        recordImageGenerated(style, size);
+        const newAchievements = checkAndUnlockAchievements();
+        if (newAchievements.length > 0) showNewAchievements(newAchievements);
         getApp().updateCredits(-1);
         return { url, revised_prompt: res.data?.[0]?.revised_prompt };
       } finally {
@@ -534,6 +538,7 @@
       showLoading('音乐生成中（可能需要30-60秒）...');
       try {
         const { generateFullMusic, saveMusicHistory } = await import('../services/musicService.js');
+        const { recordMusicGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
         const genre = document.getElementById('genreSelect').value;
         const duration = parseInt(document.getElementById('durationSelect').value);
         const res = await generateFullMusic({ prompt, genre, duration });
@@ -544,6 +549,9 @@
           lyrics: res.lyrics,
           duration: res.duration,
         });
+        recordMusicGenerated(res.duration || duration);
+        const newAchievements = checkAndUnlockAchievements();
+        if (newAchievements.length > 0) showNewAchievements(newAchievements);
         getApp().updateCredits(-5);
         return res;
       } finally {
@@ -555,12 +563,16 @@
       showLoading('语音合成中...');
       try {
         const { generateSpeech, saveB64AudioAsDataUrl, saveTTSHistory } = await import('../services/ttsService.js');
+        const { recordAudioGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
         const voice = document.getElementById('voiceSelect').value;
         const res = await generateSpeech({ input: prompt, voice, format: 'mp3' });
         if (!res.b64_audio) throw new Error('未获取到音频数据');
         const dataUrl = saveB64AudioAsDataUrl(res.b64_audio, 'mp3');
         const voiceName = { 'female-shaonv': '少女声音', 'male-qn-qingse': '青年男声', 'female-yujie': '御姐声音', 'male-qn-jingxing': '激情男声' }[voice] || voice;
         saveTTSHistory({ input: prompt, voice, voiceName, filePath: dataUrl, format: 'mp3' });
+        recordAudioGenerated();
+        const newAchievements = checkAndUnlockAchievements();
+        if (newAchievements.length > 0) showNewAchievements(newAchievements);
         getApp().updateCredits(-1);
         return { filePath: dataUrl };
       } finally {

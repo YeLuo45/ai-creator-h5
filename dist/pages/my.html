@@ -211,6 +211,139 @@
       cursor: pointer;
     }
 
+    /* Achievement Section */
+    .achievement-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .achievement-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .achievement-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      flex: 1;
+    }
+
+    .achievement-progress {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .achievement-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .achievement-item {
+      width: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 4px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #666;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .achievement-item:active {
+      transform: scale(0.95);
+    }
+
+    .achievement-item.locked {
+      opacity: 0.4;
+      filter: grayscale(1);
+    }
+
+    .achievement-item-icon {
+      font-size: 24px;
+    }
+
+    .achievement-item-name {
+      text-align: center;
+      font-size: 10px;
+      color: #999;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 50px;
+    }
+
+    /* Achievement Detail Modal */
+    .achievement-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .achievement-modal-content {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      width: 80%;
+      max-width: 320px;
+      text-align: center;
+    }
+
+    .achievement-modal-icon {
+      font-size: 64px;
+      margin-bottom: 12px;
+    }
+
+    .achievement-modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .achievement-modal-desc {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .achievement-modal-status {
+      font-size: 12px;
+      color: #1A73E8;
+      padding: 4px 12px;
+      background: #e6f0ff;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    .achievement-modal-close {
+      margin-top: 16px;
+      padding: 10px 32px;
+      background: #1A73E8;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
     /* Menu List */
     .menu-list {
       background: #fff;
@@ -317,6 +450,15 @@
       <button class="btn-save" onclick="onSaveApiKey()">保存配置</button>
     </div>
 
+    <!-- Achievement Section -->
+    <div class="achievement-card" id="achievementCard" onclick="showAchievementDetail()">
+      <div class="achievement-header">
+        <span class="achievement-title">🏆 成就</span>
+        <span class="achievement-progress" id="achievementProgress">0/0</span>
+      </div>
+      <div class="achievement-grid" id="achievementGrid"></div>
+    </div>
+
     <!-- Menu List -->
     <div class="menu-list">
       <div class="menu-item" onclick="onShare()">
@@ -377,6 +519,60 @@
         badge.textContent = '未配置';
         badge.className = 'status-badge warning';
       }
+
+      // Load achievements
+      loadAchievements();
+    }
+
+    async function loadAchievements() {
+      try {
+        const { getAllAchievements, getAchievementProgress } = await import('../services/achievementService.js');
+        const achievements = getAllAchievements();
+        const progress = getAchievementProgress();
+
+        document.getElementById('achievementProgress').textContent = `${progress.unlocked}/${progress.total}`;
+
+        const grid = document.getElementById('achievementGrid');
+        grid.innerHTML = achievements.map(ach => {
+          const isUnlocked = !!ach.unlockedAt;
+          return `
+            <div class="achievement-item ${isUnlocked ? '' : 'locked'}" data-id="${ach.id}">
+              <span class="achievement-item-icon">${ach.icon}</span>
+              <span class="achievement-item-name">${ach.title}</span>
+            </div>
+          `;
+        }).join('');
+
+        // Store for detail view
+        window._achievements = achievements;
+      } catch (e) {
+        console.error('Failed to load achievements:', e);
+      }
+    }
+
+    function showAchievementDetail() {
+      const achievements = window._achievements || [];
+      const unlockedCount = achievements.filter(a => !!a.unlockedAt).length;
+
+      const content = achievements.map(ach => {
+        const isUnlocked = !!ach.unlockedAt;
+        return `
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0;">
+            <span style="font-size:28px;${isUnlocked ? '' : 'filter:grayscale(1);opacity:0.4;'}">${ach.icon}</span>
+            <div style="flex:1;text-align:left;">
+              <div style="font-size:14px;font-weight:600;color:#1a1a1a;">${ach.title}</div>
+              <div style="font-size:12px;color:#666;">${ach.desc}</div>
+            </div>
+            <span style="font-size:12px;color:${isUnlocked ? '#52c41a' : '#999'};">${isUnlocked ? '✓ 已解锁' : '🔒 未解锁'}</span>
+          </div>
+        `;
+      }).join('');
+
+      showModal({
+        title: `🏆 成就 (${unlockedCount}/${achievements.length})`,
+        content: '<div style="max-height:400px;overflow-y:auto;">' + content + '</div>',
+        showCancel: false,
+      });
     }
 
     async function onLogin() {
