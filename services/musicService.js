@@ -101,3 +101,55 @@ export function saveMusicHistory(record) {
 export function getMusicHistory() {
   return JSON.parse(localStorage.getItem('history_music') || '[]');
 }
+
+/**
+ * Batch generate music with concurrency control (max 5 concurrent)
+ * @param {string[]} prompts - Array of prompts
+ * @param {string} genre - Music genre
+ * @param {number} duration - Duration in seconds
+ * @param {function} onProgress - Progress callback (completed/total)
+ * @returns {Promise<Array>} - Array of {success, musicUrl, coverUrl, lyrics, duration} or {success: false, error}
+ */
+export async function batchGenerateMusic(prompts, genre = 'pop', duration = 60, onProgress) {
+  const results = [];
+  const concurrency = 5;
+  let completed = 0;
+
+  async function generateOne(prompt, index) {
+    try {
+      const res = await generateFullMusic({ prompt, genre, duration });
+      if (!res.musicUrl) throw new Error('未获取到音乐数据');
+      // Save to history
+      saveMusicHistory({
+        prompt,
+        musicUrl: res.musicUrl,
+        coverUrl: res.coverUrl,
+        lyrics: res.lyrics,
+        duration: res.duration,
+      });
+      results[index] = {
+        success: true,
+        musicUrl: res.musicUrl,
+        coverUrl: res.coverUrl,
+        lyrics: res.lyrics,
+        duration: res.duration,
+      };
+    } catch (e) {
+      results[index] = { success: false, error: e.message, prompt };
+    } finally {
+      completed++;
+      if (onProgress) onProgress(completed, prompts.length);
+    }
+  }
+
+  // Process in batches of concurrency
+  for (let i = 0; i < prompts.length; i += concurrency) {
+    const batch = [];
+    for (let j = 0; j < concurrency && i + j < prompts.length; j++) {
+      batch.push(generateOne(prompts[i + j], i + j));
+    }
+    await Promise.all(batch);
+  }
+
+  return results;
+}

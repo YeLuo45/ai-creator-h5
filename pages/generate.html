@@ -274,6 +274,166 @@
       background: #dce5ff;
     }
 
+    /* Batch Mode */
+    .batch-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      font-size: 12px;
+      color: #666;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .batch-toggle.active {
+      background: #e8f0ff;
+      border-color: #1A73E8;
+      color: #1A73E8;
+    }
+
+    .batch-controls {
+      display: none;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .batch-controls.visible {
+      display: block;
+    }
+
+    .batch-size-label {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .batch-size-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .batch-size-btn {
+      flex: 1;
+      padding: 8px 0;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #666;
+      cursor: pointer;
+    }
+
+    .batch-size-btn.selected {
+      background: #1A73E8;
+      border-color: #1A73E8;
+      color: #fff;
+    }
+
+    .batch-prompt-tip {
+      font-size: 11px;
+      color: #999;
+      margin-top: 8px;
+    }
+
+    /* Batch Results */
+    .batch-result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .batch-result-item {
+      position: relative;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      padding-bottom: 12px;
+    }
+
+    .batch-result-item.failed {
+      background: #fff0f0;
+    }
+
+    .batch-result-item img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .batch-result-item .item-index {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .batch-result-item .item-failed-msg {
+      font-size: 11px;
+      color: #e53e3e;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .batch-result-music {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .batch-result-music.failed {
+      background: #fff0f0;
+    }
+
+    .batch-result-tts {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .batch-result-tts.failed {
+      background: #fff0f0;
+    }
+
+    .batch-progress {
+      margin-bottom: 12px;
+      padding: 12px;
+      background: #f0f4ff;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #1A73E8;
+      text-align: center;
+    }
+
+    .batch-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn-back-batch {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
     /* Template Panel Overlay */
     .template-overlay {
       position: fixed;
@@ -412,6 +572,19 @@
         <button class="template-btn" id="templateBtn" onclick="openTemplatePanel()">
           📋 模板中心
         </button>
+        <button class="batch-toggle" id="batchToggle" onclick="toggleBatchMode()">
+          📦 批量
+        </button>
+
+        <div class="batch-controls" id="batchControls">
+          <div class="batch-size-label">生成数量</div>
+          <div class="batch-size-btns">
+            <button class="batch-size-btn" data-size="3" onclick="selectBatchSize(3)">3张</button>
+            <button class="batch-size-btn selected" data-size="5" onclick="selectBatchSize(5)">5张</button>
+            <button class="batch-size-btn" data-size="10" onclick="selectBatchSize(10)">10张</button>
+          </div>
+          <div class="batch-prompt-tip" id="batchPromptTip">每行一个描述，最多生成10张</div>
+        </div>
 
         <textarea
           id="promptInput"
@@ -511,6 +684,10 @@
       ttsVoice: 'female-shaonj',
       isGenerating: false,
       result: null,
+      batchMode: false,
+      batchSize: 5,
+      batchResults: [],
+      batchProgress: 0,
     };
 
     const typeLabels = {
@@ -525,11 +702,24 @@
       tts: '输入要转换的文字内容',
     };
 
+    const batchPromptTips = {
+      image: '每行一个描述，最多生成10张',
+      music: '每行一个描述，最多生成5首',
+      tts: '每段文字用空行分隔，最多10段',
+    };
+
     window.pageInit = function(params) {
       state.type = params.type || 'image';
+      // Reset batch mode when switching types
+      state.batchMode = false;
+      state.batchResults = [];
+      state.batchProgress = 0;
+      document.getElementById('batchToggle').classList.remove('active');
+      document.getElementById('batchControls').classList.remove('visible');
 
       document.getElementById('typeLabel').textContent = typeLabels[state.type];
       document.getElementById('promptInput').placeholder = placeholders[state.type];
+      document.getElementById('batchPromptTip').textContent = batchPromptTips[state.type];
 
       // Show/hide param sections
       document.getElementById('imageParams').style.display = state.type === 'image' ? 'block' : 'none';
@@ -622,10 +812,53 @@
       state.result = null;
     }
 
+    function toggleBatchMode() {
+      state.batchMode = !state.batchMode;
+      const toggle = document.getElementById('batchToggle');
+      const controls = document.getElementById('batchControls');
+      if (state.batchMode) {
+        toggle.classList.add('active');
+        controls.classList.add('visible');
+      } else {
+        toggle.classList.remove('active');
+        controls.classList.remove('visible');
+      }
+    }
+
+    function selectBatchSize(size) {
+      state.batchSize = size;
+      document.querySelectorAll('.batch-size-btn').forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.dataset.size) === size);
+      });
+    }
+
     async function onGenerate() {
       const prompt = document.getElementById('promptInput').value.trim();
       if (!prompt) { showError('请输入内容描述'); return; }
       clearError();
+
+      // Parse prompts based on mode
+      let prompts = [];
+      if (state.batchMode) {
+        if (state.type === 'tts') {
+          // TTS: split by empty lines
+          prompts = prompt.split(/\n\s*\n/).map(p => p.trim()).filter(p => p);
+        } else {
+          // Image/Music: split by newlines
+          prompts = prompt.split('\n').map(p => p.trim()).filter(p => p);
+        }
+        const maxBatch = state.type === 'music' ? 5 : 10;
+        if (prompts.length > maxBatch) {
+          showError(`批量数量不能超过${maxBatch}个`);
+          return;
+        }
+        if (prompts.length === 0) {
+          showError('请输入有效的生成内容');
+          return;
+        }
+      } else {
+        prompts = [prompt];
+      }
 
       if (!contentModeration(prompt)) {
         showError('输入内容包含敏感词，请修改后重试');
@@ -644,19 +877,35 @@
 
       state.isGenerating = true;
       const btn = document.getElementById('generateBtn');
-      btn.textContent = '生成中...';
+      btn.textContent = state.batchMode ? '批量生成中...' : '生成中...';
       btn.classList.add('disabled');
 
       try {
         let result;
         if (state.type === 'image') {
-          result = await doGenerateImage(prompt);
+          if (state.batchMode) {
+            result = await doBatchGenerateImage(prompts);
+          } else {
+            result = await doGenerateImage(prompt);
+          }
         } else if (state.type === 'music') {
-          result = await doGenerateMusic(prompt);
+          if (state.batchMode) {
+            result = await doBatchGenerateMusic(prompts);
+          } else {
+            result = await doGenerateMusic(prompt);
+          }
         } else if (state.type === 'tts') {
-          result = await doGenerateTTS(prompt);
+          if (state.batchMode) {
+            result = await doBatchGenerateTTS(prompts);
+          } else {
+            result = await doGenerateTTS(prompt);
+          }
         }
-        showResult(result);
+        if (state.batchMode) {
+          showBatchResults(result);
+        } else {
+          showResult(result);
+        }
       } catch (e) {
         showError(e.message || '生成失败');
       } finally {
@@ -731,6 +980,183 @@
         return { filePath: dataUrl };
       } finally {
         hideLoading();
+      }
+    }
+
+    // Batch Generation Functions
+    async function doBatchGenerateImage(prompts) {
+      const { batchGenerateImages } = await import('../services/imageService.js');
+      const { recordImageGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
+      const style = document.getElementById('styleSelect').value;
+      const size = document.getElementById('sizeSelect').value;
+      const results = await batchGenerateImages(prompts, style, size, (progress) => {
+        state.batchProgress = progress;
+      });
+      // Record achievements and deduct credits for successful results
+      const successCount = results.filter(r => r.success).length;
+      for (let i = 0; i < successCount; i++) {
+        recordImageGenerated(style, size);
+      }
+      const newAchievements = checkAndUnlockAchievements();
+      if (newAchievements.length > 0) showNewAchievements(newAchievements);
+      getApp().updateCredits(-successCount);
+      return results;
+    }
+
+    async function doBatchGenerateMusic(prompts) {
+      const { batchGenerateMusic } = await import('../services/musicService.js');
+      const { recordMusicGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
+      const genre = document.getElementById('genreSelect').value;
+      const duration = parseInt(document.getElementById('durationSelect').value);
+      const results = await batchGenerateMusic(prompts, genre, duration, (progress) => {
+        state.batchProgress = progress;
+      });
+      const successCount = results.filter(r => r.success).length;
+      for (let i = 0; i < successCount; i++) {
+        recordMusicGenerated(duration);
+      }
+      const newAchievements = checkAndUnlockAchievements();
+      if (newAchievements.length > 0) showNewAchievements(newAchievements);
+      getApp().updateCredits(-successCount * 5);
+      return results;
+    }
+
+    async function doBatchGenerateTTS(prompts) {
+      const { batchGenerateSpeech, saveB64AudioAsDataUrl, saveTTSHistory } = await import('../services/ttsService.js');
+      const { recordAudioGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
+      const voice = document.getElementById('voiceSelect').value;
+      const voiceName = { 'female-shaonv': '少女声音', 'male-qn-qingse': '青年男声', 'female-yujie': '御姐声音', 'male-qn-jingxing': '激情男声' }[voice] || voice;
+      const results = await batchGenerateSpeech(prompts, voice, (progress) => {
+        state.batchProgress = progress;
+      });
+      const successCount = results.filter(r => r.success).length;
+      for (let i = 0; i < successCount; i++) {
+        recordAudioGenerated();
+      }
+      // Save successful results to history
+      results.forEach(r => {
+        if (r.success) {
+          saveTTSHistory({ input: r.prompt, voice, voiceName, filePath: r.filePath, format: 'mp3' });
+        }
+      });
+      const newAchievements = checkAndUnlockAchievements();
+      if (newAchievements.length > 0) showNewAchievements(newAchievements);
+      getApp().updateCredits(-successCount);
+      return results;
+    }
+
+    function showBatchResults(results) {
+      state.batchResults = results;
+      document.getElementById('formView').style.display = 'none';
+      const container = document.getElementById('resultView');
+      container.style.display = 'block';
+
+      const successCount = results.filter(r => r.success).length;
+      const failCount = results.length - successCount;
+
+      let html = `<span class="btn-back-batch" onclick="hideBatchResults()">← 返回</span>`;
+      html += `<div class="batch-progress">已完成 ${successCount}/${results.length} 张${failCount > 0 ? `（${failCount}张失败）` : ''}</div>`;
+
+      if (state.type === 'image') {
+        html += '<div class="batch-result-grid">';
+        results.forEach((r, i) => {
+          if (r.success) {
+            html += `
+              <div class="batch-result-item">
+                <span class="item-index">${i + 1}</span>
+                <img src="${r.url}" onclick="previewImage(['${r.url}'])">
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="batch-result-item failed">
+                <span class="item-index">${i + 1}</span>
+                <div class="item-failed-msg">生成失败</div>
+              </div>
+            `;
+          }
+        });
+        html += '</div>';
+        html += '<div class="batch-actions"><button class="btn-action" onclick="onSaveAllImages()">💾 保存全部</button><button class="btn-action" onclick="hideBatchResults()">🔄 继续生成</button></div>';
+      } else if (state.type === 'music') {
+        results.forEach((r, i) => {
+          if (r.success) {
+            html += `
+              <div class="batch-result-music">
+                <div class="music-cover">
+                  ${r.coverUrl ? `<img src="${r.coverUrl}" class="cover-img">` : '<span class="cover-placeholder">🎵</span>'}
+                </div>
+                <div class="music-info">
+                  <span class="music-title">AI 创作音乐 ${i + 1}</span>
+                  <span class="music-desc">时长：${r.duration}秒</span>
+                  <button class="btn-play" onclick="playBatchMusic(${i})">▶ 播放</button>
+                </div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="batch-result-music failed">
+                <div class="music-info">
+                  <span class="music-title">音乐 ${i + 1}</span>
+                  <span class="music-desc">生成失败</span>
+                </div>
+              </div>
+            `;
+          }
+        });
+        html += '<div class="batch-actions"><button class="btn-action" onclick="hideBatchResults()">🔄 继续生成</button></div>';
+      } else if (state.type === 'tts') {
+        results.forEach((r, i) => {
+          if (r.success) {
+            html += `
+              <div class="batch-result-tts">
+                <span class="tts-text">${r.prompt.substring(0, 50)}${r.prompt.length > 50 ? '...' : ''}</span>
+                <button class="btn-play" onclick="playBatchTTS(${i})">▶ 播放</button>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="batch-result-tts failed">
+                <span class="tts-text">${r.prompt.substring(0, 50)}${r.prompt.length > 50 ? '...' : ''}</span>
+                <span style="color:#e53e3e;font-size:12px;display:block;margin-top:4px;">生成失败</span>
+              </div>
+            `;
+          }
+        });
+        html += '<div class="batch-actions"><button class="btn-action" onclick="hideBatchResults()">🔄 继续生成</button></div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    function hideBatchResults() {
+      document.getElementById('resultView').style.display = 'none';
+      document.getElementById('formView').style.display = 'block';
+      state.batchResults = [];
+      state.batchProgress = 0;
+    }
+
+    function onSaveAllImages() {
+      const successResults = state.batchResults.filter(r => r.success);
+      successResults.forEach(r => saveImageToAlbum(r.url));
+      showToast(`已保存${successResults.length}张图片`, 'success');
+    }
+
+    function playBatchMusic(index) {
+      const result = state.batchResults[index];
+      if (result && result.success) {
+        const audio = document.getElementById('ttsAudio');
+        audio.src = result.musicUrl;
+        audio.play();
+      }
+    }
+
+    function playBatchTTS(index) {
+      const result = state.batchResults[index];
+      if (result && result.success) {
+        const audio = document.getElementById('ttsAudio');
+        audio.src = result.filePath;
+        audio.play();
       }
     }
 

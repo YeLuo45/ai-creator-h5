@@ -82,3 +82,41 @@ export function saveTTSHistory(record) {
 export function getTTSHistory() {
   return JSON.parse(localStorage.getItem('history_tts') || '[]');
 }
+
+/**
+ * Batch generate TTS with concurrency control (max 5 concurrent)
+ * @param {string[]} texts - Array of text inputs
+ * @param {string} voice - Voice ID
+ * @param {function} onProgress - Progress callback (completed/total)
+ * @returns {Promise<Array>} - Array of {success, filePath, prompt} or {success: false, error}
+ */
+export async function batchGenerateSpeech(texts, voice = 'female-shaonv', onProgress) {
+  const results = [];
+  const concurrency = 5;
+  let completed = 0;
+
+  async function generateOne(text, index) {
+    try {
+      const res = await generateSpeech({ input: text, voice, format: 'mp3' });
+      if (!res.b64_audio) throw new Error('未获取到音频数据');
+      const dataUrl = saveB64AudioAsDataUrl(res.b64_audio, 'mp3');
+      results[index] = { success: true, filePath: dataUrl, prompt: text };
+    } catch (e) {
+      results[index] = { success: false, error: e.message, prompt: text };
+    } finally {
+      completed++;
+      if (onProgress) onProgress(completed, texts.length);
+    }
+  }
+
+  // Process in batches of concurrency
+  for (let i = 0; i < texts.length; i += concurrency) {
+    const batch = [];
+    for (let j = 0; j < concurrency && i + j < texts.length; j++) {
+      batch.push(generateOne(texts[i + j], i + j));
+    }
+    await Promise.all(batch);
+  }
+
+  return results;
+}
