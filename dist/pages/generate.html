@@ -552,6 +552,83 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }
+
+    /* Export Dropdown */
+    .export-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .export-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      min-width: 140px;
+      z-index: 100;
+      display: none;
+      overflow: hidden;
+    }
+
+    .export-dropdown.active {
+      display: block;
+    }
+
+    .export-item {
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .export-item:active {
+      background: #f5f5f5;
+    }
+
+    /* Progress Bar */
+    .progress-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .progress-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      width: 280px;
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #1A73E8, #4facfe);
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      color: #666;
+    }
   </style>
 </head>
 <body>
@@ -671,6 +748,17 @@
         <div class="template-grid" id="templateGrid"></div>
       </div>
     </div>
+
+    <!-- Progress Overlay for ZIP -->
+    <div class="progress-overlay" id="progressOverlay" style="display:none;">
+      <div class="progress-box">
+        <div class="progress-text" id="progressText">准备中...</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+        <div class="progress-text" id="progressCount">0/0</div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -765,7 +853,15 @@
             <div class="result-actions">
               <button class="btn-action" onclick="onSave()">💾 保存</button>
               <button class="btn-action" onclick="onFavorite('image', '${result.url}')">⭐ 收藏</button>
-              <button class="btn-action" onclick="onShare()">📤 分享</button>
+              <div class="export-menu" onclick="event.stopPropagation();">
+                <button class="btn-action" onclick="toggleExportMenu()">📤 导出</button>
+                <div class="export-dropdown" id="exportDropdown">
+                  <div class="export-item" onclick="onExportImage('png')">📷 PNG</div>
+                  <div class="export-item" onclick="onExportImage('jpeg')">🖼️ JPEG</div>
+                  <div class="export-item" onclick="onCopyLink()">🔗 复制链接</div>
+                </div>
+              </div>
+              <button class="btn-action" onclick="onShare()">📱 分享</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
           </div>
@@ -787,6 +883,14 @@
             <div class="result-actions">
               <button class="btn-action" onclick="onSaveMusic()">💾 保存</button>
               <button class="btn-action" onclick="onFavoriteMusic()">⭐ 收藏</button>
+              <div class="export-menu" onclick="event.stopPropagation();">
+                <button class="btn-action" onclick="toggleExportMenu()">📤 导出</button>
+                <div class="export-dropdown" id="exportDropdown">
+                  <div class="export-item" onclick="onExportMusic()">🎵 MP3</div>
+                  <div class="export-item" onclick="onCopyLink()">🔗 复制链接</div>
+                </div>
+              </div>
+              <button class="btn-action" onclick="onShare()">📱 分享</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
           </div>
@@ -802,6 +906,14 @@
             <div class="result-actions">
               <button class="btn-action" onclick="onSaveTTS()">💾 保存</button>
               <button class="btn-action" onclick="onFavoriteTTS()">⭐ 收藏</button>
+              <div class="export-menu" onclick="event.stopPropagation();">
+                <button class="btn-action" onclick="toggleExportMenu()">📤 导出</button>
+                <div class="export-dropdown" id="exportDropdown">
+                  <div class="export-item" onclick="onExportTTS()">🎤 MP3</div>
+                  <div class="export-item" onclick="onCopyLink()">🔗 复制链接</div>
+                </div>
+              </div>
+              <button class="btn-action" onclick="onShare()">📱 分享</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
           </div>
@@ -1208,6 +1320,124 @@
         navigator.share({ title: 'AI Creator', text: '看看我创作的图片', url: window.location.href });
       } else {
         showToast('已准备分享', 'success');
+      }
+    }
+
+    // Export functions
+    function toggleExportMenu() {
+      const dropdown = document.getElementById('exportDropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+      }
+    }
+
+    // Close export menu when clicking outside
+    document.addEventListener('click', function(e) {
+      const dropdown = document.getElementById('exportDropdown');
+      if (dropdown && !dropdown.classList.contains('active')) return;
+      const exportMenus = document.querySelectorAll('.export-dropdown.active');
+      exportMenus.forEach(menu => {
+        if (!menu.parentElement.contains(e.target)) {
+          menu.classList.remove('active');
+        }
+      });
+    });
+
+    async function onExportImage(format) {
+      if (!state.result || !state.result.url) return;
+      toggleExportMenu();
+      
+      try {
+        showLoading('正在导出...');
+        const imgUrl = state.result.url;
+        
+        // Convert to desired format
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = imgUrl;
+        });
+        
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        
+        const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+        const quality = format === 'jpeg' ? 0.92 : undefined;
+        const dataUrl = canvas.toDataURL(mimeType, quality);
+        
+        // Download
+        const link = document.createElement('a');
+        link.download = `ai-image-${Date.now()}.${format}`;
+        link.href = dataUrl;
+        link.click();
+        
+        hideLoading();
+        showToast('已导出 ' + format.toUpperCase(), 'success');
+      } catch (e) {
+        hideLoading();
+        showToast('导出失败', 'error');
+        console.error(e);
+      }
+    }
+
+    async function onExportMusic() {
+      if (!state.result || !state.result.musicUrl) return;
+      toggleExportMenu();
+      
+      try {
+        const musicUrl = state.result.musicUrl;
+        const link = document.createElement('a');
+        link.download = `ai-music-${Date.now()}.mp3`;
+        link.href = musicUrl;
+        link.target = '_blank';
+        link.click();
+        showToast('已开始下载 MP3', 'success');
+      } catch (e) {
+        showToast('导出失败', 'error');
+        console.error(e);
+      }
+    }
+
+    async function onExportTTS() {
+      if (!state.result || !state.result.filePath) return;
+      toggleExportMenu();
+      
+      try {
+        const audioUrl = state.result.filePath;
+        const link = document.createElement('a');
+        link.download = `ai-tts-${Date.now()}.mp3`;
+        link.href = audioUrl;
+        link.target = '_blank';
+        link.click();
+        showToast('已开始下载 MP3', 'success');
+      } catch (e) {
+        showToast('导出失败', 'error');
+        console.error(e);
+      }
+    }
+
+    async function onCopyLink() {
+      toggleExportMenu();
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        showToast('链接已复制', 'success');
+      } catch (e) {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = window.location.href;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('链接已复制', 'success');
       }
     }
 

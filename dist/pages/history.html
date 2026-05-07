@@ -316,6 +316,150 @@
       font-size: 13px;
       color: #999;
     }
+
+    /* Batch Selection */
+    .batch-bar {
+      display: none;
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid #f0f0f0;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .batch-bar.visible {
+      display: flex;
+    }
+
+    .batch-select-all {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .batch-count {
+      flex: 1;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .batch-actions-bar {
+      display: none;
+      position: fixed;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      background: #fff;
+      padding: 12px 16px;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.1);
+      z-index: 50;
+      gap: 12px;
+    }
+
+    .batch-actions-bar.visible {
+      display: flex;
+    }
+
+    .batch-btn {
+      flex: 1;
+      padding: 12px 0;
+      border-radius: 8px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .batch-btn-download {
+      background: #1A73E8;
+      color: #fff;
+    }
+
+    .batch-btn-favorite {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .batch-btn-delete {
+      background: #fff;
+      color: #e53e3e;
+      border: 1px solid #e53e3e;
+    }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .checkbox.checked {
+      background: #1A73E8;
+      border-color: #1A73E8;
+    }
+
+    .checkbox::after {
+      content: '✓';
+      color: #fff;
+      font-size: 12px;
+      display: none;
+    }
+
+    .checkbox.checked::after {
+      display: block;
+    }
+
+    .history-item.selected {
+      background: #e8f0ff;
+    }
+
+    /* Progress for ZIP */
+    .zip-progress {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      left: 16px;
+      right: 16px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      z-index: 100;
+    }
+
+    .zip-progress.visible {
+      display: block;
+    }
+
+    .zip-progress-bar {
+      height: 6px;
+      background: #f0f0f0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .zip-progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #1A73E8, #4facfe);
+      transition: width 0.3s;
+    }
+
+    .zip-progress-text {
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -357,6 +501,16 @@
       <div class="tab-item-history" data-type="audio" onclick="onTabChange('audio')">语音</div>
     </div>
 
+    <!-- Batch Selection Bar -->
+    <div class="batch-bar" id="batchBar">
+      <div class="batch-select-all" onclick="toggleSelectAll()">
+        <div class="checkbox" id="selectAllCheckbox"></div>
+        <span>全选</span>
+      </div>
+      <div class="batch-count" id="batchCount">已选择 0 项</div>
+      <button class="btn-action" style="padding:6px 12px;font-size:12px;" onclick="cancelBatchMode()">取消</button>
+    </div>
+
     <!-- Empty State -->
     <div id="emptyState" class="empty-state" style="display:none;">
       <span class="empty-icon">📭</span>
@@ -378,6 +532,22 @@
     <!-- Clear All -->
     <div id="bottomActions" class="bottom-actions" style="display:none;">
       <button class="btn-clear" onclick="onClearAll()">清空全部历史</button>
+    </div>
+
+    <!-- Batch Actions Bar -->
+    <div class="batch-actions-bar" id="batchActionsBar">
+      <button class="batch-btn batch-btn-download" onclick="onBatchDownload()">📦 打包下载</button>
+      <button class="batch-btn batch-btn-favorite" onclick="onBatchFavorite()">⭐ 收藏</button>
+      <button class="batch-btn batch-btn-delete" onclick="onBatchDelete()">🗑️ 删除</button>
+    </div>
+
+    <!-- ZIP Progress -->
+    <div class="zip-progress" id="zipProgress">
+      <div class="zip-progress-text" id="zipProgressText">正在打包...</div>
+      <div class="zip-progress-bar">
+        <div class="zip-progress-fill" id="zipProgressFill" style="width:0%"></div>
+      </div>
+      <div class="zip-progress-text" id="zipProgressCount">0/0</div>
     </div>
   </div>
 
@@ -542,7 +712,8 @@
       container.innerHTML = list.map(item => {
         if (item.type === 'image') {
           return `
-            <div class="history-item" onclick="previewImage(['${item.url}'])">
+            <div class="history-item" data-id="${item.id}" data-url="${item.url}" onclick="onItemClick('${item.id}', 'image', this)">
+              <div class="checkbox" onclick="event.stopPropagation(); toggleItemSelection('${item.id}')"></div>
               <img src="${item.url}" class="item-thumb">
               <div class="item-info">
                 <span class="item-prompt">${item.prompt}</span>
@@ -554,7 +725,8 @@
           `;
         } else if (item.type === 'music') {
           return `
-            <div class="history-item" onclick="onMusicItem('${item.musicUrl}')">
+            <div class="history-item" data-id="${item.id}" data-url="${item.musicUrl}" onclick="onItemClick('${item.id}', 'music', this)">
+              <div class="checkbox" onclick="event.stopPropagation(); toggleItemSelection('${item.id}')"></div>
               <div class="thumb-placeholder">🎵</div>
               <div class="item-info">
                 <span class="item-prompt">${item.prompt}</span>
@@ -566,7 +738,8 @@
           `;
         } else if (item.type === 'audio') {
           return `
-            <div class="history-item" onclick="playAudioItem('${item.filePath}')">
+            <div class="history-item" data-id="${item.id}" data-url="${item.filePath}" onclick="onItemClick('${item.id}', 'audio', this)">
+              <div class="checkbox" onclick="event.stopPropagation(); toggleItemSelection('${item.id}')"></div>
               <div class="thumb-placeholder">🎤</div>
               <div class="item-info">
                 <span class="item-prompt">${item.input}</span>
@@ -695,6 +868,289 @@
 
     function goToIndex() {
       window.location.hash = '/pages/index.html';
+    }
+
+    // Batch Selection State
+    let batchMode = false;
+    let selectedItems = new Set();
+
+    function enterBatchMode() {
+      batchMode = true;
+      selectedItems.clear();
+      document.getElementById('batchBar').classList.add('visible');
+      document.getElementById('batchActionsBar').classList.add('visible');
+      document.getElementById('bottomActions').style.display = 'none';
+      // Add long press to enter batch mode
+      document.body.style.overflow = 'hidden';
+    }
+
+    function cancelBatchMode() {
+      batchMode = false;
+      selectedItems.clear();
+      document.getElementById('batchBar').classList.remove('visible');
+      document.getElementById('batchActionsBar').classList.remove('visible');
+      document.getElementById('bottomActions').style.display = allHistory.length > 0 ? 'flex' : 'none';
+      document.body.style.overflow = '';
+      updateHistoryItemsSelection();
+    }
+
+    function toggleSelectAll() {
+      const filteredList = getFilteredList();
+      if (selectedItems.size === filteredList.length) {
+        selectedItems.clear();
+      } else {
+        filteredList.forEach(item => selectedItems.add(item.id));
+      }
+      updateSelectAllCheckbox();
+      updateBatchCount();
+      updateHistoryItemsSelection();
+    }
+
+    function updateSelectAllCheckbox() {
+      const checkbox = document.getElementById('selectAllCheckbox');
+      const filteredList = getFilteredList();
+      if (selectedItems.size === filteredList.length && filteredList.length > 0) {
+        checkbox.classList.add('checked');
+      } else {
+        checkbox.classList.remove('checked');
+      }
+    }
+
+    function updateBatchCount() {
+      document.getElementById('batchCount').textContent = '已选择 ' + selectedItems.size + ' 项';
+    }
+
+    function updateHistoryItemsSelection() {
+      document.querySelectorAll('.history-item').forEach(el => {
+        const id = el.dataset.id;
+        if (selectedItems.has(id)) {
+          el.classList.add('selected');
+          el.querySelector('.checkbox')?.classList.add('checked');
+        } else {
+          el.classList.remove('selected');
+          el.querySelector('.checkbox')?.classList.remove('checked');
+        }
+      });
+    }
+
+    function toggleItemSelection(id) {
+      if (selectedItems.has(id)) {
+        selectedItems.delete(id);
+      } else {
+        selectedItems.add(id);
+      }
+      updateSelectAllCheckbox();
+      updateBatchCount();
+      updateHistoryItemsSelection();
+    }
+
+    // Modify renderList to add checkbox and long press
+    const originalRenderList = renderList;
+    renderList = function(list) {
+      originalRenderList(list);
+      
+      if (!batchMode) {
+        // Add long press listener to enter batch mode
+        document.querySelectorAll('.history-item').forEach(el => {
+          el.removeEventListener('touchstart', handleLongPress);
+          el.removeEventListener('mousedown', handleLongPress);
+          el.addEventListener('touchstart', handleLongPress, { passive: true });
+          el.addEventListener('mousedown', handleLongPress, { passive: true });
+        });
+      }
+    };
+
+    let longPressTimer = null;
+    function handleLongPress(e) {
+      if (batchMode) return;
+      longPressTimer = setTimeout(() => {
+        enterBatchMode();
+        // Select the item that was long pressed
+        const el = e.currentTarget;
+        const id = el.dataset.id;
+        if (id) {
+          selectedItems.add(id);
+          updateSelectAllCheckbox();
+          updateBatchCount();
+          updateHistoryItemsSelection();
+        }
+      }, 500);
+    }
+
+    document.addEventListener('touchend', () => clearTimeout(longPressTimer));
+    document.addEventListener('touchcancel', () => clearTimeout(longPressTimer));
+    document.addEventListener('mouseup', () => clearTimeout(longPressTimer));
+
+    // Add click handler for checkbox
+    function onItemClick(id, type, el) {
+      if (batchMode) {
+        toggleItemSelection(id);
+      } else {
+        // Normal click behavior
+        if (type === 'image') {
+          previewImage([el.dataset.url]);
+        } else if (type === 'music') {
+          onMusicItem(el.dataset.url);
+        } else if (type === 'audio') {
+          playAudioItem(el.dataset.url);
+        }
+      }
+    }
+
+    async function onBatchDownload() {
+      if (selectedItems.size === 0) {
+        showToast('请先选择项目', 'error');
+        return;
+      }
+      
+      const MAX_BATCH = 20;
+      if (selectedItems.size > MAX_BATCH) {
+        showToast('最多只能打包20个文件', 'error');
+        return;
+      }
+
+      const zipProgress = document.getElementById('zipProgress');
+      const zipProgressFill = document.getElementById('zipProgressFill');
+      const zipProgressText = document.getElementById('zipProgressText');
+      const zipProgressCount = document.getElementById('zipProgressCount');
+      
+      zipProgress.classList.add('visible');
+      zipProgressText.textContent = '正在打包...';
+      zipProgressFill.style.width = '0%';
+      
+      try {
+        const zip = new JSZip();
+        const filteredList = getFilteredList();
+        const selectedList = filteredList.filter(item => selectedItems.has(item.id));
+        let processed = 0;
+
+        for (const item of selectedList) {
+          try {
+            let filename = '';
+            let url = '';
+            
+            if (item.type === 'image') {
+              filename = `image_${item.id || Date.now()}.png`;
+              url = item.url;
+            } else if (item.type === 'music') {
+              filename = `music_${item.id || Date.now()}.mp3`;
+              url = item.musicUrl;
+            } else if (item.type === 'audio') {
+              filename = `audio_${item.id || Date.now()}.mp3`;
+              url = item.filePath;
+            }
+
+            // Sanitize filename
+            filename = filename.replace(/[\\/:*?"<>|]/g, '_');
+            
+            if (url) {
+              const response = await fetch(url);
+              const blob = await response.blob();
+              zip.file(filename, blob);
+            }
+          } catch (e) {
+            console.warn('Failed to add item to zip:', item.id, e);
+          }
+          
+          processed++;
+          const percent = Math.round((processed / selectedList.length) * 100);
+          zipProgressFill.style.width = percent + '%';
+          zipProgressCount.textContent = `${processed}/${selectedList.length}`;
+        }
+
+        zipProgressText.textContent = '正在生成ZIP...';
+        
+        const content = await zip.generateAsync({ type: 'blob' }, (metadata) => {
+          const percent = Math.round(metadata.percent);
+          zipProgressFill.style.width = percent + '%';
+        });
+
+        // Download
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = `ai-creator-${Date.now()}.zip`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+
+        showToast('打包下载成功', 'success');
+        cancelBatchMode();
+      } catch (e) {
+        console.error('ZIP error:', e);
+        showToast('打包失败', 'error');
+      } finally {
+        zipProgress.classList.remove('visible');
+      }
+    }
+
+    async function onBatchFavorite() {
+      if (selectedItems.size === 0) {
+        showToast('请先选择项目', 'error');
+        return;
+      }
+      
+      const folders = window.FavoriteService.getFolders();
+      if (folders.length === 0) {
+        showToast('请先创建收藏夹', 'error');
+        return;
+      }
+
+      const filteredList = getFilteredList();
+      const selectedList = filteredList.filter(item => selectedItems.has(item.id));
+      let addedCount = 0;
+
+      for (const item of selectedList) {
+        const type = item.type === 'audio' ? 'tts' : item.type;
+        let targetFolder = folders.find(f => f.type === type) || folders[0];
+        
+        const itemId = type + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        const url = item.type === 'image' ? item.url : (item.musicUrl || item.filePath);
+        
+        window.FavoriteService.addToFolder(targetFolder.id, {
+          itemId,
+          type: type,
+          url: url,
+          prompt: item.prompt || item.input || '',
+          cover: item.type === 'image' ? item.url : '',
+          title: item.type === 'image' ? '图片收藏' : (item.type === 'music' ? '音乐收藏' : '语音收藏'),
+        });
+        addedCount++;
+      }
+
+      showToast(`已收藏到 ${folders[0].name}`, 'success');
+      cancelBatchMode();
+    }
+
+    async function onBatchDelete() {
+      if (selectedItems.size === 0) {
+        showToast('请先选择项目', 'error');
+        return;
+      }
+
+      const res = await showModal({
+        title: '确认删除',
+        content: `确定要删除选中的 ${selectedItems.size} 个项目吗？`,
+        confirmColor: '#e53e3e',
+        showCancel: true,
+      });
+      
+      if (!res.confirm) return;
+
+      const filteredList = getFilteredList();
+      const selectedList = filteredList.filter(item => selectedItems.has(item.id));
+
+      for (const item of selectedList) {
+        const typeMap = { image: 'history_images', music: 'history_music', audio: 'history_tts' };
+        const key = typeMap[item.type];
+        if (key) {
+          const list = JSON.parse(localStorage.getItem(key) || '[]');
+          const newList = list.filter(i => i.id !== item.id);
+          localStorage.setItem(key, JSON.stringify(newList));
+        }
+      }
+
+      showToast(`已删除 ${selectedList.length} 个项目`, 'success');
+      cancelBatchMode();
+      loadHistory();
     }
 
     window.addEventListener('hashchange', loadHistory);
