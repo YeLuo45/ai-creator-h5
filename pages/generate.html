@@ -1554,6 +1554,44 @@
       document.body.style.overflow = '';
     }
 
+    // ==========================================
+    // Offline Detection for Generate Page
+    // ==========================================
+    function checkNetworkAndDisableGenerate() {
+      const btn = document.getElementById('generateBtn');
+      const offlineTip = document.getElementById('offlineGenerateTip');
+      if (!navigator.onLine) {
+        btn.classList.add('disabled');
+        btn.textContent = '当前离线，无法生成';
+        btn.disabled = true;
+        if (offlineTip) offlineTip.style.display = 'block';
+      } else {
+        btn.classList.remove('disabled');
+        btn.textContent = state.batchMode ? '📦 批量生成' : '🚀 开始生成';
+        btn.disabled = false;
+        if (offlineTip) offlineTip.style.display = 'none';
+      }
+    }
+
+    // Add offline tip element after form card
+    (function insertOfflineTip() {
+      const formCard = document.querySelector('.form-card');
+      if (formCard && !document.getElementById('offlineGenerateTip')) {
+        const tip = document.createElement('div');
+        tip.id = 'offlineGenerateTip';
+        tip.style.cssText = 'display:none;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 12px;font-size:13px;color:#856404;margin-bottom:12px;text-align:center;';
+        tip.textContent = '📡 当前处于离线状态，无法生成新内容';
+        formCard.parentNode.insertBefore(tip, formCard.nextSibling);
+      }
+    })();
+
+    // Listen for online/offline events on this page
+    window.addEventListener('online', checkNetworkAndDisableGenerate);
+    window.addEventListener('offline', checkNetworkAndDisableGenerate);
+
+    // Initial check
+    setTimeout(checkNetworkAndDisableGenerate, 100);
+
     async function loadTemplates() {
       const { loadTemplates } = await import('../services/templateService.js');
       const templates = loadTemplates(state.type);

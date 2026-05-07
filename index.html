@@ -58,10 +58,32 @@
   <script src="lib/app.js"></script>
   <script src="lib/router.js"></script>
   <script>
-    // Register Service Worker for PWA offline support
+    // PWA Update Notification
+    let newSW = null;
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
-        .then(r => console.log('SW registered'))
+        .then(r => {
+          console.log('SW registered');
+          // Listen for controller change (new version available)
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (newSW) return; // Already showing prompt
+            newSW = navigator.serviceWorker.controller;
+            if (newSW) {
+              // New version ready - prompt user to refresh
+              const toast = document.createElement('div');
+              toast.id = 'updateToast';
+              toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1A73E8;color:#fff;padding:12px 20px;border-radius:24px;font-size:14px;z-index:99998;box-shadow:0 4px 12px rgba(0,0,0,0.2);cursor:pointer;display:flex;align-items:center;gap:8px;';
+              toast.innerHTML = '✨ 有新版本可用 <span style="background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:12px;font-size:12px;">点击刷新</span>';
+              toast.onclick = () => {
+                newSW.postMessage({ type: 'SKIP_WAITING' });
+                window.location.reload();
+              };
+              document.body.appendChild(toast);
+              // Auto-dismiss after 30s
+              setTimeout(() => { if (toast.parentNode) toast.remove(); }, 30000);
+            }
+          });
+        })
         .catch(e => console.error('SW failed', e));
     }
   </script>

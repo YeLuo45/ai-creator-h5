@@ -3,12 +3,13 @@
  * Cache-First Strategy with Version Management
  */
 
-const CACHE_NAME = 'ai-creator-v1.5.0';
+const CACHE_NAME = 'ai-creator-v1.6.0';
 
 const ASSETS = [
   '/',
   '/index.html',
   '/app.css',
+  '/manifest.json',
   '/lib/app.js',
   '/lib/router.js',
   '/lib/storage.js',
@@ -17,6 +18,7 @@ const ASSETS = [
   '/pages/index.html',
   '/pages/generate.html',
   '/pages/history.html',
+  '/pages/creator.html',
   '/pages/my.html',
   '/pages/favorites.html',
   '/pages/folder.html',
@@ -25,7 +27,12 @@ const ASSETS = [
   '/services/musicService.js',
   '/services/ttsService.js',
   '/services/templateService.js',
-  '/services/favoriteService.js'
+  '/services/favoriteService.js',
+  '/services/usageService.js',
+  '/services/creatorService.js',
+  '/services/achievementService.js',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png'
 ];
 
 // Install event - cache core assets

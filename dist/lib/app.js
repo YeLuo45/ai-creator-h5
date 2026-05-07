@@ -139,3 +139,37 @@ window.getApp = getApp;
 // 创建 App 实例
 const app = new App();
 app.onLaunch();
+
+// ==========================================
+// PWA Offline Status Detection
+// ==========================================
+(function initOfflineDetection() {
+  // Create offline banner if not exists
+  if (!document.getElementById('offlineBanner')) {
+    const banner = document.createElement('div');
+    banner.id = 'offlineBanner';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e53e3e;color:#fff;text-align:center;padding:8px 16px;font-size:13px;z-index:99999;display:none;';
+    banner.textContent = '📡 当前处于离线状态，无法生成新内容';
+    document.body.appendChild(banner);
+  }
+
+  const banner = document.getElementById('offlineBanner');
+
+  function updateOnlineStatus() {
+    if (navigator.onLine) {
+      banner.style.display = 'none';
+    } else {
+      banner.style.display = 'block';
+    }
+  }
+
+  // Initial check
+  updateOnlineStatus();
+
+  // Listen for online/offline events
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+
+  // Expose globally for pages to use
+  window.isOnline = function() { return navigator.onLine; };
+})();
