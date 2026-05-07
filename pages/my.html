@@ -450,6 +450,24 @@
       <button class="btn-save" onclick="onSaveApiKey()">保存配置</button>
     </div>
 
+    <!-- API Quota Card -->
+    <div class="quota-card" id="quotaCard" onclick="showQuotaPanel()">
+      <div class="quota-header">
+        <span class="quota-title">💰 API额度</span>
+        <span class="status-badge warning" id="quotaBadge" style="display:none;">⚠️ 预警</span>
+      </div>
+      <div class="quota-content">
+        <div class="quota-spent">
+          <span class="quota-amount" id="quotaSpent">¥0.00</span>
+          <span class="quota-label">本月消耗</span>
+        </div>
+        <div class="quota-info">
+          <div class="quota-detail" id="quotaDetail">设置月度预算</div>
+          <span class="quota-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Achievement Section -->
     <div class="achievement-card" id="achievementCard" onclick="showAchievementDetail()">
       <div class="achievement-header">
@@ -522,6 +540,8 @@
 
       // Load achievements
       loadAchievements();
+      // Load API quota
+      loadQuota();
     }
 
     async function loadAchievements() {
@@ -654,6 +674,154 @@
         content: '版本：1.0.0\n\nAI Creator 是一款 AI 内容生成工具，支持图片、音乐、语音等多种创作能力。\n\n本产品不存储用户的 API Key，所有请求由用户设备直接发送至模型服务商。',
         showCancel: false,
       });
+    }
+
+    // ========== API Quota Functions ==========
+    async function loadQuota() {
+      try {
+        const { getUsageData, getWarningStatus, getBudget, getUsageBreakdown } = await import('../services/usageService.js');
+        const status = getWarningStatus();
+        const breakdown = getUsageBreakdown();
+        const budget = getBudget();
+
+        // Update spent amount
+        document.getElementById('quotaSpent').textContent = '¥' + status.spent.toFixed(2);
+
+        // Update badge visibility
+        const badge = document.getElementById('quotaBadge');
+        if (status.isWarning) {
+          badge.style.display = 'inline-block';
+        } else {
+          badge.style.display = 'none';
+        }
+
+        // Update detail text
+        const detail = document.getElementById('quotaDetail');
+        if (budget > 0) {
+          const percent = status.percent;
+          detail.textContent = `已用 ${percent.toFixed(0)}% / 剩余 ¥${status.remaining.toFixed(2)}`;
+        } else {
+          detail.textContent = '未设置预算';
+        }
+
+        return { status, breakdown, budget };
+      } catch (e) {
+        console.error('Failed to load quota:', e);
+        return null;
+      }
+    }
+
+    async function showQuotaPanel() {
+      const data = await loadQuota();
+      if (!data) return;
+
+      const { status, breakdown, budget } = data;
+
+      const content = `
+        <div class="quota-panel">
+          <div class="quota-summary">
+            <div class="quota-summary-item">
+              <span class="quota-summary-label">本月消耗</span>
+              <span class="quota-summary-value primary">¥${status.spent.toFixed(2)}</span>
+            </div>
+            ${budget > 0 ? `
+            <div class="quota-summary-item">
+              <span class="quota-summary-label">剩余额度</span>
+              <span class="quota-summary-value">¥${status.remaining.toFixed(2)}</span>
+            </div>
+            <div class="quota-summary-item">
+              <span class="quota-summary-label">月度预算</span>
+              <span class="quota-summary-value">¥${budget.toFixed(2)}</span>
+            </div>
+            ` : ''}
+          </div>
+          ${status.isWarning ? '<div class="quota-warning">⚠️ 已超过预警阈值（' + status.threshold + '%）</div>' : ''}
+          <div class="quota-breakdown">
+            <div class="quota-breakdown-title">📊 消耗明细</div>
+            <div class="quota-breakdown-item">
+              <span>🖼️ 图片生成</span>
+              <span>${breakdown.image.count}次 · ¥${breakdown.image.cost.toFixed(2)}</span>
+            </div>
+            <div class="quota-breakdown-item">
+              <span>🎵 音乐生成</span>
+              <span>${breakdown.music.count}次 · ¥${breakdown.music.cost.toFixed(2)}</span>
+            </div>
+            <div class="quota-breakdown-item">
+              <span>🎤 语音合成</span>
+              <span>${breakdown.tts.count}次 · ¥${breakdown.tts.cost.toFixed(2)}</span>
+            </div>
+          </div>
+          <div class="quota-settings">
+            <div class="quota-settings-title">⚙️ 额度设置</div>
+            <div class="quota-input-group">
+              <span class="quota-input-label">月度预算</span>
+              <input class="quota-input" id="quotaBudgetInput" type="number" placeholder="0=不限制" value="${budget || ''}" min="0" step="1">
+              <span class="quota-input-suffix">¥</span>
+            </div>
+            <div class="quota-input-group">
+              <span class="quota-input-label">预警阈值</span>
+              <input class="quota-input" id="quotaThresholdInput" type="number" placeholder="80" value="${status.threshold || 80}" min="0" max="100" step="5">
+              <span class="quota-input-suffix">%</span>
+            </div>
+          </div>
+          <button class="btn-save" onclick="saveQuotaSettings()">保存设置</button>
+        </div>
+      `;
+
+      // Create modal overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'quota-modal-overlay';
+      overlay.id = 'quotaModalOverlay';
+      overlay.innerHTML = `
+        <div class="quota-modal-box">
+          <div class="quota-modal-header">
+            <span class="quota-modal-title">💰 API额度管理</span>
+            <span class="quota-modal-close" onclick="closeQuotaPanel()">×</span>
+          </div>
+          <div class="quota-modal-content">
+            ${content}
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      // Animate in
+      requestAnimationFrame(() => {
+        overlay.classList.add('active');
+      });
+
+      // Close on overlay click
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeQuotaPanel();
+      });
+    }
+
+    async function saveQuotaSettings() {
+      const budgetInput = document.getElementById('quotaBudgetInput');
+      const thresholdInput = document.getElementById('quotaThresholdInput');
+
+      const budget = parseFloat(budgetInput.value) || 0;
+      const threshold = parseFloat(thresholdInput.value) || 80;
+
+      try {
+        const { setBudget, setThreshold } = await import('../services/usageService.js');
+        setBudget(budget);
+        setThreshold(threshold);
+        closeQuotaPanel();
+        loadQuota();
+        showToast('设置已保存', 'success');
+      } catch (e) {
+        console.error('Failed to save quota settings:', e);
+        showToast('保存失败', 'error');
+      }
+    }
+
+    function closeQuotaPanel() {
+      const overlay = document.getElementById('quotaModalOverlay');
+      if (overlay) {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.remove(), 300);
+      }
     }
   </script>
 </body>

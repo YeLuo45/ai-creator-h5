@@ -1043,6 +1043,8 @@
         if (!url) throw new Error('未获取到生成结果');
         saveImageHistory({ prompt, url, style, size });
         recordImageGenerated(style, size);
+        const { recordUsage } = await import('../services/usageService.js');
+        recordUsage('image', { model: 'image-01', size });
         const newAchievements = checkAndUnlockAchievements();
         if (newAchievements.length > 0) showNewAchievements(newAchievements);
         getApp().updateCredits(-1);
@@ -1068,6 +1070,8 @@
           duration: res.duration,
         });
         recordMusicGenerated(res.duration || duration);
+        const { recordUsage } = await import('../services/usageService.js');
+        recordUsage('music', { model: 'music-2.6', duration: res.duration || duration });
         const newAchievements = checkAndUnlockAchievements();
         if (newAchievements.length > 0) showNewAchievements(newAchievements);
         getApp().updateCredits(-5);
@@ -1089,6 +1093,8 @@
         const voiceName = { 'female-shaonv': '少女声音', 'male-qn-qingse': '青年男声', 'female-yujie': '御姐声音', 'male-qn-jingxing': '激情男声' }[voice] || voice;
         saveTTSHistory({ input: prompt, voice, voiceName, filePath: dataUrl, format: 'mp3' });
         recordAudioGenerated();
+        const { recordUsage } = await import('../services/usageService.js');
+        recordUsage('tts', { model: 'TTS-HD', charCount: prompt.length });
         const newAchievements = checkAndUnlockAchievements();
         if (newAchievements.length > 0) showNewAchievements(newAchievements);
         getApp().updateCredits(-1);
@@ -1109,8 +1115,10 @@
       });
       // Record achievements and deduct credits for successful results
       const successCount = results.filter(r => r.success).length;
+      const { recordUsage: batchRecordUsage } = await import('../services/usageService.js');
       for (let i = 0; i < successCount; i++) {
         recordImageGenerated(style, size);
+        batchRecordUsage('image', { model: 'image-01', size });
       }
       const newAchievements = checkAndUnlockAchievements();
       if (newAchievements.length > 0) showNewAchievements(newAchievements);
@@ -1127,8 +1135,10 @@
         state.batchProgress = progress;
       });
       const successCount = results.filter(r => r.success).length;
+      const { recordUsage: batchMusicRecordUsage } = await import('../services/usageService.js');
       for (let i = 0; i < successCount; i++) {
         recordMusicGenerated(duration);
+        batchMusicRecordUsage('music', { model: 'music-2.6', duration });
       }
       const newAchievements = checkAndUnlockAchievements();
       if (newAchievements.length > 0) showNewAchievements(newAchievements);
@@ -1145,8 +1155,10 @@
         state.batchProgress = progress;
       });
       const successCount = results.filter(r => r.success).length;
+      const { recordUsage: batchTTSRecordUsage } = await import('../services/usageService.js');
       for (let i = 0; i < successCount; i++) {
         recordAudioGenerated();
+        batchTTSRecordUsage('tts', { model: 'TTS-HD', charCount: results[i].prompt?.length || 0 });
       }
       // Save successful results to history
       results.forEach(r => {
