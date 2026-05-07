@@ -477,6 +477,22 @@
       <div class="achievement-grid" id="achievementGrid"></div>
     </div>
 
+    <!-- Creator Center Card -->
+    <div class="creator-entry-card" id="creatorEntryCard" onclick="onCreatorCenter()">
+      <div class="creator-entry-left">
+        <div class="creator-entry-avatar" id="creatorEntryAvatar">
+          <span>👤</span>
+        </div>
+        <div class="creator-entry-info">
+          <div class="creator-entry-name" id="creatorEntryName">创作者</div>
+          <div class="creator-entry-count" id="creatorEntryCount">0 个作品</div>
+        </div>
+      </div>
+      <div class="creator-entry-right">
+        <span class="creator-entry-arrow">›</span>
+      </div>
+    </div>
+
     <!-- Menu List -->
     <div class="menu-list">
       <div class="menu-item" onclick="onShare()">
@@ -542,6 +558,29 @@
       loadAchievements();
       // Load API quota
       loadQuota();
+      // Load creator center entry
+      loadCreatorEntry();
+    }
+
+    async function loadCreatorEntry() {
+      try {
+        const { getCreatorProfile, getWorksStats } = await import('../services/creatorService.js');
+        const profile = getCreatorProfile();
+        const stats = getWorksStats();
+
+        document.getElementById('creatorEntryName').textContent = profile.nickname || '创作者';
+        document.getElementById('creatorEntryCount').textContent = `${stats.total} 个作品`;
+
+        if (profile.avatar) {
+          document.getElementById('creatorEntryAvatar').innerHTML = `<img src="${profile.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        }
+      } catch (e) {
+        console.error('Failed to load creator entry:', e);
+      }
+    }
+
+    function onCreatorCenter() {
+      window.navigateTo('/pages/creator.html');
     }
 
     async function loadAchievements() {

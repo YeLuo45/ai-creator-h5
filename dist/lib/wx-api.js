@@ -225,6 +225,14 @@ function getNetworkType() {
   });
 }
 
+// ========== Share Card Image ==========
+function createShareCardImage(work) {
+  if (window.CreatorService && window.CreatorService.createShareCardImage) {
+    return window.CreatorService.createShareCardImage(work);
+  }
+  return Promise.reject(new Error('CreatorService not available'));
+}
+
 // Export all
 window.showToast = showToast;
 window.hideLoading = hideLoading;
