@@ -16,8 +16,9 @@ class Router {
   }
 
   async handleRoute() {
-    const hash = window.location.hash.replace('#', '') || '/pages/index.html';
-    const [path, query] = hash.split('?');
+    const rawHash = window.location.hash.replace('#', '') || '/pages/index.html';
+    const path = rawHash.startsWith('/') ? rawHash : '/' + rawHash;
+    const [pathOnly, query] = path.split('?');
     const params = {};
     if (query) {
       query.split('&').forEach(pair => {
