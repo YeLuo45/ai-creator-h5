@@ -148,6 +148,17 @@
       cursor: pointer;
     }
 
+    .btn-favorite {
+      font-size: 16px;
+      padding: 8px;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .btn-favorite:active {
+      color: #ffc107;
+    }
+
     /* Bottom Actions */
     .bottom-actions {
       padding: 16px;
@@ -250,6 +261,7 @@
                 <span class="item-prompt">${item.prompt}</span>
                 <span class="item-meta">图片 · ${new Date(item.createdAt).toLocaleDateString()}</span>
               </div>
+              <span class="btn-favorite" onclick="event.stopPropagation(); onFavoriteItem('${item.id}', 'image', '${item.url}', '${encodeURIComponent(item.prompt || '')}')">⭐</span>
               <span class="btn-delete" onclick="event.stopPropagation(); onDelete('${item.id}', '${item.type}')">🗑️</span>
             </div>
           `;
@@ -261,6 +273,7 @@
                 <span class="item-prompt">${item.prompt}</span>
                 <span class="item-meta">音乐 · ${item.duration}秒</span>
               </div>
+              <span class="btn-favorite" onclick="event.stopPropagation(); onFavoriteItem('${item.id}', 'music', '${item.musicUrl}', '${encodeURIComponent(item.prompt || '')}')">⭐</span>
               <span class="btn-delete" onclick="event.stopPropagation(); onDelete('${item.id}', '${item.type}')">🗑️</span>
             </div>
           `;
@@ -272,6 +285,7 @@
                 <span class="item-prompt">${item.input}</span>
                 <span class="item-meta">语音 · ${item.voiceName}</span>
               </div>
+              <span class="btn-favorite" onclick="event.stopPropagation(); onFavoriteItem('${item.id}', 'tts', '${item.filePath}', '${encodeURIComponent(item.input || '')}')">⭐</span>
               <span class="btn-delete" onclick="event.stopPropagation(); onDelete('${item.id}', '${item.type}')">🗑️</span>
             </div>
           `;
@@ -318,6 +332,30 @@
       window.clearAllHistory();
       loadHistory();
       showToast('已清空', 'success');
+    }
+
+    async function onFavoriteItem(id, type, url, prompt) {
+      const folders = window.FavoriteService.getFolders();
+      if (folders.length === 0) {
+        showToast('请先创建收藏夹', 'error');
+        return;
+      }
+
+      // Find the appropriate type-specific folder
+      let targetFolder = folders.find(f => f.type === type) || folders[0];
+      const decodedPrompt = decodeURIComponent(prompt);
+
+      const itemId = type + '_' + Date.now();
+      window.FavoriteService.addToFolder(targetFolder.id, {
+        itemId,
+        type: type,
+        url: url,
+        prompt: decodedPrompt,
+        cover: type === 'image' ? url : '',
+        title: type === 'image' ? '图片收藏' : (type === 'music' ? '音乐收藏' : '语音收藏'),
+      });
+
+      showToast('已收藏到' + targetFolder.name, 'success');
     }
 
     function goToIndex() {

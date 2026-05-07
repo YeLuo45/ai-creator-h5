@@ -236,6 +236,15 @@
         </div>
         <span class="feature-arrow">›</span>
       </div>
+
+      <div class="feature-card" onclick="goToFavorites()">
+        <div class="feature-icon" style="background: rgba(255, 193, 7, 0.15)">⭐</div>
+        <div class="feature-content">
+          <span class="feature-name">我的收藏</span>
+          <span class="feature-desc">收藏夹管理</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
     </div>
 
     <!-- API Key 提示 -->
@@ -314,6 +323,10 @@
 
     function goToMy() {
       window.location.hash = '/pages/my.html';
+    }
+
+    function goToFavorites() {
+      window.location.hash = '/pages/favorites.html';
     }
 
     // Init

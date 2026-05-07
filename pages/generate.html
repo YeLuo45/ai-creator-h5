@@ -764,6 +764,7 @@
             ${result.revised_prompt ? `<div class="revised-prompt"><span class="label">优化后描述：</span>${result.revised_prompt}</div>` : ''}
             <div class="result-actions">
               <button class="btn-action" onclick="onSave()">💾 保存</button>
+              <button class="btn-action" onclick="onFavorite('image', '${result.url}')">⭐ 收藏</button>
               <button class="btn-action" onclick="onShare()">📤 分享</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
@@ -785,6 +786,7 @@
             ${result.lyrics ? `<div class="lyrics-section"><span class="section-title">歌词</span><span class="lyrics-text">${result.lyrics}</span></div>` : ''}
             <div class="result-actions">
               <button class="btn-action" onclick="onSaveMusic()">💾 保存</button>
+              <button class="btn-action" onclick="onFavoriteMusic()">⭐ 收藏</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
           </div>
@@ -799,6 +801,7 @@
             </div>
             <div class="result-actions">
               <button class="btn-action" onclick="onSaveTTS()">💾 保存</button>
+              <button class="btn-action" onclick="onFavoriteTTS()">⭐ 收藏</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
           </div>
@@ -1210,6 +1213,83 @@
 
     function onRegenerate() {
       hideResult();
+    }
+
+    // Favorite Functions
+    async function onFavorite(type, url) {
+      const folders = window.FavoriteService.getFolders();
+      if (folders.length === 0) {
+        showToast('请先创建收藏夹', 'error');
+        return;
+      }
+
+      const itemId = 'img_' + Date.now();
+      const prompt = state.prompt || '';
+
+      // Show folder selection
+      const folderNames = folders.map(f => f.name).join(', ');
+      const folderId = folders[0].id; // Default to first folder
+
+      window.FavoriteService.addToFolder(folderId, {
+        itemId,
+        type: 'image',
+        url: url,
+        prompt: prompt,
+        cover: url,
+        title: '图片 ' + new Date().toLocaleDateString(),
+      });
+
+      showToast('已收藏到' + folders[0].name, 'success');
+    }
+
+    async function onFavoriteMusic() {
+      const folders = window.FavoriteService.getFolders();
+      if (folders.length === 0) {
+        showToast('请先创建收藏夹', 'error');
+        return;
+      }
+
+      const result = state.result;
+      if (!result) return;
+
+      const itemId = 'music_' + Date.now();
+      const prompt = state.prompt || '';
+
+      window.FavoriteService.addToFolder(folders[0].id, {
+        itemId,
+        type: 'music',
+        url: result.musicUrl,
+        cover: result.coverUrl || '',
+        prompt: prompt,
+        title: '音乐 ' + new Date().toLocaleDateString(),
+        duration: result.duration || 0,
+      });
+
+      showToast('已收藏到' + folders[0].name, 'success');
+    }
+
+    async function onFavoriteTTS() {
+      const folders = window.FavoriteService.getFolders();
+      if (folders.length === 0) {
+        showToast('请先创建收藏夹', 'error');
+        return;
+      }
+
+      const result = state.result;
+      if (!result) return;
+
+      const itemId = 'tts_' + Date.now();
+      const input = document.getElementById('promptInput').value || '';
+
+      window.FavoriteService.addToFolder(folders[0].id, {
+        itemId,
+        type: 'tts',
+        url: result.filePath,
+        prompt: input,
+        title: '语音 ' + new Date().toLocaleDateString(),
+      });
+
+      showToast('已收藏到' + folders[0].name, 'success');
     }
 
     // Input listener
