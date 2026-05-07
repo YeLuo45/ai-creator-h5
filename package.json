@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "AI Creator H5 Version - Image, Music, TTS Generation",
   "scripts": {
-    "build": "cp -r pages services utils components src index.html app.css lib dist/ && echo 'Build complete'",
+    "build": "cp -r pages services utils components src data index.html app.css lib dist/ && echo 'Build complete'",
     "dev": "npm run build && echo 'Development server ready'",
     "serve": "npx serve dist -l 3000"
   },
