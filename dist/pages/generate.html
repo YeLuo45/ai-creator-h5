@@ -254,6 +254,144 @@
       font-size: 14px;
       cursor: pointer;
     }
+
+    /* Template Button */
+    .template-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      background: #f0f4ff;
+      border: 1px solid #d0d9ff;
+      border-radius: 16px;
+      font-size: 12px;
+      color: #1A73E8;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .template-btn:active {
+      background: #dce5ff;
+    }
+
+    /* Template Panel Overlay */
+    .template-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .template-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Template Panel */
+    .template-panel {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-height: 60vh;
+      background: #fff;
+      border-radius: 16px 16px 0 0;
+      z-index: 1000;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-out;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .template-panel.active {
+      transform: translateY(0);
+    }
+
+    .template-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      flex-shrink: 0;
+    }
+
+    .template-panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .template-panel-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f5f5f5;
+      border: none;
+      font-size: 18px;
+      color: #666;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .template-panel-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 16px 24px;
+    }
+
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .template-card {
+      background: #f9f9f9;
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .template-card:active {
+      background: #f0f4ff;
+      border-color: #1A73E8;
+    }
+
+    .template-card-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .template-card-desc {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 6px;
+    }
+
+    .template-card-prompt {
+      font-size: 11px;
+      color: #666;
+      line-height: 1.4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
   </style>
 </head>
 <body>
@@ -270,6 +408,10 @@
           <span id="typeLabel">🖼️ 图片生成</span>
           <span class="credits-info" id="creditsInfo">剩余 0 积分</span>
         </div>
+
+        <button class="template-btn" id="templateBtn" onclick="openTemplatePanel()">
+          📋 模板中心
+        </button>
 
         <textarea
           id="promptInput"
@@ -344,6 +486,18 @@
 
     <!-- Audio element for TTS playback -->
     <audio id="ttsAudio" style="display:none;"></audio>
+
+    <!-- Template Panel -->
+    <div class="template-overlay" id="templateOverlay" onclick="closeTemplatePanel()"></div>
+    <div class="template-panel" id="templatePanel">
+      <div class="template-panel-header">
+        <span class="template-panel-title">📋 选择模板</span>
+        <button class="template-panel-close" onclick="closeTemplatePanel()">×</button>
+      </div>
+      <div class="template-panel-content">
+        <div class="template-grid" id="templateGrid"></div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -637,6 +791,61 @@
       state.prompt = this.value;
       clearError();
     });
+
+    // Template Panel Functions
+    function openTemplatePanel() {
+      loadTemplates();
+      document.getElementById('templateOverlay').classList.add('active');
+      document.getElementById('templatePanel').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTemplatePanel() {
+      document.getElementById('templateOverlay').classList.remove('active');
+      document.getElementById('templatePanel').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    async function loadTemplates() {
+      const { loadTemplates } = await import('../services/templateService.js');
+      const templates = loadTemplates(state.type);
+      renderTemplateGrid(templates);
+    }
+
+    function renderTemplateGrid(templates) {
+      const grid = document.getElementById('templateGrid');
+      grid.innerHTML = templates.map(t => `
+        <div class="template-card" onclick="applyTemplateById('${t.id}')">
+          <div class="template-card-name">${t.name}</div>
+          <div class="template-card-desc">${t.desc}</div>
+          <div class="template-card-prompt">${t.prompt}</div>
+        </div>
+      `).join('');
+    }
+
+    async function applyTemplateById(templateId) {
+      const { applyTemplate } = await import('../services/templateService.js');
+      const result = applyTemplate(state.type, templateId);
+      if (result) {
+        document.getElementById('promptInput').value = result.prompt;
+        state.prompt = result.prompt;
+
+        // Apply params
+        if (result.params) {
+          if (state.type === 'image') {
+            if (result.params.style) document.getElementById('styleSelect').value = result.params.style;
+            if (result.params.size) document.getElementById('sizeSelect').value = result.params.size;
+          } else if (state.type === 'music') {
+            if (result.params.genre) document.getElementById('genreSelect').value = result.params.genre;
+            if (result.params.duration) document.getElementById('durationSelect').value = result.params.duration;
+          } else if (state.type === 'tts') {
+            if (result.params.voice) document.getElementById('voiceSelect').value = result.params.voice;
+          }
+        }
+        closeTemplatePanel();
+        showToast('模板已应用，请修改占位符内容', 'success');
+      }
+    }
   </script>
 </body>
 </html>
