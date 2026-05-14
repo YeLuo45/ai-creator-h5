@@ -18,6 +18,7 @@ export const MINIMAX_MODELS = {
   MUSIC_COVER: 'music-cover',
   TTS_HD: 'speech-2.8-hd',
   TTS: 'speech-02',
+  VIDEO_01: 'video-01',
 };
 
 export class MiniMaxAdapter {
@@ -254,6 +255,31 @@ export class MiniMaxTTSAdapter extends MiniMaxAdapter {
 }
 
 /**
+ * MiniMax 视频生成适配器
+ * POST /v1/video_generation
+ * 模型: video-01
+ * 参数: model, prompt, duration (5/10/15), resolution (720p), response_format (url)
+ */
+export class MiniMaxVideoAdapter extends MiniMaxAdapter {
+  constructor(apiKey) {
+    super(apiKey);
+    this.model = MINIMAX_MODELS.VIDEO_01;
+  }
+
+  async generate(params) {
+    const payload = {
+      model: params.model || this.model,
+      prompt: params.prompt,
+      duration: params.duration || 5,
+      resolution: params.resolution || '720p',
+      response_format: params.response_format || 'url',
+    };
+
+    return this.request('/video_generation', payload);
+  }
+}
+
+/**
  * 工厂函数
  */
 export function createMiniMaxImageAdapter(apiKey) {
@@ -274,4 +300,8 @@ export function createMiniMaxMusicCoverAdapter(apiKey) {
 
 export function createMiniMaxTTSAdapter(apiKey) {
   return new MiniMaxTTSAdapter(apiKey);
+}
+
+export function createMiniMaxVideoAdapter(apiKey) {
+  return new MiniMaxVideoAdapter(apiKey);
 }

@@ -186,6 +186,20 @@ function updateGenerateForm(type) {
         </div>
       `;
       break;
+    case 'video':
+      html = `
+        <div class="form-label">视频描述 (Prompt)</div>
+        <textarea class="input" id="prompt-input" placeholder="描述你想要生成的视频内容"></textarea>
+        <div style="margin-top:12px;">
+          <div class="form-label">时长</div>
+          <select class="input" id="duration-select">
+            <option value="5">5 秒</option>
+            <option value="10">10 秒</option>
+            <option value="15">15 秒</option>
+          </select>
+        </div>
+      `;
+      break;
   }
   formContainer.innerHTML = html;
 }
@@ -225,6 +239,11 @@ async function handleGenerate() {
       const voice = document.getElementById('voice-select')?.value || 'female-shaonv';
       result = await generateTTS({ input: promptInput.value, voice });
       showResult('tts', result);
+    } else if (type === 'video') {
+      const { generateVideo } = await import('./services/videoService.js');
+      const duration = parseInt(document.getElementById('duration-select')?.value || '5');
+      result = await generateVideo({ prompt: promptInput.value, duration });
+      showResult('video', result);
     }
   } catch (err) {
     showToast({ title: err.message || '生成失败' });
@@ -258,6 +277,11 @@ function showResult(type, result) {
     html += `<div style="margin-top:12px;">`;
     html += `<button class="btn" onclick="window.open('${result.url}', '_blank')">下载音频</button>`;
     html += `</div>`;
+  } else if (type === 'video' && result.url) {
+    html += `<video src="${result.url}" controls class="video-player" style="width:100%;border-radius:8px;"></video>`;
+    html += `<div style="margin-top:12px;">`;
+    html += `<button class="btn" onclick="window.open('${result.url}', '_blank')">下载视频</button>`;
+    html += `</div>`;
   } else {
     html += '<p>生成完成，但未返回有效数据</p>';
     // Debug: 显示原始结果
@@ -289,7 +313,7 @@ async function loadHistory(filter) {
   const listContainer = document.getElementById('history-list');
   if (!listContainer) return;
 
-  let images = [], music = [], tts = [];
+  let images = [], music = [], tts = [], videos = [];
 
   if (filter === 'all' || filter === 'image') {
     const { getHistory: getImageHistory } = await import('./services/imageService.js');
@@ -303,11 +327,16 @@ async function loadHistory(filter) {
     const { getHistory: getTTSHistory } = await import('./services/ttsService.js');
     tts = getTTSHistory();
   }
+  if (filter === 'all' || filter === 'video') {
+    const { getHistory: getVideoHistory } = await import('./services/videoService.js');
+    videos = getVideoHistory();
+  }
 
   const all = [
     ...images.map(i => ({ ...i, type: 'image' })),
     ...music.map(m => ({ ...m, type: 'music' })),
     ...tts.map(t => ({ ...t, type: 'tts' })),
+    ...videos.map(v => ({ ...v, type: 'video' })),
   ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   if (all.length === 0) {
@@ -322,7 +351,7 @@ async function loadHistory(filter) {
 
   listContainer.innerHTML = all.map(item => `
     <div class="history-item" data-id="${item.id}" data-type="${item.type}">
-      ${item.type === 'image' ? `<img class="history-thumb" src="${item.url}" alt="图片">` : '<div class="history-thumb" style="display:flex;align-items:center;justify-content:center;font-size:32px;">' + (item.type === 'music' ? '🎵' : '🔊') + '</div>'}
+      ${item.type === 'image' ? `<img class="history-thumb" src="${item.url}" alt="图片">` : '<div class="history-thumb" style="display:flex;align-items:center;justify-content:center;font-size:32px;">' + (item.type === 'music' ? '🎵' : item.type === 'tts' ? '🔊' : '🎬') + '</div>'}
       <div class="history-info">
         <div class="history-title">${item.prompt || item.input || '生成作品'}</div>
         <div class="history-meta">${new Date(item.createdAt).toLocaleString()}</div>
@@ -352,6 +381,9 @@ async function showHistoryDetail(type, id) {
   } else if (type === 'tts') {
     const { getHistory } = await import('./services/ttsService.js');
     item = getHistory().find(i => i.id === id);
+  } else if (type === 'video') {
+    const { getHistory } = await import('./services/videoService.js');
+    item = getHistory().find(i => i.id === id);
   }
 
   if (!item) {
@@ -363,6 +395,9 @@ async function showHistoryDetail(type, id) {
   if (type === 'image') {
     content += `<img src="${item.url}" style="max-width:100%;margin-top:12px;border-radius:8px;">`;
     content += `<div style="margin-top:12px;"><button class="btn" onclick="window.open('${item.url}', '_blank')">打开图片</button></div>`;
+  } else if (type === 'video') {
+    content += `<video src="${item.url}" controls style="width:100%;margin-top:12px;border-radius:8px;"></video>`;
+    content += `<div style="margin-top:12px;"><button class="btn" onclick="window.open('${item.url}', '_blank')">下载视频</button></div>`;
   } else {
     content += `<audio src="${item.url}" controls style="width:100%;margin-top:12px;"></audio>`;
     content += `<div style="margin-top:12px;"><button class="btn" onclick="window.open('${item.url}', '_blank')">下载</button></div>`;
@@ -411,9 +446,11 @@ function bindMyEvents() {
         const { clearHistory: clearImage } = await import('./services/imageService.js');
         const { clearHistory: clearMusic } = await import('./services/musicService.js');
         const { clearHistory: clearTTS } = await import('./services/ttsService.js');
+        const { clearHistory: clearVideo } = await import('./services/videoService.js');
         clearImage();
         clearMusic();
         clearTTS();
+        clearVideo();
         showToast({ title: '历史已清空' });
       }
     });

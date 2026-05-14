@@ -12,6 +12,7 @@ export function renderGeneratePage() {
         <div class="type-tag active" data-type="image">🎨 图片</div>
         <div class="type-tag" data-type="music">🎵 音乐</div>
         <div class="type-tag" data-type="tts">🔊 语音</div>
+        <div class="type-tag" data-type="video">🎬 视频</div>
       </div>
 
       <div class="card">
