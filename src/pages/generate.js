@@ -4,6 +4,10 @@
 
 export function renderGeneratePage() {
   return `
+    <div id="api-key-alert" class="api-key-alert" style="display:none;">
+      <span class="alert-icon">⚠️</span>
+      <span class="alert-text">未配置 API Key，请在"我的"页面设置后再使用</span>
+    </div>
     <div class="page-header">
       <h1>✨ AI 生成</h1>
     </div>
@@ -42,6 +46,18 @@ export function renderGeneratePage() {
       </div>
 
       <div id="result-container" class="card" style="display:none;"></div>
+      <div id="skeleton-container" class="card" style="display:none;">
+        <div class="skeleton-header"></div>
+        <div class="skeleton-blocks">
+          <div class="skeleton-block"></div>
+          <div class="skeleton-block"></div>
+          <div class="skeleton-block"></div>
+        </div>
+        <div class="skeleton-progress">
+          <div class="skeleton-progress-bar" id="skeleton-progress-bar"></div>
+        </div>
+        <div class="skeleton-time" id="skeleton-time">正在生成... 0秒</div>
+      </div>
     </div>
   `;
 }

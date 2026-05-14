@@ -13,6 +13,24 @@ import { renderMyPage } from './pages/my.js';
 // 当前路由
 let currentPage = '';
 
+// 网络状态
+let isOnline = navigator.onLine;
+
+// 主题设置
+function initTheme() {
+  const savedTheme = storage.get('app_theme') || 'system';
+  applyTheme(savedTheme);
+}
+
+function applyTheme(theme) {
+  if (theme === 'system') {
+    document.body.removeAttribute('data-theme');
+  } else {
+    document.body.setAttribute('data-theme', theme);
+  }
+  storage.set('app_theme', theme);
+}
+
 // 路由配置
 const routes = {
   '': renderIndexPage,
@@ -113,6 +131,13 @@ function bindIndexEvents() {
 
 // 生成页事件绑定
 function bindGenerateEvents() {
+  // 检查并显示 API Key 提示
+  const apiKey = storage.get('minimax_api_key');
+  const apiKeyAlert = document.getElementById('api-key-alert');
+  if (apiKeyAlert) {
+    apiKeyAlert.style.display = apiKey ? 'none' : 'flex';
+  }
+
   // 类型切换
   document.querySelectorAll('.type-tag').forEach(tag => {
     tag.addEventListener('click', () => {
@@ -126,6 +151,59 @@ function bindGenerateEvents() {
   const generateBtn = document.getElementById('generate-btn');
   if (generateBtn) {
     generateBtn.addEventListener('click', handleGenerate);
+  }
+
+  // 分享按钮（使用事件委托）
+  document.addEventListener('click', async (e) => {
+    if (e.target.id === 'share-btn' || e.target.closest('#share-btn')) {
+      const btn = e.target.id === 'share-btn' ? e.target : e.target.closest('#share-btn');
+      const url = btn.dataset.url;
+      await handleShareImage(url, btn);
+    }
+  });
+
+  // 更新按钮状态
+  updateGenerateButtonState();
+}
+
+// 分享图片
+async function handleShareImage(url, btn) {
+  try {
+    if (navigator.share && navigator.canShare && navigator.canShare({ url })) {
+      await navigator.share({
+        title: 'AI Creator 图片',
+        text: '来看看我用 AI 生成的这张图片！',
+        url: url
+      });
+      showToast({ title: '分享成功' });
+    } else {
+      // 降级：复制链接
+      await navigator.clipboard.writeText(url);
+      showToast({ title: '链接已复制到剪贴板' });
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      // 降级：复制链接
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast({ title: '链接已复制到剪贴板' });
+      } catch {
+        showToast({ title: '分享失败' });
+      }
+    }
+  }
+}
+
+// 更新生成按钮状态
+function updateGenerateButtonState() {
+  const generateBtn = document.getElementById('generate-btn');
+  if (generateBtn) {
+    generateBtn.disabled = !isOnline;
+    if (!isOnline) {
+      generateBtn.textContent = '🔌 当前离线';
+    } else {
+      generateBtn.textContent = '开始生成';
+    }
   }
 }
 
@@ -205,6 +283,43 @@ function updateGenerateForm(type) {
 }
 
 // 处理生成
+let generateTimer = null;
+let generateSeconds = 0;
+
+function showSkeleton() {
+  const skeleton = document.getElementById('skeleton-container');
+  const result = document.getElementById('result-container');
+  if (skeleton) {
+    skeleton.style.display = 'block';
+    result.style.display = 'none';
+  }
+  generateSeconds = 0;
+  updateSkeletonProgress();
+  generateTimer = setInterval(() => {
+    generateSeconds++;
+    const timeEl = document.getElementById('skeleton-time');
+    if (timeEl) timeEl.textContent = `正在生成... ${generateSeconds}秒`;
+  }, 1000);
+}
+
+function updateSkeletonProgress() {
+  // 模拟进度条增长，最大到90%留余量
+  const bar = document.getElementById('skeleton-progress-bar');
+  if (bar) {
+    const progress = Math.min(generateSeconds * 5, 90);
+    bar.style.width = progress + '%';
+  }
+}
+
+function hideSkeleton() {
+  if (generateTimer) {
+    clearInterval(generateTimer);
+    generateTimer = null;
+  }
+  const skeleton = document.getElementById('skeleton-container');
+  if (skeleton) skeleton.style.display = 'none';
+}
+
 async function handleGenerate() {
   const typeTags = document.querySelectorAll('.type-tag.active');
   if (!typeTags.length) return;
@@ -216,41 +331,66 @@ async function handleGenerate() {
     return;
   }
 
+  // 检查 API Key
+  const apiKey = storage.get('minimax_api_key');
+  if (!apiKey) {
+    showToast({ title: '请先在"我的"页面配置 API Key' });
+    return;
+  }
+
   const btn = document.getElementById('generate-btn');
   btn.disabled = true;
   btn.textContent = '生成中...';
 
-  try {
-    let result;
-    if (type === 'image') {
-      const { generateImage } = await import('./services/imageService.js');
-      const style = document.getElementById('style-select')?.value || 'vivid';
-      const size = document.getElementById('size-select')?.value || '1024x1024';
-      result = await generateImage({ prompt: promptInput.value, style, size });
-      showResult('image', result);
-    } else if (type === 'music') {
-      const { generateMusic } = await import('./services/musicService.js');
-      const duration = parseInt(document.getElementById('duration-input')?.value || '180');
-      const lyrics = document.getElementById('lyrics-input')?.value || '';
-      result = await generateMusic({ prompt: promptInput.value, lyrics, duration });
-      showResult('music', result);
-    } else if (type === 'tts') {
-      const { generateTTS } = await import('./services/ttsService.js');
-      const voice = document.getElementById('voice-select')?.value || 'female-shaonv';
-      result = await generateTTS({ input: promptInput.value, voice });
-      showResult('tts', result);
-    } else if (type === 'video') {
-      const { generateVideo } = await import('./services/videoService.js');
-      const duration = parseInt(document.getElementById('duration-select')?.value || '5');
-      result = await generateVideo({ prompt: promptInput.value, duration });
-      showResult('video', result);
+  showSkeleton();
+
+  let lastError = null;
+  // 失败重试1次
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      let result;
+      if (type === 'image') {
+        const { generateImage } = await import('./services/imageService.js');
+        const style = document.getElementById('style-select')?.value || 'vivid';
+        const size = document.getElementById('size-select')?.value || '1024x1024';
+        result = await generateImage({ prompt: promptInput.value, style, size });
+        showResult('image', result);
+      } else if (type === 'music') {
+        const { generateMusic } = await import('./services/musicService.js');
+        const duration = parseInt(document.getElementById('duration-input')?.value || '180');
+        const lyrics = document.getElementById('lyrics-input')?.value || '';
+        result = await generateMusic({ prompt: promptInput.value, lyrics, duration });
+        showResult('music', result);
+      } else if (type === 'tts') {
+        const { generateTTS } = await import('./services/ttsService.js');
+        const voice = document.getElementById('voice-select')?.value || 'female-shaonv';
+        result = await generateTTS({ input: promptInput.value, voice });
+        showResult('tts', result);
+      } else if (type === 'video') {
+        const { generateVideo } = await import('./services/videoService.js');
+        const duration = parseInt(document.getElementById('duration-select')?.value || '5');
+        result = await generateVideo({ prompt: promptInput.value, duration });
+        showResult('video', result);
+      }
+      hideSkeleton();
+      btn.disabled = false;
+      btn.textContent = '开始生成';
+      return;
+    } catch (err) {
+      lastError = err;
+      if (attempt === 0) {
+        // 第一次失败，尝试重试
+        const timeEl = document.getElementById('skeleton-time');
+        if (timeEl) timeEl.textContent = `生成失败，正在重试...`;
+        await new Promise(r => setTimeout(r, 1000));
+      }
     }
-  } catch (err) {
-    showToast({ title: err.message || '生成失败' });
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '生成';
   }
+
+  hideSkeleton();
+  showToast({ title: lastError?.message || '生成失败' });
+  btn.disabled = false;
+  btn.textContent = '开始生成';
 }
 
 // 显示结果
@@ -263,9 +403,10 @@ function showResult(type, result) {
   // Token Plan API 返回格式更新
   if (type === 'image' && result.data?.image_urls?.[0]) {
     const imgUrl = result.data.image_urls[0];
-    html += `<img src="${imgUrl}" class="preview-image" alt="生成图片">`;
-    html += `<div style="margin-top:12px;display:flex;gap:8px;">`;
-    html += `<button class="btn" onclick="window.open('${imgUrl}', '_blank')">在新窗口打开</button>`;
+    html += `<img src="${imgUrl}" class="preview-image" alt="生成图片" onclick="window.open('${imgUrl}', '_blank')" style="cursor:zoom-in;">`;
+    html += `<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">`;
+    html += `<button class="btn" onclick="window.open('${imgUrl}', '_blank')">🔍 在新窗口打开</button>`;
+    html += `<button class="btn" id="share-btn" data-url="${imgUrl}">📤 分享图片</button>`;
     html += `</div>`;
   } else if (type === 'music' && result.url) {
     html += `<audio src="${result.url}" controls class="audio-player"></audio>`;
@@ -344,6 +485,7 @@ async function loadHistory(filter) {
       <div class="empty-state">
         <div class="icon">📭</div>
         <p>暂无历史记录</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--text-secondary);">快去"生成"页面创作吧</p>
       </div>
     `;
     return;
@@ -420,6 +562,18 @@ function bindMyEvents() {
 
   if (apiKeyInput) apiKeyInput.value = apiKey;
 
+  // 主题切换按钮
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.dataset.theme;
+      applyTheme(theme);
+      // 更新按钮状态
+      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      showToast({ title: `已切换到${theme === 'dark' ? '深色' : theme === 'light' ? '浅色' : '系统'}主题` });
+    });
+  });
+
   // 保存按钮
   const saveBtn = document.getElementById('save-config-btn');
   if (saveBtn) {
@@ -460,5 +614,46 @@ function bindMyEvents() {
 // 初始化
 window.addEventListener('hashchange', handleRoute);
 window.addEventListener('DOMContentLoaded', () => {
+  initTheme();  // 初始化主题
+  initNetworkStatus();  // 初始化网络状态
   handleRoute();
 });
+
+// 网络状态监听
+function initNetworkStatus() {
+  updateGenerateButtonState();
+
+  window.addEventListener('online', () => {
+    isOnline = true;
+    showToast({ title: '🌐 网络已连接' });
+    updateGenerateButtonState();
+    processRetryQueue();
+  });
+
+  window.addEventListener('offline', () => {
+    isOnline = false;
+    showToast({ title: '🔌 网络已断开' });
+    updateGenerateButtonState();
+  });
+}
+
+// 重试队列
+const retryQueue = [];
+
+function addToRetryQueue(task) {
+  retryQueue.push(task);
+  storage.set('retry_queue', JSON.stringify(retryQueue));
+}
+
+function processRetryQueue() {
+  if (!isOnline || retryQueue.length === 0) return;
+
+  const queue = [...retryQueue];
+  retryQueue.length = 0;
+  storage.remove('retry_queue');
+
+  queue.forEach(task => {
+    showToast({ title: `正在重试: ${task.type}` });
+    // 实际的重试逻辑由各服务处理
+  });
+}
