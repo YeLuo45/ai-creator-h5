@@ -498,6 +498,110 @@ textarea.input {
   overflow: hidden;
 }
 
+/* V9: 历史页控制区 */
+.history-controls {
+  margin-bottom: 12px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.filter-select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.filter-select:focus {
+  border-color: var(--primary);
+}
+
+/* V9: 批量栏新增按钮 */
+.batch-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.batch-btn:hover {
+  background: var(--bg-card);
+  border-color: var(--primary);
+}
+
+/* V9: 历史卡片评分星星 */
+.item-rating {
+  display: flex;
+  gap: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.item-rating .star {
+  font-size: 14px;
+  color: var(--border);
+  transition: color 0.2s;
+}
+
+.item-rating .star.filled {
+  color: #f59e0b;
+}
+
+/* V9: 标签按钮、备注按钮 */
+.tag-btn, .note-btn {
+  padding: 4px 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.tag-btn:hover, .note-btn:hover {
+  opacity: 1;
+}
+
+/* V9: 标签预览小圆点 */
+.item-tags {
+  display: inline-flex;
+  gap: 3px;
+  margin-left: 6px;
+}
+
+.tag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* V9: 标签选项（在弹窗中） */
+.tag-option {
+  transition: opacity 0.2s, border-color 0.2s;
+  user-select: none;
+}
+
+/* V9: 历史备注预览 */
+.history-note-preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .bar-fill {
   height: 100%;
   background: var(--primary);

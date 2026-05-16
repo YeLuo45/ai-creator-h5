@@ -59,6 +59,7 @@ const useStore = create(
       setOffline: (isOffline) => set({ isOffline }),
 
       // 添加历史记录（type: 'image' | 'music' | 'tts'）
+      // V9: item 可包含 rating, tags, note
       addHistoryItem: (type, item) => {
         const keyMap = {
           image: 'images',
@@ -75,6 +76,9 @@ const useStore = create(
             ...item,
             id: Date.now(),
             createdAt: new Date().toISOString(),
+            rating: item.rating || 0,
+            tags: item.tags || [],
+            note: item.note || '',
           },
           ...items,
         ].slice(0, 50); // 最多 50 条
@@ -154,6 +158,46 @@ const useStore = create(
           newHistory[storageKey] = (newHistory[storageKey] || []).filter(item => item.id !== id);
         }
         set({ history: newHistory });
+      },
+
+      // V9: 更新单条历史记录的 rating/tags/note
+      updateHistoryItem: (type, id, patch) => {
+        const keyMap = {
+          image: 'images',
+          music: 'music',
+          tts: 'tts',
+        };
+        const storageKey = keyMap[type];
+        if (!storageKey) return;
+
+        const history = get().history;
+        const items = history[storageKey] || [];
+        const updated = items.map(item => {
+          if (item.id === id) {
+            return { ...item, ...patch };
+          }
+          return item;
+        });
+
+        set({
+          history: {
+            ...history,
+            [storageKey]: updated,
+          },
+        });
+      },
+
+      // V9: 根据 type 和 id 数组获取条目
+      getItemsByIds: (type, ids) => {
+        const keyMap = {
+          image: 'images',
+          music: 'music',
+          tts: 'tts',
+        };
+        const storageKey = keyMap[type];
+        if (!storageKey) return [];
+        const items = get().history[storageKey] || [];
+        return items.filter(item => ids.includes(item.id));
       },
 
       // 清空所有历史（兼容旧接口）

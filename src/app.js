@@ -225,12 +225,55 @@ function bindHistoryEvents() {
     tag.addEventListener('click', () => {
       document.querySelectorAll('.type-tag').forEach(t => t.classList.remove('active'));
       tag.classList.add('active');
-      loadHistory(tag.dataset.filter);
+      loadHistory(getCurrentFilters());
     });
   });
 
+  // V9: 时间筛选
+  const timeFilter = document.getElementById('time-filter');
+  if (timeFilter) {
+    timeFilter.addEventListener('change', () => {
+      loadHistory(getCurrentFilters());
+    });
+  }
+
+  // V9: 评分筛选
+  const ratingFilter = document.getElementById('rating-filter');
+  if (ratingFilter) {
+    ratingFilter.addEventListener('change', () => {
+      loadHistory(getCurrentFilters());
+    });
+  }
+
+  // V9: 搜索输入
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    let debounceTimer;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        loadHistory(getCurrentFilters());
+      }, 300);
+    });
+  }
+
+  // V9: 批量下载按钮
+  const batchDownloadBtn = document.getElementById('batch-download');
+  if (batchDownloadBtn) {
+    batchDownloadBtn.addEventListener('click', handleBatchDownload);
+  }
+
   // 加载历史
-  loadHistory('all');
+  loadHistory(getCurrentFilters());
+}
+
+// V9: 获取当前筛选条件
+function getCurrentFilters() {
+  const activeFilter = document.querySelector('.type-tag.active')?.dataset.filter || 'all';
+  const timeFilter = document.getElementById('time-filter')?.value || 'all';
+  const ratingFilter = parseInt(document.getElementById('rating-filter')?.value || '0');
+  const searchKeyword = document.getElementById('search-input')?.value.trim().toLowerCase() || '';
+  return { filter: activeFilter, timeFilter, ratingFilter, searchKeyword };
 }
 
 // 批量更新选中计数并显示/隐藏批量栏
@@ -244,8 +287,59 @@ function updateBatchBar() {
   batchBar.style.display = count > 0 ? 'flex' : 'none';
 }
 
+// V9: 判断时间是否在范围内
+function isWithinTimeRange(dateStr, timeFilter) {
+  if (timeFilter === 'all') return true;
+  const date = new Date(dateStr);
+  const now = new Date();
+  if (timeFilter === 'today') {
+    return date.toDateString() === now.toDateString();
+  } else if (timeFilter === 'week') {
+    const weekAgo = new Date(now);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return date >= weekAgo;
+  } else if (timeFilter === 'month') {
+    const monthAgo = new Date(now);
+    monthAgo.setMonth(monthAgo.getMonth() - 1);
+    return date >= monthAgo;
+  }
+  return true;
+}
+
+// V9: 判断是否匹配搜索关键词
+function matchesSearch(item, keyword) {
+  if (!keyword) return true;
+  const prompt = (item.prompt || item.input || '').toLowerCase();
+  const note = (item.note || '').toLowerCase();
+  return prompt.includes(keyword) || note.includes(keyword);
+}
+
+// V9: 判断是否匹配评分筛选
+function matchesRating(item, minRating) {
+  if (minRating === 0) return true;
+  return (item.rating || 0) >= minRating;
+}
+
+// V9: 判断是否匹配标签筛选
+function matchesTags(item, tagFilter) {
+  if (!tagFilter || tagFilter.length === 0) return true;
+  const itemTags = item.tags || [];
+  return tagFilter.some(t => itemTags.includes(t));
+}
+
 // 加载历史记录
-async function loadHistory(filter) {
+async function loadHistory(filters) {
+  // 支持传入 filters 对象或旧的 filter string（兼容）
+  let filter, timeFilter, ratingFilter, searchKeyword;
+  if (typeof filters === 'object') {
+    ({ filter = 'all', timeFilter = 'all', ratingFilter = 0, searchKeyword = '' } = filters);
+  } else {
+    filter = filters;
+    timeFilter = 'all';
+    ratingFilter = 0;
+    searchKeyword = '';
+  }
+
   const listContainer = document.getElementById('history-list');
   if (!listContainer) return;
 
@@ -274,7 +368,15 @@ async function loadHistory(filter) {
     ...tts.map(t => ({ ...t, type: 'tts' })),
   ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  if (all.length === 0) {
+  // V9: 应用时间、评分、搜索筛选
+  const filtered = all.filter(item => {
+    if (!isWithinTimeRange(item.createdAt, timeFilter)) return false;
+    if (!matchesRating(item, ratingFilter)) return false;
+    if (!matchesSearch(item, searchKeyword)) return false;
+    return true;
+  });
+
+  if (filtered.length === 0) {
     listContainer.innerHTML = `
       <div class="empty-state">
         <div class="icon">📭</div>
@@ -284,18 +386,68 @@ async function loadHistory(filter) {
     return;
   }
 
-  listContainer.innerHTML = all.map(item => `
+  // V9: 渲染历史卡片，包含评分星星、标签、备注按钮
+  listContainer.innerHTML = filtered.map(item => `
     <div class="history-item" data-id="${item.id}" data-type="${item.type}">
       <input type="checkbox" class="item-checkbox" data-id="${item.id}" data-type="${item.type}">
       ${item.type === 'image' ? `<img class="history-thumb" src="${item.url}" alt="图片">` : '<div class="history-thumb" style="display:flex;align-items:center;justify-content:center;font-size:32px;">' + (item.type === 'music' ? '🎵' : '🔊') + '</div>'}
       <div class="history-info">
         <div class="history-title">${item.prompt || item.input || '生成作品'}</div>
-        <div class="history-meta">${new Date(item.createdAt).toLocaleString()}</div>
+        <div class="history-meta">
+          ${new Date(item.createdAt).toLocaleString()}
+          ${item.tags && item.tags.length > 0 ? `<span class="item-tags">${item.tags.map(t => `<span class="tag-dot" style="background:${t}"></span>`).join('')}</span>` : ''}
+        </div>
+        <div class="history-note-preview" id="note-preview-${item.id}" style="font-size:11px;color:var(--text-secondary);margin-top:2px;${item.note ? '' : 'display:none'}">
+          📝 ${item.note.length > 30 ? item.note.slice(0, 30) + '...' : item.note}
+        </div>
       </div>
-      <button class="share-btn" data-id="${item.id}" data-type="${item.type}" data-url="${item.url || ''}">📤 分享</button>
+
+      <!-- V9: 评分星星 -->
+      <div class="item-rating" data-id="${item.id}" data-type="${item.type}" onclick="event.stopPropagation()">
+        ${[1,2,3,4,5].map(n => `<span class="star ${n <= (item.rating || 0) ? 'filled' : ''}" data-value="${n}">★</span>`).join('')}
+      </div>
+
+      <!-- V9: 标签按钮 -->
+      <button class="tag-btn" data-id="${item.id}" data-type="${item.type}" onclick="event.stopPropagation()">🏷️</button>
+
+      <!-- V9: 备注按钮 -->
+      <button class="note-btn" data-id="${item.id}" data-type="${item.type}" onclick="event.stopPropagation()">📝</button>
+
+      <button class="share-btn" data-id="${item.id}" data-type="${item.type}" data-url="${item.url || ''}">📤</button>
       <button class="fav-btn" data-id="${item.id}" data-type="${item.type}">⭐</button>
     </div>
   `).join('');
+
+  // V9: 绑定评分星星点击
+  document.querySelectorAll('.item-rating .star').forEach(star => {
+    star.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const type = star.closest('.item-rating').dataset.type;
+      const id = parseInt(star.closest('.item-rating').dataset.id);
+      const value = parseInt(star.dataset.value);
+      handleUpdateRating(type, id, value);
+    });
+  });
+
+  // V9: 绑定标签按钮点击
+  document.querySelectorAll('.tag-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const type = btn.dataset.type;
+      const id = parseInt(btn.dataset.id);
+      openTagModal(type, id);
+    });
+  });
+
+  // V9: 绑定备注按钮点击
+  document.querySelectorAll('.note-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const type = btn.dataset.type;
+      const id = parseInt(btn.dataset.id);
+      openNoteModal(type, id);
+    });
+  });
 
   // 绑定 checkbox 事件
   document.querySelectorAll('.item-checkbox').forEach(cb => {
@@ -344,7 +496,7 @@ async function loadHistory(filter) {
         });
         useStore.getState().removeHistoryItems(toRemove);
         showToast({ title: `已删除 ${items.length} 项` });
-        loadHistory(filter);
+        loadHistory(getCurrentFilters());
       }
     };
   }
@@ -401,6 +553,208 @@ async function loadHistory(filter) {
     });
   });
 }
+
+// V9: 处理评分更新
+async function handleUpdateRating(type, id, value) {
+  useStore.getState().updateHistoryItem(type, id, { rating: value });
+  // 更新 UI
+  const ratingEl = document.querySelector(`.item-rating[data-id="${id}"][data-type="${type}"]`);
+  if (ratingEl) {
+    ratingEl.querySelectorAll('.star').forEach(star => {
+      const starVal = parseInt(star.dataset.value);
+      star.classList.toggle('filled', starVal <= value);
+    });
+  }
+  showToast({ title: `已设为 ${value} 星` });
+}
+
+// V9: 打开标签选择弹窗
+async function openTagModal(type, id) {
+  // 获取当前标签
+  let currentTags = [];
+  if (type === 'image') {
+    const { getHistory } = await import('./services/imageService.js');
+    const item = getHistory().find(i => i.id === id);
+    currentTags = item?.tags || [];
+  } else if (type === 'music') {
+    const { getHistory } = await import('./services/musicService.js');
+    const item = getHistory().find(i => i.id === id);
+    currentTags = item?.tags || [];
+  } else if (type === 'tts') {
+    const { getHistory } = await import('./services/ttsService.js');
+    const item = getHistory().find(i => i.id === id);
+    currentTags = item?.tags || [];
+  }
+
+  const tagColors = [
+    { name: '红', value: '#ef4444' },
+    { name: '橙', value: '#f97316' },
+    { name: '黄', value: '#eab308' },
+    { name: '绿', value: '#22c55e' },
+    { name: '青', value: '#06b6d4' },
+    { name: '蓝', value: '#3b82f6' },
+    { name: '紫', value: '#a855f7' },
+    { name: '粉', value: '#ec4899' },
+  ];
+
+  const content = `
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+      ${tagColors.map(t => `
+        <div class="tag-option ${currentTags.includes(t.value) ? 'selected' : ''}"
+             data-color="${t.value}"
+             style="width:40px;height:40px;border-radius:50%;background:${t.value};cursor:pointer;opacity:${currentTags.includes(t.value) ? 1 : 0.4};border:3px solid ${currentTags.includes(t.value) ? '#fff' : 'transparent'};">
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  await showModal({
+    title: '选择标签',
+    content,
+    confirmText: '保存',
+    cancelText: '取消',
+  }).then(async ({ confirm }) => {
+    if (!confirm) return;
+    // 收集选中的颜色
+    const selected = [];
+    document.querySelectorAll('.tag-option.selected').forEach(el => {
+      selected.push(el.dataset.color);
+    });
+    useStore.getState().updateHistoryItem(type, id, { tags: selected });
+    showToast({ title: '标签已更新' });
+    loadHistory(getCurrentFilters());
+  });
+
+  // 绑定标签点击事件（在弹窗显示后）
+  setTimeout(() => {
+    document.querySelectorAll('.tag-option').forEach(el => {
+      el.addEventListener('click', () => {
+        el.classList.toggle('selected');
+        el.style.opacity = el.classList.contains('selected') ? 1 : 0.4;
+        el.style.borderColor = el.classList.contains('selected') ? '#fff' : 'transparent';
+      });
+    });
+  }, 100);
+}
+
+// V9: 打开备注编辑弹窗
+async function openNoteModal(type, id) {
+  // 获取当前备注
+  let currentNote = '';
+  if (type === 'image') {
+    const { getHistory } = await import('./services/imageService.js');
+    const item = getHistory().find(i => i.id === id);
+    currentNote = item?.note || '';
+  } else if (type === 'music') {
+    const { getHistory } = await import('./services/musicService.js');
+    const item = getHistory().find(i => i.id === id);
+    currentNote = item?.note || '';
+  } else if (type === 'tts') {
+    const { getHistory } = await import('./services/ttsService.js');
+    const item = getHistory().find(i => i.id === id);
+    currentNote = item?.note || '';
+  }
+
+  await showModal({
+    title: '编辑备注',
+    content: `<textarea id="note-input" class="input" rows="3" placeholder="输入备注信息...">${currentNote}</textarea>`,
+    confirmText: '保存',
+    cancelText: '取消',
+  }).then(({ confirm }) => {
+    if (!confirm) return;
+    const note = document.getElementById('note-input')?.value || '';
+    useStore.getState().updateHistoryItem(type, id, { note });
+    showToast({ title: '备注已保存' });
+    // 更新预览
+    const preview = document.getElementById(`note-preview-${id}`);
+    if (preview) {
+      if (note) {
+        preview.textContent = '📝 ' + (note.length > 30 ? note.slice(0, 30) + '...' : note);
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+  });
+}
+
+// V9: 批量下载处理
+async function handleBatchDownload() {
+  const items = Array.from(window.__batchSelectedItems || []);
+  if (items.length === 0) {
+    showToast({ title: '请先选择要下载的项目' });
+    return;
+  }
+
+  showToast({ title: `正在准备 ${items.length} 个文件...` });
+
+  try {
+    const zip = new JSZip();
+    let addedCount = 0;
+
+    for (const key of items) {
+      const [type, idStr] = key.split('-');
+      const id = parseInt(idStr);
+
+      let item = null;
+      let folderName = '';
+      if (type === 'image') {
+        const { getHistory } = await import('./services/imageService.js');
+        item = getHistory().find(i => i.id === id);
+        folderName = 'images';
+      } else if (type === 'music') {
+        const { getHistory } = await import('./services/musicService.js');
+        item = getHistory().find(i => i.id === id);
+        folderName = 'music';
+      } else if (type === 'tts') {
+        const { getHistory } = await import('./services/ttsService.js');
+        item = getHistory().find(i => i.id === id);
+        folderName = 'audio';
+      }
+
+      if (item && item.url) {
+        try {
+          // 尝试下载文件内容
+          const response = await fetch(item.url);
+          const blob = await response.blob();
+          const ext = getFileExtension(item.url, type);
+          const filename = `${folderName}/${item.id}_${item.prompt?.slice(0, 20) || 'untitled'}${ext}`;
+          zip.file(filename.replace(/[\/\\:*?"<>|]/g, '_'), blob);
+          addedCount++;
+        } catch (e) {
+          console.warn(`下载失败: ${item.url}`, e);
+        }
+      }
+    }
+
+    if (addedCount === 0) {
+      showToast({ title: '没有可下载的文件' });
+      return;
+    }
+
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+    saveAs(zipBlob, `ai-creator-${timestamp}.zip`);
+    showToast({ title: `已生成 ${addedCount} 个文件的 ZIP 包` });
+  } catch (e) {
+    console.error('批量下载失败', e);
+    showToast({ title: '批量下载失败: ' + (e.message || '未知错误') });
+  }
+}
+
+// V9: 根据 URL 和类型获取文件扩展名
+function getFileExtension(url, type) {
+  if (!url) {
+    return type === 'image' ? '.png' : type === 'music' ? '.mp3' : '.wav';
+  }
+  const match = url.match(/\.[^.]+$/);
+  if (match) return match[0];
+  return type === 'image' ? '.png' : type === 'music' ? '.mp3' : '.wav';
+}
+
+// V9: loadHistory 已在上方重新实现，兼容旧的 loadHistory(filter) 调用
+// 此处保留兼容性代理
+const _origLoadHistory = loadHistory;
 
 // 更新全选复选框状态
 function updateSelectAllState() {
