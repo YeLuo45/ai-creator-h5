@@ -17,7 +17,7 @@ function getConfig() {
 /**
  * 生成语音
  */
-export async function generateTTS({ input, voice = 'female-shaonv', speed = 1.0 }) {
+export async function generateTTS({ input, model = 'speech-01', voice = 'female-shaonv', speed = 1.0 }) {
   const { apiKey } = getConfig();
 
   if (!apiKey) {
@@ -28,7 +28,7 @@ export async function generateTTS({ input, voice = 'female-shaonv', speed = 1.0 
 
   showLoading({ title: '语音合成中...' });
   try {
-    const result = await adapter.generate({ input, voice, speed });
+    const result = await adapter.generate({ input, model, voice, speed });
 
     let audioUrl = '';
     if (result.b64_audio) {

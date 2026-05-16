@@ -48,7 +48,7 @@ function getConfig() {
 /**
  * 生成音乐
  */
-export async function generateMusic({ prompt, lyrics = '', duration = 180, instrumental = false }) {
+export async function generateMusic({ prompt, model = 'music-2.6', lyrics = '', duration = 180, instrumental = false }) {
   const { apiKey } = getConfig();
 
   if (!apiKey) {
@@ -62,7 +62,7 @@ export async function generateMusic({ prompt, lyrics = '', duration = 180, instr
     // 如果没有提供歌词，使用 prompt 作为简单歌词
     const finalLyrics = lyrics || `这是一首关于 ${prompt} 的歌曲`;
     console.log('[MusicService] Generating with prompt:', prompt, 'lyrics:', finalLyrics);
-    const result = await adapter.generate({ prompt, lyrics: finalLyrics, duration, instrumental });
+    const result = await adapter.generate({ prompt, model, lyrics: finalLyrics, duration, instrumental });
     console.log('[MusicService] API result:', JSON.stringify(result).substring(0, 200));
 
     // music_generation 返回格式: { data: { audio: "hex", status: 2 }, extra_info: {...} }

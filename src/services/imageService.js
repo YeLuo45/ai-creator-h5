@@ -17,7 +17,7 @@ function getConfig() {
 /**
  * 生成图片
  */
-export async function generateImage({ prompt, style = 'vivid', size = '1024x1024' }) {
+export async function generateImage({ prompt, model = 'image-01', style = 'vivid', size = '1024x1024' }) {
   const { apiKey } = getConfig();
 
   if (!apiKey) {
@@ -28,12 +28,13 @@ export async function generateImage({ prompt, style = 'vivid', size = '1024x1024
 
   showLoading({ title: '图片生成中...' });
   try {
-    const result = await adapter.generate({ prompt, style, size });
+    const result = await adapter.generate({ prompt, model, style, size });
 
     // Token Plan 图片 API 返回 { data: { image_urls: [...] } }
     if (result.data?.image_urls?.length > 0) {
       addToHistory({
         prompt,
+        model,
         style,
         size,
         url: result.data.image_urls[0],

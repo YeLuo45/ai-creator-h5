@@ -12,12 +12,13 @@ const API_BASE = 'https://api.minimaxi.com/v1';
 // MiniMax 模型 ID 映射
 export const MINIMAX_MODELS = {
   IMAGE_01: 'image-01',
-  IMAGE_01_PRO: 'image-01-pro',
+  IMAGE_02: 'image-02',
   MUSIC_26: 'music-2.6',
+  MUSIC_02: 'music-02',
   LYRICS: 'lyrics_generation',
   MUSIC_COVER: 'music-cover',
-  TTS_HD: 'speech-2.8-hd',
-  TTS: 'speech-02',
+  TTS_HD: 'speech-01',
+  TTS_EMOTION: 'speech-02',
 };
 
 export class MiniMaxAdapter {
@@ -198,7 +199,7 @@ export class MiniMaxMusicCoverAdapter extends MiniMaxAdapter {
 export class MiniMaxTTSAdapter extends MiniMaxAdapter {
   constructor(apiKey) {
     super(apiKey);
-    this.model = MINIMAX_MODELS.TTS_HD;
+    this.model = MINIMAX_MODELS.TTS_HD; // speech-01
   }
 
   // 音色列表 (speech-2.8-hd)

@@ -5,7 +5,7 @@
 
 import { showToast, showModal } from './adapter/web-api.js';
 import { renderIndexPage } from './pages/index.js';
-import { renderGeneratePage } from './pages/generate.js';
+import { renderGeneratePage, initGeneratePage } from './pages/generate.js';
 import { renderHistoryPage } from './pages/history.js';
 import { renderMyPage } from './pages/my.js';
 import useStore from './store/useStore.js';
@@ -116,14 +116,8 @@ function bindIndexEvents() {
 
 // 生成页事件绑定
 function bindGenerateEvents() {
-  // 类型切换
-  document.querySelectorAll('.type-tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-      document.querySelectorAll('.type-tag').forEach(t => t.classList.remove('active'));
-      tag.classList.add('active');
-      updateGenerateForm(tag.dataset.type);
-    });
-  });
+  // 初始化生成页交互（模型选择、模板等）
+  initGeneratePage();
 
   // 生成按钮
   const generateBtn = document.getElementById('generate-btn');
@@ -132,66 +126,8 @@ function bindGenerateEvents() {
   }
 }
 
-// 更新生成表单
-function updateGenerateForm(type) {
-  const formContainer = document.getElementById('generate-form');
-  if (!formContainer) return;
-
-  let html = '';
-  switch (type) {
-    case 'image':
-      html = `
-        <div class="form-label">图片描述 (Prompt)</div>
-        <textarea class="input" id="prompt-input" placeholder="描述你想要生成的图片，例如：一只穿着汉服的猫咪"></textarea>
-        <div style="margin-top:12px;">
-          <div class="form-label">风格</div>
-          <select class="input" id="style-select">
-            <option value="vivid">写实</option>
-            <option value="natural">自然</option>
-          </select>
-        </div>
-        <div style="margin-top:12px;">
-          <div class="form-label">尺寸</div>
-          <select class="input" id="size-select">
-            <option value="1024x1024">1:1 (1024x1024)</option>
-            <option value="1792x1024">16:9 (1792x1024)</option>
-            <option value="1024x1792">9:16 (1024x1792)</option>
-          </select>
-        </div>
-      `;
-      break;
-    case 'music':
-      html = `
-        <div class="form-label">音乐描述 (Prompt)</div>
-        <textarea class="input" id="prompt-input" placeholder="描述你想要生成的音乐，例如：欢快的流行音乐，适合派对"></textarea>
-        <div style="margin-top:12px;">
-          <div class="form-label">歌词（可选）</div>
-          <textarea class="input" id="lyrics-input" placeholder="输入歌词，如不填则自动生成" style="min-height:60px;"></textarea>
-        </div>
-        <div style="margin-top:12px;">
-          <div class="form-label">时长（秒）</div>
-          <input type="number" class="input" id="duration-input" value="180" min="30" max="300">
-        </div>
-      `;
-      break;
-    case 'tts':
-      html = `
-        <div class="form-label">文字内容</div>
-        <textarea class="input" id="prompt-input" placeholder="输入要转换为语音的文字"></textarea>
-        <div style="margin-top:12px;">
-          <div class="form-label">音色</div>
-          <select class="input" id="voice-select">
-            <option value="female-shaonv">少女声音</option>
-            <option value="male-qn-qingse">青年男声</option>
-            <option value="male-qn-jingxing">激情男声</option>
-            <option value="female-yujie">御姐声音</option>
-          </select>
-        </div>
-      `;
-      break;
-  }
-  formContainer.innerHTML = html;
-}
+// 更新生成表单（由 generate.js initGeneratePage 调用）
+// 现在由 generate.js 的 updateGenerateForm 统一处理
 
 // 处理生成
 async function handleGenerate() {
@@ -205,6 +141,9 @@ async function handleGenerate() {
     return;
   }
 
+  const modelSelect = document.getElementById('model-select');
+  const selectedModel = modelSelect?.value || (type === 'image' ? 'image-01' : type === 'music' ? 'music-2.6' : 'speech-01');
+
   const btn = document.getElementById('generate-btn');
   btn.disabled = true;
   btn.textContent = '生成中...';
@@ -215,18 +154,19 @@ async function handleGenerate() {
       const { generateImage } = await import('./services/imageService.js');
       const style = document.getElementById('style-select')?.value || 'vivid';
       const size = document.getElementById('size-select')?.value || '1024x1024';
-      result = await generateImage({ prompt: promptInput.value, style, size });
+      result = await generateImage({ prompt: promptInput.value, model: selectedModel, style, size });
       showResult('image', result);
     } else if (type === 'music') {
       const { generateMusic } = await import('./services/musicService.js');
       const duration = parseInt(document.getElementById('duration-input')?.value || '180');
       const lyrics = document.getElementById('lyrics-input')?.value || '';
-      result = await generateMusic({ prompt: promptInput.value, lyrics, duration });
+      result = await generateMusic({ prompt: promptInput.value, model: selectedModel, lyrics, duration });
       showResult('music', result);
     } else if (type === 'tts') {
       const { generateTTS } = await import('./services/ttsService.js');
       const voice = document.getElementById('voice-select')?.value || 'female-shaonv';
-      result = await generateTTS({ input: promptInput.value, voice });
+      const speed = parseFloat(document.getElementById('tts-speed')?.value || '1.0');
+      result = await generateTTS({ input: promptInput.value, model: selectedModel, voice, speed });
       showResult('tts', result);
     }
   } catch (err) {
