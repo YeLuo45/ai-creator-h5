@@ -276,8 +276,19 @@ async function loadHistory(filter) {
         <div class="history-title">${item.prompt || item.input || '生成作品'}</div>
         <div class="history-meta">${new Date(item.createdAt).toLocaleString()}</div>
       </div>
+      <button class="fav-btn" data-id="${item.id}" data-type="${item.type}">⭐</button>
     </div>
   `).join('');
+
+  // 绑定收藏按钮事件
+  document.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const type = btn.dataset.type;
+      const id = parseInt(btn.dataset.id);
+      openFavoriteModal(type, id);
+    });
+  });
 
   // 绑定点击事件
   document.querySelectorAll('.history-item').forEach(item => {
@@ -325,6 +336,64 @@ async function showHistoryDetail(type, id) {
   });
 }
 
+// 打开收藏弹窗
+async function openFavoriteModal(type, id) {
+  const { albums, addFavorite, createAlbum } = useStore.getState();
+  const modal = document.getElementById('favorite-modal');
+  const albumSelect = document.getElementById('album-select');
+  const newAlbumInput = document.getElementById('new-album-name');
+  const favNameInput = document.getElementById('favorite-name');
+
+  // 填充专辑选项
+  albumSelect.innerHTML = '<option value="">-- 选择专辑 --</option>' +
+    albums.map(a => `<option value="${a.id}">${a.name}</option>`).join('') +
+    '<option value="__new__">+ 新建专辑</option>';
+
+  newAlbumInput.style.display = 'none';
+  newAlbumInput.value = '';
+  favNameInput.value = '';
+  modal.style.display = 'flex';
+
+  // 切换到新建专辑输入
+  albumSelect.onchange = () => {
+    newAlbumInput.style.display = albumSelect.value === '__new__' ? 'block' : 'none';
+  };
+
+  // 取消
+  document.getElementById('fav-cancel').onclick = () => {
+    modal.style.display = 'none';
+  };
+
+  // 确认
+  document.getElementById('fav-confirm').onclick = async () => {
+    let albumId = albumSelect.value;
+    if (albumId === '__new__') {
+      const name = newAlbumInput.value.trim();
+      if (!name) { showToast({ title: '请输入专辑名称' }); return; }
+      albumId = createAlbum(name);
+    }
+
+    // 获取历史项目数据
+    let item = null;
+    if (type === 'image') {
+      const { getHistory } = await import('./services/imageService.js');
+      item = getHistory().find(i => i.id === id);
+    } else if (type === 'music') {
+      const { getHistory } = await import('./services/musicService.js');
+      item = getHistory().find(i => i.id === id);
+    } else if (type === 'tts') {
+      const { getHistory } = await import('./services/ttsService.js');
+      item = getHistory().find(i => i.id === id);
+    }
+
+    if (item) {
+      addFavorite({ type, data: item }, albumId, favNameInput.value.trim());
+      showToast({ title: '已收藏到专辑' });
+    }
+    modal.style.display = 'none';
+  };
+}
+
 // 我的页事件绑定
 function bindMyEvents() {
   // 加载配置 (Token Plan 只需 API Key)
@@ -362,6 +431,98 @@ function bindMyEvents() {
       }
     });
   }
+
+  // V7: 专辑管理
+  renderAlbumList();
+
+  // 新建专辑按钮
+  const createAlbumBtn = document.getElementById('create-album-btn');
+  const newAlbumInput = document.getElementById('new-album-name');
+  if (createAlbumBtn) {
+    createAlbumBtn.addEventListener('click', () => {
+      if (newAlbumInput.style.display === 'none') {
+        newAlbumInput.style.display = 'block';
+        newAlbumInput.focus();
+      } else {
+        const name = newAlbumInput.value.trim();
+        if (!name) { showToast({ title: '请输入专辑名称' }); return; }
+        useStore.getState().createAlbum(name);
+        newAlbumInput.value = '';
+        newAlbumInput.style.display = 'none';
+        renderAlbumList();
+        showToast({ title: '专辑已创建' });
+      }
+    });
+  }
+}
+
+// 渲染专辑列表
+function renderAlbumList() {
+  const list = document.getElementById('album-list');
+  if (!list) return;
+  const { albums, getFavoritesByAlbum, deleteAlbum } = useStore.getState();
+
+  if (albums.length === 0) {
+    list.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">暂无专辑</p>';
+    return;
+  }
+
+  list.innerHTML = albums.map(album => {
+    const favs = getFavoritesByAlbum(album.id);
+    return `<div class="album-item" data-id="${album.id}">
+      <div class="album-header">
+        <span class="album-name">${album.name}</span>
+        <span class="album-count">${favs.length}个作品</span>
+        <button class="album-delete-btn" data-id="${album.id}">🗑️</button>
+      </div>
+      <div class="album-favs" id="album-favs-${album.id}" style="display:none;">
+        ${favs.length === 0 ? '<p style="font-size:12px;color:var(--text-secondary);">专辑为空</p>' :
+          favs.map(f => `<div class="fav-item">
+            <span>${f.type === 'image' ? '🖼️' : f.type === 'music' ? '🎵' : '🔊'}</span>
+            <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f.name || f.data?.prompt || f.data?.input || '作品'}</span>
+            <button class="fav-remove-btn" data-id="${f.id}">✕</button>
+          </div>`).join('')
+        }
+      </div>
+    </div>`;
+  }).join('');
+
+  // 绑定专辑展开/折叠
+  document.querySelectorAll('.album-name').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.closest('.album-item').dataset.id;
+      const favs = document.getElementById(`album-favs-${id}`);
+      if (favs) favs.style.display = favs.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+
+  // 绑定删除专辑
+  document.querySelectorAll('.album-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      const { confirm } = await showModal({
+        title: '确认删除',
+        content: '删除专辑将同时删除其内所有收藏，确定删除？',
+      });
+      if (confirm) {
+        deleteAlbum(id);
+        renderAlbumList();
+        showToast({ title: '专辑已删除' });
+      }
+    });
+  });
+
+  // 绑定删除收藏
+  document.querySelectorAll('.fav-remove-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      useStore.getState().removeFavorite(id);
+      renderAlbumList();
+      showToast({ title: '已移除收藏' });
+    });
+  });
 }
 
 // ============ Offline Status Bar ============

@@ -173,6 +173,54 @@ const useStore = create(
         return mostUsed;
       },
 
+      // ============ V7: 专辑 & 收藏 ============
+      albums: [], // { id, name, createdAt }
+      favorites: [], // { id, type, data, name, albumId, rating, createdAt }
+
+      createAlbum: (name) => {
+        const id = Date.now().toString();
+        set({ albums: [...get().albums, { id, name, createdAt: new Date().toISOString() }] });
+        return id;
+      },
+
+      deleteAlbum: (albumId) => {
+        set({
+          albums: get().albums.filter(a => a.id !== albumId),
+          favorites: get().favorites.filter(f => f.albumId !== albumId),
+        });
+      },
+
+      addFavorite: (item, albumId, name, rating) => {
+        set({
+          favorites: [...get().favorites, {
+            id: Date.now().toString(),
+            type: item.type,
+            data: item.data || item,
+            name: name || '',
+            albumId: albumId || null,
+            rating: rating || 0,
+            createdAt: new Date().toISOString(),
+          }],
+        });
+      },
+
+      removeFavorite: (favoriteId) => {
+        set({ favorites: get().favorites.filter(f => f.id !== favoriteId) });
+      },
+
+      getFavoritesByAlbum: (albumId) => {
+        if (!albumId) return get().favorites;
+        return get().favorites.filter(f => f.albumId === albumId);
+      },
+
+      moveFavorite: (favoriteId, newAlbumId) => {
+        set({
+          favorites: get().favorites.map(f =>
+            f.id === favoriteId ? { ...f, albumId: newAlbumId } : f
+          ),
+        });
+      },
+
       // ============ V6: 成本统计 ============
 
       // 所有模型调用次数之和

@@ -22,5 +22,21 @@ export function renderHistoryPage() {
         </div>
       </div>
     </div>
+
+    <div id="favorite-modal" class="modal" style="display:none">
+      <div class="modal-content">
+        <h3>收藏到专辑</h3>
+        <select id="album-select">
+          <option value="">-- 选择专辑 --</option>
+          <option value="__new__">+ 新建专辑</option>
+        </select>
+        <input id="new-album-name" placeholder="新专辑名称" style="display:none">
+        <input id="favorite-name" placeholder="作品名称（可选）">
+        <div class="modal-actions">
+          <button id="fav-cancel">取消</button>
+          <button id="fav-confirm">确认</button>
+        </div>
+      </div>
+    </div>
   `;
 }

@@ -1,6 +1,7 @@
 /**
  * 我的页面
  * V6: API额度管理 + 成本统计
+ * V7: 专辑管理
  */
 import useStore, { MODEL_COST } from '../store/useStore.js';
 
@@ -104,6 +105,13 @@ export function renderMyPage() {
           })()}
         </div>
         <div class="total-cost">累计消耗: ${getTotalCost().toLocaleString()} tokens</div>
+      </div>
+
+      <div id="albums-section" class="card">
+        <h3 style="font-size:16px;margin-bottom:16px;">📁 我的专辑</h3>
+        <button class="btn btn-primary btn-full" id="create-album-btn" style="margin-bottom:12px;">+ 新建专辑</button>
+        <input type="text" class="input" id="new-album-name" placeholder="专辑名称" style="display:none;margin-bottom:12px;">
+        <div id="album-list"></div>
       </div>
 
       <div class="card">
