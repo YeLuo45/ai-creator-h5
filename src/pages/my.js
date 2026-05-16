@@ -1,12 +1,12 @@
 /**
  * 我的页面
- * V5: 模型使用统计
+ * V6: API额度管理 + 成本统计
  */
-import useStore from '../store/useStore.js';
+import useStore, { MODEL_COST } from '../store/useStore.js';
 
 export function renderMyPage() {
   // 获取模型使用统计
-  const { modelUsage } = useStore.getState();
+  const { modelUsage, getTotalUsage, getTotalCost } = useStore.getState();
 
   // 渲染统计行
   const statsRows = Object.entries({
@@ -73,6 +73,37 @@ export function renderMyPage() {
         <div class="model-stats">
           ${statsRows}
         </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:16px;">📊 API 使用概览</h3>
+        <div class="model-bars">
+          ${(() => {
+            const usageData = Object.entries({
+              'image-01': 'Image-01',
+              'image-02': 'Image-02',
+              'music-2.6': 'Music-2.6',
+              'music-02': 'Music-02',
+              'speech-01': 'Speech-01',
+              'speech-02': 'Speech-02',
+            }).map(([key, label]) => ({
+              key,
+              label,
+              count: modelUsage[key] || 0,
+              tokens: MODEL_COST[key]?.tokens || 0,
+            }));
+            const maxUsage = Math.max(...usageData.map(d => d.count), 1);
+            return usageData.map(d => {
+              const barPct = d.count > 0 ? Math.round((d.count / maxUsage) * 100) : 0;
+              return `<div class="bar-row">
+                <span class="bar-label">${d.label}</span>
+                <div class="bar-container"><div class="bar-fill" style="width:${barPct}%"></div></div>
+                <span class="bar-count">${d.count}次 / ${d.tokens}tokens</span>
+              </div>`;
+            }).join('');
+          })()}
+        </div>
+        <div class="total-cost">累计消耗: ${getTotalCost().toLocaleString()} tokens</div>
       </div>
 
       <div class="card">

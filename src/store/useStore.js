@@ -5,6 +5,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+// ============ V6: 模型成本配置 ============
+export const MODEL_COST = {
+  'image-01': { tokens: 100 },
+  'image-02': { tokens: 50 },
+  'music-2.6': { tokens: 200 },
+  'music-02': { tokens: 150 },
+  'speech-01': { tokens: 80 },
+  'speech-02': { tokens: 120 },
+};
+
 const useStore = create(
   persist(
     (set, get) => ({
@@ -161,6 +171,25 @@ const useStore = create(
           }
         }
         return mostUsed;
+      },
+
+      // ============ V6: 成本统计 ============
+
+      // 所有模型调用次数之和
+      getTotalUsage: () => {
+        const { modelUsage } = get();
+        return Object.values(modelUsage).reduce((sum, v) => sum + (v || 0), 0);
+      },
+
+      // 所有模型调用消耗 tokens 之和
+      getTotalCost: () => {
+        const { modelUsage } = get();
+        let total = 0;
+        for (const [model, count] of Object.entries(modelUsage)) {
+          const cost = MODEL_COST[model];
+          if (cost) total += (count || 0) * cost.tokens;
+        }
+        return total;
       },
     }),
     {

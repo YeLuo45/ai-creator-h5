@@ -469,3 +469,55 @@ textarea.input {
   color: var(--primary);
   font-weight: 600;
 }
+
+/* V6: API使用概览 */
+.model-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 70px;
+}
+
+.bar-container {
+  flex: 1;
+  height: 10px;
+  background: var(--bg-surface);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.bar-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 90px;
+  text-align: right;
+}
+
+.total-cost {
+  text-align: center;
+  font-size: 14px;
+  color: var(--primary);
+  font-weight: 600;
+  padding: 10px;
+  background: var(--bg-surface);
+  border-radius: 8px;
+}
