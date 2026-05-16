@@ -4,11 +4,11 @@
  */
 
 import { showToast, showModal } from './adapter/web-api.js';
-import { storage } from './adapter/web-api.js';
 import { renderIndexPage } from './pages/index.js';
 import { renderGeneratePage } from './pages/generate.js';
 import { renderHistoryPage } from './pages/history.js';
 import { renderMyPage } from './pages/my.js';
+import useStore from './store/useStore.js';
 
 // 当前路由
 let currentPage = '';
@@ -382,7 +382,7 @@ async function showHistoryDetail(type, id) {
 // 我的页事件绑定
 function bindMyEvents() {
   // 加载配置 (Token Plan 只需 API Key)
-  const apiKey = storage.get('minimax_api_key') || '';
+  const apiKey = useStore.getState().apiKey;
 
   const apiKeyInput = document.getElementById('api-key-input');
 
@@ -394,9 +394,9 @@ function bindMyEvents() {
     saveBtn.addEventListener('click', async () => {
       const newApiKey = document.getElementById('api-key-input')?.value || '';
 
-      storage.set('minimax_api_key', newApiKey);
+      useStore.getState().setApiKey(newApiKey);
       // 清除旧的 Group ID（如果存在）
-      storage.remove('minimax_group_id');
+      useStore.getState().setGroupId('');
 
       showToast({ title: '配置已保存' });
     });
@@ -411,20 +411,47 @@ function bindMyEvents() {
         content: '确定要清空所有历史记录吗？此操作不可恢复。',
       });
       if (confirm) {
-        const { clearHistory: clearImage } = await import('./services/imageService.js');
-        const { clearHistory: clearMusic } = await import('./services/musicService.js');
-        const { clearHistory: clearTTS } = await import('./services/ttsService.js');
-        clearImage();
-        clearMusic();
-        clearTTS();
+        useStore.getState().clearAllHistory();
         showToast({ title: '历史已清空' });
       }
     });
   }
 }
 
-// 初始化
+// ============ Offline Status Bar ============
+function renderOfflineBar() {
+  const isOffline = useStore.getState().isOffline;
+  let bar = document.getElementById('offline-bar');
+  if (isOffline) {
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'offline-bar';
+      bar.innerHTML = '⚠️ 当前处于离线模式';
+      document.body.prepend(bar);
+    }
+  } else {
+    if (bar) bar.remove();
+  }
+}
+
+// ============ Init ============
 window.addEventListener('hashchange', handleRoute);
 window.addEventListener('DOMContentLoaded', () => {
+  // 初始化离线状态
+  useStore.getState().setOffline(!navigator.onLine);
+
+  // 监听 online/offline 事件
+  window.addEventListener('online', () => {
+    useStore.getState().setOffline(false);
+    renderOfflineBar();
+  });
+  window.addEventListener('offline', () => {
+    useStore.getState().setOffline(true);
+    renderOfflineBar();
+  });
+
+  // 渲染离线状态栏
+  renderOfflineBar();
+
   handleRoute();
 });

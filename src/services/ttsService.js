@@ -3,17 +3,15 @@
  */
 
 import { MiniMaxTTSAdapter } from '../adapter/MiniMaxAdapter.js';
-import { storage, showLoading, hideLoading, createInnerAudioContext } from '../adapter/web-api.js';
-
-const HISTORY_KEY = 'history_tts';
+import { showLoading, hideLoading, createInnerAudioContext } from '../adapter/web-api.js';
+import useStore from '../store/useStore.js';
 
 /**
  * 获取 API 配置
  */
 function getConfig() {
-  return {
-    apiKey: storage.get('minimax_api_key') || '',
-  };
+  const apiKey = useStore.getState().apiKey;
+  return { apiKey };
 }
 
 /**
@@ -67,28 +65,21 @@ export function playTTS(audioUrl) {
  * 添加到历史记录
  */
 function addToHistory(item) {
-  const history = getHistory();
-  history.unshift({
-    ...item,
-    id: Date.now(),
-    createdAt: new Date().toISOString(),
-  });
-  if (history.length > 50) history.pop();
-  storage.set(HISTORY_KEY, history);
+  useStore.getState().addHistoryItem('tts', item);
 }
 
 /**
  * 获取历史记录
  */
 export function getHistory() {
-  return storage.get(HISTORY_KEY) || [];
+  return useStore.getState().getHistory('tts');
 }
 
 /**
  * 清空历史记录
  */
 export function clearHistory() {
-  storage.remove(HISTORY_KEY);
+  useStore.getState().clearHistory('tts');
 }
 
 /**

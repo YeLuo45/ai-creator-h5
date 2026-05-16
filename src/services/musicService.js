@@ -3,9 +3,8 @@
  */
 
 import { MiniMaxMusicAdapter, MiniMaxLyricsAdapter, MiniMaxMusicCoverAdapter } from '../adapter/MiniMaxAdapter.js';
-import { storage, showLoading, hideLoading } from '../adapter/web-api.js';
-
-const HISTORY_KEY = 'history_music';
+import { showLoading, hideLoading } from '../adapter/web-api.js';
+import useStore from '../store/useStore.js';
 
 /**
  * Hex 字符串转 Base64
@@ -42,9 +41,8 @@ function hexToBase64(hex) {
  * 获取 API 配置
  */
 function getConfig() {
-  return {
-    apiKey: storage.get('minimax_api_key') || '',
-  };
+  const apiKey = useStore.getState().apiKey;
+  return { apiKey };
 }
 
 /**
@@ -146,26 +144,19 @@ export async function generateMusicCover({ prompt, musicUrl }) {
  * 添加到历史记录
  */
 function addToHistory(item) {
-  const history = getHistory();
-  history.unshift({
-    ...item,
-    id: Date.now(),
-    createdAt: new Date().toISOString(),
-  });
-  if (history.length > 50) history.pop();
-  storage.set(HISTORY_KEY, history);
+  useStore.getState().addHistoryItem('music', item);
 }
 
 /**
  * 获取历史记录
  */
 export function getHistory() {
-  return storage.get(HISTORY_KEY) || [];
+  return useStore.getState().getHistory('music');
 }
 
 /**
  * 清空历史记录
  */
 export function clearHistory() {
-  storage.remove(HISTORY_KEY);
+  useStore.getState().clearHistory('music');
 }

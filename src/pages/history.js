@@ -13,7 +13,6 @@ export function renderHistoryPage() {
         <div class="type-tag" data-filter="image">图片</div>
         <div class="type-tag" data-filter="music">音乐</div>
         <div class="type-tag" data-filter="tts">语音</div>
-        <div class="type-tag" data-filter="video">视频</div>
       </div>
 
       <div id="history-list">

@@ -3,24 +3,11 @@
  */
 
 export function renderMyPage() {
-  // 获取当前主题
-  const currentTheme = document.body.dataset.theme || 'system';
-  const themeLabel = currentTheme === 'dark' ? '🌙 深色' : currentTheme === 'light' ? '☀️ 浅色' : '🔄 跟随系统';
-
   return `
     <div class="page-header">
       <h1>👤 我的</h1>
     </div>
     <div class="page">
-      <div class="card">
-        <h3 style="font-size:16px;margin-bottom:16px;">🎨 主题设置</h3>
-        <div class="theme-selector">
-          <div class="theme-btn ${currentTheme === 'light' ? 'active' : ''}" data-theme="light">☀️ 浅色</div>
-          <div class="theme-btn ${currentTheme === 'dark' ? 'active' : ''}" data-theme="dark">🌙 深色</div>
-          <div class="theme-btn ${currentTheme === 'system' ? 'active' : ''}" data-theme="system">🔄 系统</div>
-        </div>
-      </div>
-
       <div class="card">
         <h3 style="font-size:16px;margin-bottom:16px;">⚙️ API 配置</h3>
         <div style="margin-bottom:12px;">
