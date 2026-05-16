@@ -676,3 +676,98 @@ textarea.input {
   font-size: 12px;
   padding: 2px 6px;
 }
+
+/* V8: 批量操作栏 */
+.batch-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-surface);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.batch-bar input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.batch-bar span {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.batch-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  transition: background 0.2s;
+}
+
+.batch-btn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.batch-cancel {
+  background: var(--bg-page);
+  color: var(--text-secondary);
+}
+
+.batch-cancel:hover {
+  background: #444;
+  color: var(--text-primary);
+}
+
+/* V8: 分享按钮 */
+.share-btn {
+  position: absolute;
+  top: 8px;
+  right: 48px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.share-btn:hover {
+  background: rgba(6, 182, 212, 0.6);
+}
+
+/* V8: 历史项添加左边距以容纳复选框 */
+.history-item .item-checkbox {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--primary);
+  z-index: 2;
+}
+
+.history-item {
+  position: relative;
+  padding-left: 36px;
+}
+
+.history-item .history-thumb {
+  margin-left: 0;
+}

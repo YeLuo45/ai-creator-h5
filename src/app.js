@@ -233,10 +233,25 @@ function bindHistoryEvents() {
   loadHistory('all');
 }
 
+// 批量更新选中计数并显示/隐藏批量栏
+function updateBatchBar() {
+  const batchBar = document.getElementById('batch-bar');
+  const selectedCount = document.getElementById('selected-count');
+  if (!batchBar || !selectedCount) return;
+
+  const count = window.__batchSelectedItems?.size || 0;
+  selectedCount.textContent = count;
+  batchBar.style.display = count > 0 ? 'flex' : 'none';
+}
+
 // 加载历史记录
 async function loadHistory(filter) {
   const listContainer = document.getElementById('history-list');
   if (!listContainer) return;
+
+  // 重置批量选择
+  window.__batchSelectedItems = new Set();
+  updateBatchBar();
 
   let images = [], music = [], tts = [];
 
@@ -271,14 +286,100 @@ async function loadHistory(filter) {
 
   listContainer.innerHTML = all.map(item => `
     <div class="history-item" data-id="${item.id}" data-type="${item.type}">
+      <input type="checkbox" class="item-checkbox" data-id="${item.id}" data-type="${item.type}">
       ${item.type === 'image' ? `<img class="history-thumb" src="${item.url}" alt="图片">` : '<div class="history-thumb" style="display:flex;align-items:center;justify-content:center;font-size:32px;">' + (item.type === 'music' ? '🎵' : '🔊') + '</div>'}
       <div class="history-info">
         <div class="history-title">${item.prompt || item.input || '生成作品'}</div>
         <div class="history-meta">${new Date(item.createdAt).toLocaleString()}</div>
       </div>
+      <button class="share-btn" data-id="${item.id}" data-type="${item.type}" data-url="${item.url || ''}">📤 分享</button>
       <button class="fav-btn" data-id="${item.id}" data-type="${item.type}">⭐</button>
     </div>
   `).join('');
+
+  // 绑定 checkbox 事件
+  document.querySelectorAll('.item-checkbox').forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      e.stopPropagation();
+      const key = `${cb.dataset.type}-${cb.dataset.id}`;
+      if (!window.__batchSelectedItems) window.__batchSelectedItems = new Set();
+      if (cb.checked) {
+        window.__batchSelectedItems.add(key);
+      } else {
+        window.__batchSelectedItems.delete(key);
+      }
+      updateBatchBar();
+      updateSelectAllState();
+    });
+  });
+
+  // 全选/取消全选
+  const selectAll = document.getElementById('select-all');
+  if (selectAll) {
+    selectAll.addEventListener('change', (e) => {
+      const checked = e.target.checked;
+      document.querySelectorAll('.item-checkbox').forEach(cb => {
+        cb.checked = checked;
+        const key = `${cb.dataset.type}-${cb.dataset.id}`;
+        if (checked) {
+          window.__batchSelectedItems.add(key);
+        } else {
+          window.__batchSelectedItems.delete(key);
+        }
+      });
+      updateBatchBar();
+    });
+  }
+
+  // 绑定批量删除
+  const batchDeleteBtn = document.getElementById('batch-delete');
+  if (batchDeleteBtn) {
+    batchDeleteBtn.onclick = () => {
+      const items = Array.from(window.__batchSelectedItems || []);
+      if (items.length === 0) return;
+      if (confirm(`确认删除 ${items.length} 项？`)) {
+        const toRemove = items.map(key => {
+          const [type, id] = key.split('-');
+          return { type, id: parseInt(id) };
+        });
+        useStore.getState().removeHistoryItems(toRemove);
+        showToast({ title: `已删除 ${items.length} 项` });
+        loadHistory(filter);
+      }
+    };
+  }
+
+  // 绑定批量收藏
+  const batchFavBtn = document.getElementById('batch-fav');
+  if (batchFavBtn) {
+    batchFavBtn.onclick = () => {
+      const items = Array.from(window.__batchSelectedItems || []);
+      if (items.length === 0) return;
+      openBatchFavoriteModal(items);
+    };
+  }
+
+  // 绑定取消
+  const batchCancelBtn = document.getElementById('batch-cancel');
+  if (batchCancelBtn) {
+    batchCancelBtn.onclick = () => {
+      window.__batchSelectedItems = new Set();
+      document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = false);
+      const selectAllEl = document.getElementById('select-all');
+      if (selectAllEl) selectAllEl.checked = false;
+      updateBatchBar();
+    };
+  }
+
+  // 绑定分享按钮
+  document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const type = btn.dataset.type;
+      const url = btn.dataset.url;
+      handleShare(type, url);
+    });
+  });
 
   // 绑定收藏按钮事件
   document.querySelectorAll('.fav-btn').forEach(btn => {
@@ -290,14 +391,113 @@ async function loadHistory(filter) {
     });
   });
 
-  // 绑定点击事件
+  // 绑定点击事件（排除按钮）
   document.querySelectorAll('.history-item').forEach(item => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
       const type = item.dataset.type;
       const id = parseInt(item.dataset.id);
       showHistoryDetail(type, id);
     });
   });
+}
+
+// 更新全选复选框状态
+function updateSelectAllState() {
+  const selectAll = document.getElementById('select-all');
+  const checkboxes = document.querySelectorAll('.item-checkbox');
+  if (!selectAll || checkboxes.length === 0) return;
+
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+  const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+  selectAll.checked = allChecked;
+  selectAll.indeterminate = someChecked && !allChecked;
+}
+
+// 处理分享
+function handleShare(type, url) {
+  if (type === 'image' && url) {
+    // 复制图片 URL 到剪贴板
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast({ title: '已复制到剪贴板' });
+      }).catch(() => {
+        showToast({ title: '复制失败' });
+      });
+    } else {
+      alert('复制功能在非安全环境下不可用');
+    }
+  } else if ((type === 'music' || type === 'tts') && url) {
+    // 播放音频（不复制 base64）
+    try {
+      const audio = new Audio(url);
+      audio.play();
+      showToast({ title: '正在播放' });
+    } catch (e) {
+      showToast({ title: '播放失败' });
+    }
+  } else {
+    showToast({ title: '分享内容不可用' });
+  }
+}
+
+// 批量收藏弹窗
+async function openBatchFavoriteModal(items) {
+  const { albums, addFavorite, createAlbum } = useStore.getState();
+  const modal = document.getElementById('batch-fav-modal');
+  const albumSelect = document.getElementById('batch-album-select');
+  const newAlbumInput = document.getElementById('batch-new-album-name');
+  const countEl = document.getElementById('batch-fav-count');
+
+  countEl.textContent = `已选 ${items.length} 项`;
+  albumSelect.innerHTML = '<option value="">-- 选择专辑 --</option>' +
+    albums.map(a => `<option value="${a.id}">${a.name}</option>`).join('') +
+    '<option value="__new__">+ 新建专辑</option>';
+
+  newAlbumInput.style.display = 'none';
+  newAlbumInput.value = '';
+  modal.style.display = 'flex';
+
+  albumSelect.onchange = () => {
+    newAlbumInput.style.display = albumSelect.value === '__new__' ? 'block' : 'none';
+  };
+
+  document.getElementById('batch-fav-cancel').onclick = () => {
+    modal.style.display = 'none';
+  };
+
+  document.getElementById('batch-fav-confirm').onclick = async () => {
+    let albumId = albumSelect.value;
+    if (albumId === '__new__') {
+      const name = newAlbumInput.value.trim();
+      if (!name) { showToast({ title: '请输入专辑名称' }); return; }
+      albumId = createAlbum(name);
+    }
+
+    // 批量添加到收藏
+    for (const key of items) {
+      const [type, id] = key.split('-');
+      let item = null;
+      if (type === 'image') {
+        const { getHistory } = await import('./services/imageService.js');
+        item = getHistory().find(i => i.id === parseInt(id));
+      } else if (type === 'music') {
+        const { getHistory } = await import('./services/musicService.js');
+        item = getHistory().find(i => i.id === parseInt(id));
+      } else if (type === 'tts') {
+        const { getHistory } = await import('./services/ttsService.js');
+        item = getHistory().find(i => i.id === parseInt(id));
+      }
+      if (item) {
+        addFavorite({ type, data: item }, albumId, '');
+      }
+    }
+
+    showToast({ title: `已收藏 ${items.length} 项到专辑` });
+    modal.style.display = 'none';
+    window.__batchSelectedItems = new Set();
+    loadHistory(document.querySelector('.type-tag.active')?.dataset.filter || 'all');
+  };
 }
 
 // 显示历史详情

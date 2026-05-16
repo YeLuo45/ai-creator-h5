@@ -122,6 +122,40 @@ const useStore = create(
         });
       },
 
+      // 删除单条历史记录（V8 批量操作）
+      removeHistoryItem: (type, id) => {
+        const keyMap = {
+          image: 'images',
+          music: 'music',
+          tts: 'tts',
+        };
+        const storageKey = keyMap[type];
+        if (!storageKey) return;
+
+        const history = get().history;
+        set({
+          history: {
+            ...history,
+            [storageKey]: (history[storageKey] || []).filter(item => item.id !== id),
+          },
+        });
+      },
+
+      // 批量删除历史记录（V8 批量操作）
+      removeHistoryItems: (items) => {
+        // items: [{ type, id }, ...]
+        const history = get().history;
+        const keyMap = { image: 'images', music: 'music', tts: 'tts' };
+
+        const newHistory = { ...history };
+        for (const { type, id } of items) {
+          const storageKey = keyMap[type];
+          if (!storageKey) continue;
+          newHistory[storageKey] = (newHistory[storageKey] || []).filter(item => item.id !== id);
+        }
+        set({ history: newHistory });
+      },
+
       // 清空所有历史（兼容旧接口）
       clearAllHistory: () => {
         set({ history: { images: [], music: [], tts: [] } });
