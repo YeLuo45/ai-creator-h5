@@ -1,7 +1,9 @@
 /**
  * 生成页
  * V4: 多模型选择 + 提示词模板库
+ * V5: 用户偏好记忆 + 模型使用统计
  */
+import useStore from '../store/useStore.js';
 
 const TEMPLATES = {
   image: [
@@ -35,7 +37,7 @@ const MODEL_OPTIONS = {
   ],
 };
 
-// 模型选择状态（用于 handleGenerate）
+// 模型选择状态（用于 handleGenerate） - 现在从 store 读取
 let currentModel = {
   image: 'image-01',
   music: 'music-2.6',
@@ -131,6 +133,14 @@ export function renderGeneratePage() {
  * 初始化生成页交互（由 app.js bindGenerateEvents 调用）
  */
 export function initGeneratePage() {
+  // 从 store 恢复上次选择的模型
+  const store = useStore.getState();
+  currentModel = {
+    image: store.lastSelectedModel?.image || 'image-01',
+    music: store.lastSelectedModel?.music || 'music-2.6',
+    tts: store.lastSelectedModel?.tts || 'speech-01',
+  };
+
   // Tab 切换
   document.querySelectorAll('.type-tag').forEach(tag => {
     tag.addEventListener('click', () => {
@@ -140,11 +150,13 @@ export function initGeneratePage() {
     });
   });
 
-  // 模型选择器变化时保存当前选择
+  // 模型选择器变化时保存到 store
   document.getElementById('model-select').addEventListener('change', (e) => {
     const activeTab = document.querySelector('.type-tag.active');
     if (activeTab) {
-      currentModel[activeTab.dataset.type] = e.target.value;
+      const type = activeTab.dataset.type;
+      currentModel[type] = e.target.value;
+      useStore.getState().setLastSelectedModel(type, e.target.value);
     }
   });
 

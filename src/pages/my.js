@@ -1,8 +1,29 @@
 /**
  * 我的页面
+ * V5: 模型使用统计
  */
+import useStore from '../store/useStore.js';
 
 export function renderMyPage() {
+  // 获取模型使用统计
+  const { modelUsage } = useStore.getState();
+
+  // 渲染统计行
+  const statsRows = Object.entries({
+    'image-01': 'Image-01',
+    'image-02': 'Image-02',
+    'music-2.6': 'Music-2.6',
+    'music-02': 'Music-02',
+    'speech-01': 'Speech-01',
+    'speech-02': 'Speech-02',
+  }).map(([key, label]) => {
+    const count = modelUsage[key] || 0;
+    return `<div class="stat-row">
+      <span class="model-name">${label}</span>
+      <span class="model-count">${count}次</span>
+    </div>`;
+  }).join('');
+
   return `
     <div class="page-header">
       <h1>👤 我的</h1>
@@ -45,6 +66,13 @@ export function renderMyPage() {
             <td style="text-align:right;">按请求数计，每5小时滚动重置</td>
           </tr>
         </table>
+      </div>
+
+      <div class="card stats-section">
+        <h3 style="font-size:16px;margin-bottom:16px;">📈 模型使用统计</h3>
+        <div class="model-stats">
+          ${statsRows}
+        </div>
       </div>
 
       <div class="card">

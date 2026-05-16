@@ -156,18 +156,24 @@ async function handleGenerate() {
       const size = document.getElementById('size-select')?.value || '1024x1024';
       result = await generateImage({ prompt: promptInput.value, model: selectedModel, style, size });
       showResult('image', result);
+      // V5: 记录模型使用
+      useStore.getState().incrementModelUsage(selectedModel);
     } else if (type === 'music') {
       const { generateMusic } = await import('./services/musicService.js');
       const duration = parseInt(document.getElementById('duration-input')?.value || '180');
       const lyrics = document.getElementById('lyrics-input')?.value || '';
       result = await generateMusic({ prompt: promptInput.value, model: selectedModel, lyrics, duration });
       showResult('music', result);
+      // V5: 记录模型使用
+      useStore.getState().incrementModelUsage(selectedModel);
     } else if (type === 'tts') {
       const { generateTTS } = await import('./services/ttsService.js');
       const voice = document.getElementById('voice-select')?.value || 'female-shaonv';
       const speed = parseFloat(document.getElementById('tts-speed')?.value || '1.0');
       result = await generateTTS({ input: promptInput.value, model: selectedModel, voice, speed });
       showResult('tts', result);
+      // V5: 记录模型使用
+      useStore.getState().incrementModelUsage(selectedModel);
     }
   } catch (err) {
     showToast({ title: err.message || '生成失败' });
