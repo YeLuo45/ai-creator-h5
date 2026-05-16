@@ -1,13 +1,1 @@
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  base: './',
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-  },
-  server: {
-    port: 3200,
-    open: true,
-  },
-});
+aW1wb3J0IHsgZGVmaW5lQ29uZmlnIH0gZnJvbSAndml0ZSc7CgpleHBvcnQgZGVmYXVsdCBkZWZpbmVDb25maWcoewogIGJhc2U6ICcuLycsCiAgYnVpbGQ6IHsKICAgIG91dERpcjogJ2Rpc3QnLAogICAgYXNzZXRzRGlyOiAnYXNzZXRzJywKICB9LAogIHNlcnZlcjogewogICAgcG9ydDogMzIwMCwKICAgIG9wZW46IHRydWUsCiAgfSwKfSk7Cg==

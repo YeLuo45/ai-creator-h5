@@ -1,17 +1,1 @@
-{
-  "name": "ai-creator-h5",
-  "version": "1.0.0",
-  "description": "AI Creator H5 - AI 图片/音乐/语音生成平台",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "zustand": "^5.0.13"
-  },
-  "devDependencies": {
-    "vite": "^5.4.21"
-  }
-}
+ewogICJuYW1lIjogImFpLWNyZWF0b3ItaDUiLAogICJ2ZXJzaW9uIjogIjEuMC4wIiwKICAiZGVzY3JpcHRpb24iOiAiQUkgQ3JlYXRvciBINSAtIEFJIOWbvueJhy/pn7PkuZAv6K+t6Z+z55Sf5oiQ5bmz5Y+wIiwKICAidHlwZSI6ICJtb2R1bGUiLAogICJzY3JpcHRzIjogewogICAgImRldiI6ICJ2aXRlIiwKICAgICJidWlsZCI6ICJ2aXRlIGJ1aWxkIiwKICAgICJwcmV2aWV3IjogInZpdGUgcHJldmlldyIKICB9LAogICJkZXBlbmRlbmNpZXMiOiB7CiAgICAienVzdGFuZCI6ICJeNS4wLjEzIgogIH0sCiAgImRldkRlcGVuZGVuY2llcyI6IHsKICAgICJ2aXRlIjogIl41LjQuMjEiCiAgfQp9Cg==
