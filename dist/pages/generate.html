@@ -710,6 +710,13 @@
 </head>
 <body>
   <div class="page">
+    <!-- Offline Status Banner -->
+    <div id="offlineBanner" class="offline-banner" style="display:none;">
+      <span class="offline-icon">📡</span>
+      <span class="offline-text" id="offlineText">离线模式</span>
+      <span class="offline-queue" id="queueBadge" style="display:none;">0 个待提交</span>
+    </div>
+
     <span class="btn-back" onclick="window.history.back()">← 返回</span>
 
     <!-- Result View -->
@@ -882,6 +889,124 @@
       tts: '每段文字用空行分隔，最多10段',
     };
 
+    // ========== Offline Queue Functions ==========
+    function updateOfflineStatus() {
+      const banner = document.getElementById('offlineBanner');
+      const offlineText = document.getElementById('offlineText');
+      const queueBadge = document.getElementById('queueBadge');
+
+      if (!navigator.onLine) {
+        banner.style.display = 'flex';
+        offlineText.textContent = '离线模式 - 请求已加入队列';
+        banner.classList.add('offline');
+      } else {
+        banner.style.display = 'flex';
+        offlineText.textContent = '🌐 在线';
+        banner.classList.remove('offline');
+        // Hide after 2 seconds when online
+        setTimeout(() => {
+          banner.style.display = 'none';
+        }, 2000);
+      }
+    }
+
+    async function updateQueueBadge() {
+      const badge = document.getElementById('queueBadge');
+      if (!window.OfflineQueue) {
+        badge.style.display = 'none';
+        return;
+      }
+
+      try {
+        const status = await window.OfflineQueue.getQueueStatus();
+        if (status.pending > 0) {
+          badge.style.display = 'inline';
+          badge.textContent = `${status.pending} 个待提交`;
+        } else {
+          badge.style.display = 'none';
+        }
+      } catch (e) {
+        badge.style.display = 'none';
+      }
+    }
+
+    async function handleOfflineRequest(prompts) {
+      if (!window.OfflineQueue) {
+        showError('离线队列服务不可用，请检查网络');
+        return;
+      }
+
+      const btn = document.getElementById('generateBtn');
+
+      try {
+        for (const prompt of prompts) {
+          let params = {};
+          if (state.type === 'image') {
+            params = {
+              style: document.getElementById('styleSelect').value,
+              size: document.getElementById('sizeSelect').value
+            };
+          } else if (state.type === 'music') {
+            params = {
+              genre: document.getElementById('genreSelect').value,
+              duration: parseInt(document.getElementById('durationSelect').value)
+            };
+          } else if (state.type === 'tts') {
+            params = {
+              voice: document.getElementById('voiceSelect').value
+            };
+          }
+
+          await window.OfflineQueue.addToQueue({
+            type: state.type,
+            prompt: prompt,
+            params: params
+          });
+        }
+
+        // Show success message
+        showToast(`已加入离线队列，网络恢复后将自动提交`, 'success');
+
+        // Update UI
+        updateOfflineStatus();
+        updateQueueBadge();
+
+        // Clear input
+        document.getElementById('promptInput').value = '';
+
+      } catch (e) {
+        console.error('Add to queue error:', e);
+        showError('加入队列失败: ' + e.message);
+      }
+    }
+
+    // Setup offline status listeners
+    function setupOfflineListeners() {
+      window.addEventListener('online', () => {
+        updateOfflineStatus();
+        updateQueueBadge();
+      });
+
+      window.addEventListener('offline', () => {
+        updateOfflineStatus();
+      });
+
+      // Listen for queue processing events
+      window.addEventListener('offlineQueue:processed', (e) => {
+        const { processed, failed } = e.detail;
+        showToast(`队列处理完成: ${processed}个成功${failed > 0 ? `, ${failed}个失败` : ''}`, processed > 0 ? 'success' : 'warning');
+        updateQueueBadge();
+      });
+
+      window.addEventListener('offlineQueue:statusChange', (e) => {
+        updateOfflineStatus();
+      });
+
+      // Initial status update
+      updateOfflineStatus();
+      updateQueueBadge();
+    }
+
     window.pageInit = function(params) {
       state.type = params.type || 'image';
       // Reset batch mode when switching types
@@ -909,6 +1034,7 @@
       refreshCredits();
       hideResult();
       loadMemoryRecommendations();
+      setupOfflineListeners();
     };
 
     // Memory Recommendation Functions
@@ -1126,6 +1252,12 @@
           content: '您的积分不足，请先充值',
           confirmText: '充值',
         }).then(res => { if (res.confirm) window.location.hash = '/pages/my.html'; });
+        return;
+      }
+
+      // Check if offline - add to queue instead of generating directly
+      if (!navigator.onLine) {
+        await handleOfflineRequest(prompts);
         return;
       }
 

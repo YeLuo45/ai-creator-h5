@@ -493,6 +493,20 @@
       </div>
     </div>
 
+    <!-- Cache Management -->
+    <div class="cache-card" id="cacheCard">
+      <div class="cache-header">
+        <span class="cache-title">💾 缓存管理</span>
+        <span class="cache-size" id="cacheSize">计算中...</span>
+      </div>
+      <div class="cache-info" id="cacheInfo">
+        离线队列: <span id="queueCount">0</span> 个待处理
+      </div>
+      <button class="cache-clear-btn" id="clearCacheBtn" onclick="clearAllCache()">
+        🗑️ 清理缓存
+      </button>
+    </div>
+
     <!-- Menu List -->
     <div class="menu-list">
       <div class="menu-item" onclick="onShare()">
@@ -560,6 +574,101 @@
       loadQuota();
       // Load creator center entry
       loadCreatorEntry();
+      // Load cache info
+      loadCacheInfo();
+    }
+
+    // ========== Cache Management Functions ==========
+    async function loadCacheInfo() {
+      const cacheSizeEl = document.getElementById('cacheSize');
+      const queueCountEl = document.getElementById('queueCount');
+
+      try {
+        // Get cache size from service worker
+        if ('caches' in window) {
+          let totalSize = 0;
+          const cacheNames = await caches.keys();
+          for (const name of cacheNames) {
+            if (name.startsWith('ai-creator-')) {
+              const cache = await caches.open(name);
+              const keys = await cache.keys();
+              for (const request of keys) {
+                const response = await cache.match(request);
+                if (response) {
+                  const blob = await response.clone().blob();
+                  totalSize += blob.size;
+                }
+              }
+            }
+          }
+          cacheSizeEl.textContent = formatBytes(totalSize);
+        } else {
+          cacheSizeEl.textContent = '不支持';
+        }
+
+        // Get queue count from OfflineQueue
+        if (window.OfflineQueue) {
+          const status = await window.OfflineQueue.getQueueStatus();
+          queueCountEl.textContent = status.pending;
+        } else {
+          queueCountEl.textContent = '0';
+        }
+      } catch (e) {
+        console.error('Failed to load cache info:', e);
+        cacheSizeEl.textContent = '计算失败';
+        queueCountEl.textContent = '-';
+      }
+    }
+
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    async function clearAllCache() {
+      const confirmed = await showModal({
+        title: '清理缓存',
+        content: '确定要清理所有缓存吗？包括离线队列中的请求。',
+        confirmText: '清理',
+        cancelText: '取消',
+      });
+
+      if (!confirmed.confirm) return;
+
+      showLoading('清理中...');
+
+      try {
+        // Clear IndexedDB queue
+        if (window.OfflineQueue) {
+          await window.OfflineQueue.clearQueue();
+        }
+
+        // Clear caches
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          for (const name of cacheNames) {
+            if (name.startsWith('ai-creator-')) {
+              await caches.delete(name);
+            }
+          }
+        }
+
+        hideLoading();
+        showToast('缓存已清理', 'success');
+
+        // Reload page to reset state
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+
+      } catch (e) {
+        console.error('Clear cache error:', e);
+        hideLoading();
+        showToast('清理失败: ' + e.message, 'error');
+      }
     }
 
     async function loadCreatorEntry() {
