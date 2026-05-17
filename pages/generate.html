@@ -1259,6 +1259,7 @@
                 </div>
               </div>
               <button class="btn-action" onclick="onShare()">📱 分享</button>
+              <button class="btn-action" onclick="onCollabShare()">🤝 协作</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
           </div>
@@ -1288,6 +1289,7 @@
                 </div>
               </div>
               <button class="btn-action" onclick="onShare()">📱 分享</button>
+              <button class="btn-action" onclick="onCollabShare()">🤝 协作</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
           </div>
@@ -1311,6 +1313,7 @@
                 </div>
               </div>
               <button class="btn-action" onclick="onShare()">📱 分享</button>
+              <button class="btn-action" onclick="onCollabShare()">🤝 协作</button>
               <button class="btn-action" onclick="onRegenerate()">🔄 重新生成</button>
             </div>
           </div>
@@ -2055,6 +2058,143 @@
       if (dropdown) {
         dropdown.classList.toggle('active');
       }
+    }
+
+    // ========== Collab Functions ==========
+    async function onCollabShare() {
+      if (!state.result) return;
+      
+      // 动态加载协作服务
+      const { CollabService } = await import('../services/collabService.js');
+      
+      // 准备作品数据
+      const workData = {
+        type: state.type,
+        prompt: state.prompt || '',
+        url: state.result.url || state.result.musicUrl || state.result.filePath || '',
+        title: state.type === 'image' ? '🎨 AI 创作图片' : state.type === 'music' ? '🎵 AI 创作音乐' : '🎤 AI 语音合成',
+        coverUrl: state.result.coverUrl || '',
+        duration: state.result.duration || 0,
+        style: state.result.style || '',
+        size: state.result.size || ''
+      };
+      
+      // 生成分享链接
+      const shareResult = CollabService.shareWork(workData);
+      state.shareId = shareResult.shareId;
+      state.collabUrl = shareResult.shareUrl;
+      
+      // 显示协作面板
+      showCollabPanel(shareResult);
+    }
+    
+    function showCollabPanel(shareResult) {
+      // 如果已存在面板则移除
+      const existing = document.getElementById('collabPanel');
+      if (existing) existing.remove();
+      
+      const overlay = document.createElement('div');
+      overlay.id = 'collabOverlay';
+      overlay.className = 'share-overlay';
+      overlay.onclick = closeCollabPanel;
+      
+      const panel = document.createElement('div');
+      panel.id = 'collabPanel';
+      panel.className = 'share-panel collab-panel';
+      
+      panel.innerHTML = `
+        <div class="share-panel-header">
+          <span class="share-panel-title">🤝 协作分享</span>
+          <button class="share-panel-close" onclick="closeCollabPanel()">×</button>
+        </div>
+        <div class="collab-panel-desc">分享链接给好友，他们可以查看并评论你的作品</div>
+        <div class="collab-share-url">
+          <input type="text" id="collabShareUrl" value="${shareResult.shareUrl}" readonly>
+          <button class="share-url-copy-btn" onclick="copyCollabUrl()">复制</button>
+        </div>
+        <div class="collab-comments-section">
+          <div class="collab-comments-title">💬 最近评论</div>
+          <div class="collab-comments-list" id="collabCommentsList">
+            ${renderCollabComments(shareResult.shareId)}
+          </div>
+        </div>
+      `;
+      
+      overlay.appendChild(panel);
+      document.body.appendChild(overlay);
+      document.body.style.overflow = 'hidden';
+      
+      requestAnimationFrame(() => overlay.classList.add('active'));
+      
+      // 订阅实时更新
+      if (state.collabUnsubscribe) {
+        state.collabUnsubscribe();
+      }
+      state.collabUnsubscribe = CollabService.subscribeToUpdates((event) => {
+        if (event.type === 'comment') {
+          refreshCollabComments(shareResult.shareId);
+        }
+      });
+    }
+    
+    function renderCollabComments(shareId) {
+      const comments = CollabService.getComments(shareId);
+      if (comments.length === 0) {
+        return '<div class="collab-comments-empty">暂无评论，快来抢沙发吧</div>';
+      }
+      return comments.slice(0, 5).map(c => `
+        <div class="collab-comment-item">
+          <span class="collab-comment-author">${escapeHtml(c.author)}:</span>
+          <span class="collab-comment-content">${escapeHtml(c.content)}</span>
+        </div>
+      `).join('');
+    }
+    
+    function refreshCollabComments(shareId) {
+      const list = document.getElementById('collabCommentsList');
+      if (list) {
+        list.innerHTML = renderCollabComments(shareId);
+      }
+    }
+    
+    function closeCollabPanel() {
+      const overlay = document.getElementById('collabOverlay');
+      const panel = document.getElementById('collabPanel');
+      if (overlay) {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+          overlay.remove();
+          document.body.style.overflow = '';
+        }, 300);
+      }
+      if (state.collabUnsubscribe) {
+        state.collabUnsubscribe();
+        state.collabUnsubscribe = null;
+      }
+    }
+    
+    async function copyCollabUrl() {
+      const url = document.getElementById('collabShareUrl').value;
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('协作链接已复制', 'success');
+      } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = url;
+        textarea.style.cssText = 'position:fixed;opacity:0;';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('协作链接已复制', 'success');
+      }
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
 
     // Close export menu when clicking outside
