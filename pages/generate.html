@@ -1371,11 +1371,39 @@
     
     // 构建质量评估面板HTML
     function buildQualityPanelHTML(evaluation) {
-      const { score, metrics, percentile, suggestions, summary, type } = evaluation;
+      const { score, metrics, percentile, suggestions, summary, type, benchmark, improvements, promptOptimization } = evaluation;
       const level = score >= 90 ? 'S' : score >= 80 ? 'A' : score >= 70 ? 'B' : score >= 60 ? 'C' : 'D';
       const levelClass = level.toLowerCase() + '-rank';
       
       const typeIcons = { image: '🖼️', music: '🎵', tts: '🎤' };
+      
+      // 行业基准对比信息
+      const benchmarkLevelClass = benchmark ? benchmark.level : 'average';
+      const benchmarkIcon = benchmarkLevelClass === 'excellent' ? '🌟' : 
+                            benchmarkLevelClass === 'good' ? '👍' : 
+                            benchmarkLevelClass === 'average' ? '📊' : 
+                            benchmarkLevelClass === 'below' ? '📈' : '💪';
+      
+      let benchmarkHTML = '';
+      if (benchmark) {
+        const diffSign = benchmark.difference >= 0 ? '+' : '';
+        benchmarkHTML = `
+          <div class="quality-benchmark">
+            <div class="quality-benchmark-bar">
+              <div class="quality-benchmark-avg" style="left: ${benchmark.benchmarkAvg}%;"></div>
+              <div class="quality-benchmark-user" style="left: ${score}%;"></div>
+            </div>
+            <div class="quality-benchmark-labels">
+              <span>行业平均: ${benchmark.benchmarkAvg}</span>
+              <span class="quality-benchmark-comparison ${benchmarkLevelClass}">${benchmarkIcon} ${benchmark.comparison} (${diffSign}${benchmark.difference})</span>
+              <span>您的得分: ${score}</span>
+            </div>
+          </div>
+        `;
+      }
+      
+      // 百分位排名徽章
+      const percentileBadge = percentile >= 90 ? '👑' : percentile >= 75 ? '🏆' : percentile >= 50 ? '👍' : '💡';
       
       let metricsHTML = '';
       for (const [key, metric] of Object.entries(metrics)) {
@@ -1405,6 +1433,44 @@
         `;
       }
       
+      // 分维度改进建议
+      let improvementsHTML = '';
+      if (improvements && improvements.length > 0) {
+        improvementsHTML = `
+          <div class="quality-improvements">
+            <div class="quality-improvements-title">🎯 分维度改进建议</div>
+            <ul class="quality-improvements-list">
+              ${improvements.map(imp => `
+                <li class="quality-improvement-item ${imp.priority === 'high' ? 'high-priority' : ''}" data-tip="${imp.tip}">
+                  <span class="quality-improvement-dim">${imp.dimension}</span>
+                  <span class="quality-improvement-score">${imp.score}分</span>
+                  <span class="quality-improvement-tip">💡 ${imp.tip}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        `;
+      }
+      
+      // Prompt优化建议
+      let promptOptHTML = '';
+      if (promptOptimization && promptOptimization.tips && promptOptimization.tips.length > 0) {
+        promptOptHTML = `
+          <div class="quality-prompt-opt">
+            <div class="quality-prompt-opt-title">✨ Prompt优化建议</div>
+            <ul class="quality-prompt-opt-list">
+              ${promptOptimization.tips.map(tip => `
+                <li class="quality-prompt-opt-item ${tip.type}">
+                  <span class="quality-prompt-opt-icon">${tip.type === 'success' ? '✅' : tip.type === 'add' ? '➕' : '💬'}</span>
+                  <span class="quality-prompt-opt-text">${tip.text}</span>
+                  ${tip.examples ? `<div class="quality-prompt-opt-examples">示例: ${tip.examples.join(', ')}</div>` : ''}
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        `;
+      }
+      
       return `
         <div class="quality-panel" id="qualityPanel">
           <div class="quality-panel-header">
@@ -1418,13 +1484,16 @@
             </div>
           </div>
           <div class="quality-percentile">
-            <span class="quality-percentile-icon">🏆</span>
+            <span class="quality-percentile-icon">${percentileBadge}</span>
             <span class="quality-percentile-text">超过了 <span class="quality-percentile-value">${percentile}%</span> 的创作</span>
           </div>
+          ${benchmarkHTML}
           <div class="quality-summary">${summary}</div>
           <div class="quality-metrics">
             ${metricsHTML}
           </div>
+          ${improvementsHTML}
+          ${promptOptHTML}
           <div class="quality-suggestions">
             <div class="quality-suggestions-title">💬 优化建议</div>
             <ul class="quality-suggestions-list">

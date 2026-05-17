@@ -1,6 +1,7 @@
 /**
- * QualityService - 创作质量评估服务
+ * QualityService - 创作质量评估服务 v2
  * 支持图片、音乐、TTS 的质量评分与优化建议
+ * 增强：行业基准对比、百分位排名、分维度改进建议、Prompt优化建议
  */
 class QualityService {
   constructor() {
@@ -10,6 +11,262 @@ class QualityService {
       music: [],
       tts: []
     };
+    
+    // 行业基准数据 (预设的平均水平)
+    this._industryBenchmarks = {
+      image: {
+        avgScore: 75,
+        distribution: [
+          { range: '0-60', percent: 15 },
+          { range: '60-70', percent: 20 },
+          { range: '70-80', percent: 30 },
+          { range: '80-90', percent: 25 },
+          { range: '90-100', percent: 10 }
+        ]
+      },
+      music: {
+        avgScore: 78,
+        distribution: [
+          { range: '0-60', percent: 10 },
+          { range: '60-70', percent: 18 },
+          { range: '70-80', percent: 32 },
+          { range: '80-90', percent: 28 },
+          { range: '90-100', percent: 12 }
+        ]
+      },
+      tts: {
+        avgScore: 72,
+        distribution: [
+          { range: '0-60', percent: 18 },
+          { range: '60-70', percent: 22 },
+          { range: '70-80', percent: 28 },
+          { range: '80-90', percent: 22 },
+          { range: '90-100', percent: 10 }
+        ]
+      }
+    };
+  }
+
+  /**
+   * 添加行业基准数据
+   * @param {string} type - 类型 (image/music/tts)
+   * @param {Object} benchmarkData - 基准数据 { avgScore, distribution }
+   */
+  addIndustryBenchmark(type, benchmarkData) {
+    if (!this._industryBenchmarks[type]) {
+      this._industryBenchmarks[type] = { avgScore: 0, distribution: [] };
+    }
+    if (benchmarkData.avgScore) {
+      this._industryBenchmarks[type].avgScore = benchmarkData.avgScore;
+    }
+    if (benchmarkData.distribution && Array.isArray(benchmarkData.distribution)) {
+      this._industryBenchmarks[type].distribution = benchmarkData.distribution;
+    }
+  }
+
+  /**
+   * 获取行业基准对比信息
+   * @param {number} score - 质量分数
+   * @param {string} type - 类型 (image/music/tts)
+   * @returns {Object} 对比结果 { benchmarkAvg, difference, comparison, level }
+   */
+  getBenchmarkComparison(score, type) {
+    const benchmark = this._industryBenchmarks[type] || { avgScore: 75 };
+    const benchmarkAvg = benchmark.avgScore;
+    const difference = score - benchmarkAvg;
+    
+    let comparison, level;
+    if (difference >= 15) {
+      comparison = '远超行业平均水平';
+      level = 'excellent';
+    } else if (difference >= 5) {
+      comparison = '高于行业平均水平';
+      level = 'good';
+    } else if (difference >= -5) {
+      comparison = '接近行业平均水平';
+      level = 'average';
+    } else if (difference >= -15) {
+      comparison = '略低于行业平均水平';
+      level = 'below';
+    } else {
+      comparison = '明显低于行业平均水平';
+      level = 'poor';
+    }
+    
+    return {
+      benchmarkAvg,
+      difference,
+      comparison,
+      level,
+      percentile: this.getPercentileRank(score, type)
+    };
+  }
+
+  /**
+   * 获取百分位排名
+   * @param {number} score - 质量分数
+   * @param {string} type - 类型 (image/music/tts)
+   * @returns {number} 百分位 (0-100)
+   */
+  getPercentileRank(score, type) {
+    const cache = this._scoreCache[type] || [];
+    
+    // 如果缓存不足，先初始化一些模拟数据
+    if (cache.length < 10) {
+      this._initScoreCache(type);
+    }
+    
+    // 计算百分位
+    const sortedScores = [...cache].sort((a, b) => a - b);
+    let rank = sortedScores.findIndex(s => s >= score);
+    if (rank === -1) rank = sortedScores.length;
+    
+    // 更新缓存（滑动窗口，保持最近100条）
+    cache.push(score);
+    if (cache.length > 100) cache.shift();
+    
+    return Math.round((rank / sortedScores.length) * 100);
+  }
+
+  /**
+   * 获取分维度改进建议
+   * @param {Object} metrics - 维度得分对象 { dimensionName: { score, label } }
+   * @param {string} type - 类型 (image/music/tts)
+   * @returns {Array} 改进建议列表
+   */
+  getDimensionImprovement(metrics, type) {
+    const suggestions = [];
+    const dimensionConfigs = {
+      image: {
+        composition: { low: 75, keywords: ['构图', '前景', '背景', '层次'], tip: '添加前景、背景层次或使用三分构图' },
+        color: { low: 75, keywords: ['色彩', '互补色', '冷暖'], tip: '增加色彩对比或使用互补色' },
+        clarity: { low: 75, keywords: ['清晰', '细节', '高清'], tip: '添加"高清"、"细节丰富"等关键词' },
+        creativity: { low: 70, keywords: ['创意', '梦幻', '奇幻'], tip: '增加创意关键词如"梦幻"、"超现实"' }
+      },
+      music: {
+        duration: { low: 80, keywords: ['时长', '长度'], tip: '调整音乐时长至60-120秒' },
+        bpm: { low: 80, keywords: ['节奏', 'BPM'], tip: '根据风格调整BPM至合适范围' },
+        loudness: { low: 80, keywords: ['响度', '起伏'], tip: '增加响度起伏增强感染力' },
+        quality: { low: 80, keywords: ['音质', '完整'], tip: '添加歌词和封面提升完整度' }
+      },
+      tts: {
+        speed: { low: 75, keywords: ['语速', '自然'], tip: '控制文本长度使语速更均匀' },
+        pause: { low: 75, keywords: ['停顿', '节奏'], tip: '添加标点符号优化停顿节奏' },
+        clarity: { low: 75, keywords: ['清晰', '发音'], tip: '使用标准普通话避免生僻字' }
+      }
+    };
+    
+    const configs = dimensionConfigs[type] || {};
+    
+    for (const [dimKey, metric] of Object.entries(metrics)) {
+      const config = configs[dimKey];
+      if (!config) continue;
+      
+      if (metric.score < config.low) {
+        suggestions.push({
+          dimension: metric.label || dimKey,
+          score: metric.score,
+          tip: config.tip,
+          priority: metric.score < 60 ? 'high' : 'medium',
+          keywords: config.keywords
+        });
+      }
+    }
+    
+    // 按分数从低到高排序
+    suggestions.sort((a, b) => a.score - b.score);
+    
+    return suggestions;
+  }
+
+  /**
+   * Prompt优化建议
+   * @param {string} prompt - 原始Prompt
+   * @param {Array} lowScores - 低分维度列表
+   * @returns {Object} 优化建议 { optimizedPrompt, tips }
+   */
+  getPromptOptimization(prompt, lowScores) {
+    const tips = [];
+    let optimizedPrompt = prompt;
+    
+    if (!lowScores || lowScores.length === 0) {
+      tips.push({ type: 'success', text: '当前Prompt质量良好，可直接使用' });
+      return { optimizedPrompt, tips };
+    }
+    
+    const lowDimSet = new Set(lowScores.map(d => d.dimension || d));
+    
+    // 构图/创意优化
+    if (lowDimSet.has('构图') || lowDimSet.has('创意') || lowDimSet.has('creativity') || lowDimSet.has('composition')) {
+      const compositionKeywords = ['三分法构图', '前景虚化', '背景层次', '光影效果', '视觉焦点'];
+      const creativityKeywords = ['超现实', '梦幻光影', '艺术感', '奇幻风格', '创意构图'];
+      
+      // 检查是否已有这些关键词
+      const hasComposition = compositionKeywords.some(k => prompt.includes(k));
+      const hasCreativity = creativityKeywords.some(k => prompt.includes(k));
+      
+      if (!hasComposition && !hasCreativity) {
+        tips.push({
+          type: 'add',
+          text: '建议添加构图/创意描述',
+          examples: [...compositionKeywords.slice(0, 2), ...creativityKeywords.slice(0, 2)]
+        });
+      }
+    }
+    
+    // 色彩优化
+    if (lowDimSet.has('色彩') || lowDimSet.has('color')) {
+      const colorKeywords = ['色彩鲜艳', '冷暖对比', '色调和谐', '金色光芒', '蓝色氛围'];
+      const hasColor = colorKeywords.some(k => prompt.includes(k));
+      
+      if (!hasColor) {
+        tips.push({
+          type: 'add',
+          text: '建议添加色彩描述',
+          examples: colorKeywords.slice(0, 3)
+        });
+      }
+    }
+    
+    // 清晰度优化
+    if (lowDimSet.has('清晰度') || lowDimSet.has('clarity')) {
+      const clarityKeywords = ['高清画质', '细节丰富', '8K分辨率', '精致细节'];
+      const hasClarity = clarityKeywords.some(k => prompt.includes(k));
+      
+      if (!hasClarity) {
+        tips.push({
+          type: 'add',
+          text: '建议添加清晰度描述',
+          examples: clarityKeywords.slice(0, 2)
+        });
+      }
+    }
+    
+    // 节奏/BPM优化 (音乐)
+    if (lowDimSet.has('BPM') || lowDimSet.has('节奏') || lowDimSet.has('bpm')) {
+      tips.push({
+        type: 'info',
+        text: '节奏调整主要通过选择合适的音乐风格实现，而非修改Prompt'
+      });
+    }
+    
+    // 语速优化 (TTS)
+    if (lowDimSet.has('语速') || lowDimSet.has('speed')) {
+      tips.push({
+        type: 'info',
+        text: '语速优化建议：将长句拆分为短句，添加适当的标点符号'
+      });
+    }
+    
+    // 如果没有具体建议，给出通用建议
+    if (tips.length === 0) {
+      tips.push({
+        type: 'success',
+        text: '各项指标良好，继续保持'
+      });
+    }
+    
+    return { optimizedPrompt, tips };
   }
 
   /**
@@ -46,7 +303,22 @@ class QualityService {
     });
     
     // 计算百分位排名
-    const percentile = this.getRankingPercentile(overallScore, 'image');
+    const percentile = this.getPercentileRank(overallScore, 'image');
+    
+    // 行业基准对比
+    const benchmarkComparison = this.getBenchmarkComparison(overallScore, 'image');
+    
+    // 分维度改进建议
+    const dimensionImprovements = this.getDimensionImprovement({
+      composition: { score: composition, label: '构图平衡' },
+      color: { score: color, label: '色彩和谐' },
+      clarity: { score: clarity, label: '清晰度' },
+      creativity: { score: creativity, label: '创意性' }
+    }, 'image');
+    
+    // Prompt优化建议
+    const originalPrompt = imageData.prompt || '';
+    const promptOptimization = this.getPromptOptimization(originalPrompt, dimensionImprovements);
     
     return {
       type: 'image',
@@ -59,7 +331,10 @@ class QualityService {
       },
       percentile,
       suggestions,
-      summary: this._getImageSummary(overallScore)
+      summary: this._getImageSummary(overallScore),
+      benchmark: benchmarkComparison,
+      improvements: dimensionImprovements,
+      promptOptimization
     };
   }
 
@@ -94,7 +369,21 @@ class QualityService {
     }, musicData);
     
     // 计算百分位排名
-    const percentile = this.getRankingPercentile(overallScore, 'music');
+    const percentile = this.getPercentileRank(overallScore, 'music');
+    
+    // 行业基准对比
+    const benchmarkComparison = this.getBenchmarkComparison(overallScore, 'music');
+    
+    // 分维度改进建议
+    const dimensionImprovements = this.getDimensionImprovement({
+      duration: { score: durationScore, label: '时长合理性' },
+      bpm: { score: bpmScore, label: 'BPM稳定性' },
+      loudness: { score: loudnessScore, label: '响度曲线' },
+      quality: { score: qualityScore, label: '音质' }
+    }, 'music');
+    
+    // Prompt优化建议 (音乐主要通过风格参数调整)
+    const promptOptimization = this.getPromptOptimization(musicData.prompt || '', dimensionImprovements);
     
     return {
       type: 'music',
@@ -107,7 +396,10 @@ class QualityService {
       },
       percentile,
       suggestions,
-      summary: this._getMusicSummary(overallScore)
+      summary: this._getMusicSummary(overallScore),
+      benchmark: benchmarkComparison,
+      improvements: dimensionImprovements,
+      promptOptimization
     };
   }
 
@@ -139,7 +431,21 @@ class QualityService {
     }, ttsData);
     
     // 计算百分位排名
-    const percentile = this.getRankingPercentile(overallScore, 'tts');
+    const percentile = this.getPercentileRank(overallScore, 'tts');
+    
+    // 行业基准对比
+    const benchmarkComparison = this.getBenchmarkComparison(overallScore, 'tts');
+    
+    // 分维度改进建议
+    const dimensionImprovements = this.getDimensionImprovement({
+      speed: { score: speedScore, label: '语速自然度' },
+      pause: { score: pauseScore, label: '停顿节奏' },
+      clarity: { score: clarityScore, label: '发音清晰度' }
+    }, 'tts');
+    
+    // Prompt优化建议
+    const originalPrompt = ttsData.text || '';
+    const promptOptimization = this.getPromptOptimization(originalPrompt, dimensionImprovements);
     
     return {
       type: 'tts',
@@ -151,7 +457,10 @@ class QualityService {
       },
       percentile,
       suggestions,
-      summary: this._getTTSSummary(overallScore)
+      summary: this._getTTSSummary(overallScore),
+      benchmark: benchmarkComparison,
+      improvements: dimensionImprovements,
+      promptOptimization
     };
   }
 

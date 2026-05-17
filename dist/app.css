@@ -1399,6 +1399,209 @@ html, body {
   color: #52c41a;
 }
 
+/* ========== Quality Benchmark Comparison ========== */
+.quality-benchmark {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.quality-benchmark-bar {
+  position: relative;
+  height: 10px;
+  background: linear-gradient(90deg, #e0e0e0, #f0f0f0);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.quality-benchmark-avg {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 18px;
+  background: #fa8c16;
+  border-radius: 2px;
+  transform: translateX(-50%);
+}
+
+.quality-benchmark-user {
+  position: absolute;
+  top: -6px;
+  width: 12px;
+  height: 22px;
+  background: linear-gradient(135deg, #1A73E8, #4facfe);
+  border-radius: 3px;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 6px rgba(26, 115, 232, 0.4);
+}
+
+.quality-benchmark-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #999;
+}
+
+.quality-benchmark-comparison {
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+.quality-benchmark-comparison.excellent {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #fff;
+}
+
+.quality-benchmark-comparison.good {
+  background: linear-gradient(135deg, #52c41a, #73d13d);
+  color: #fff;
+}
+
+.quality-benchmark-comparison.average {
+  background: linear-gradient(135deg, #1A73E8, #4facfe);
+  color: #fff;
+}
+
+.quality-benchmark-comparison.below {
+  background: linear-gradient(135deg, #fa8c16, #ffc53d);
+  color: #fff;
+}
+
+.quality-benchmark-comparison.poor {
+  background: linear-gradient(135deg, #ff4d4f, #ff7875);
+  color: #fff;
+}
+
+/* ========== Quality Improvements ========== */
+.quality-improvements {
+  background: linear-gradient(135deg, #fff9e6, #fff3cc);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  border: 1px solid #ffe58f;
+}
+
+.quality-improvements-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #d48806;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quality-improvements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.quality-improvement-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #ffe58f;
+  font-size: 12px;
+}
+
+.quality-improvement-item:last-child {
+  border-bottom: none;
+}
+
+.quality-improvement-item.high-priority {
+  background: #fff5e6;
+  margin: 0 -10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border-bottom: none;
+}
+
+.quality-improvement-dim {
+  font-weight: 600;
+  color: #d48806;
+  min-width: 60px;
+}
+
+.quality-improvement-score {
+  background: #fa8c16;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.quality-improvement-tip {
+  color: #8c6d1f;
+  flex: 1;
+}
+
+/* ========== Quality Prompt Optimization ========== */
+.quality-prompt-opt {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  border: 1px solid #a5d6a7;
+}
+
+.quality-prompt-opt-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quality-prompt-opt-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.quality-prompt-opt-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #a5d6a7;
+  font-size: 12px;
+}
+
+.quality-prompt-opt-item:last-child {
+  border-bottom: none;
+}
+
+.quality-prompt-opt-icon {
+  font-size: 13px;
+}
+
+.quality-prompt-opt-text {
+  color: #2e7d32;
+  line-height: 1.4;
+}
+
+.quality-prompt-opt-item.add .quality-prompt-opt-text {
+  color: #1565c0;
+  font-weight: 500;
+}
+
+.quality-prompt-opt-examples {
+  font-size: 11px;
+  color: #666;
+  background: rgba(255,255,255,0.6);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
 /* ========== Role Card Styles (for roles.html) ========== */
 .role-grid {
   display: grid;
