@@ -187,6 +187,10 @@ window.router.register('!/creator', async (container, params) => {
   await loadPage('pages/creator.html', params);
 });
 
+window.router.register('/pages/tools.html', async (container, params) => {
+  await loadPage('pages/tools.html', params);
+});
+
 // Navigation helpers
 window.navigateTo = function(path) {
   window.location.hash = path;
