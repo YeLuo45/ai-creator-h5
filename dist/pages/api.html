@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API 开放平台 - AI Creator</title>
+  <style>
+    .page {
+      padding: 16px;
+      padding-bottom: 80px;
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+
+    /* API Header */
+    .api-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .api-header-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .api-header-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .api-header-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
+    }
+
+    /* API Section Card */
+    .api-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .api-section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .api-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      flex: 1;
+    }
+
+    .api-section-badge {
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+      background: #e6f7e6;
+      color: #52c41a;
+    }
+
+    /* API Endpoint */
+    .api-endpoint {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+    }
+
+    .api-endpoint-method {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+
+    .api-endpoint-method.get { background: #61affe; color: #fff; }
+    .api-endpoint-method.post { background: #49cc90; color: #fff; }
+
+    .api-endpoint-path {
+      color: #333;
+      word-break: break-all;
+    }
+
+    /* Code Block */
+    .api-code-block {
+      background: #1e1e1e;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 8px 0;
+      overflow-x: auto;
+    }
+
+    .api-code-block pre {
+      margin: 0;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #d4d4d4;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .api-code-block .keyword { color: #569cd6; }
+    .api-code-block .string { color: #ce9178; }
+    .api-code-block .number { color: #b5cea8; }
+    .api-code-block .comment { color: #6a9955; }
+    .api-code-block .key { color: #9cdcfe; }
+
+    /* Param Table */
+    .api-params-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .api-params-table th {
+      background: #f0f4ff;
+      padding: 8px;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .api-params-table td {
+      padding: 8px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #666;
+    }
+
+    .api-params-table .param-name {
+      font-weight: 500;
+      color: #1A73E8;
+      font-family: monospace;
+    }
+
+    .api-params-table .param-required {
+      color: #e53e3e;
+      font-size: 10px;
+      margin-left: 4px;
+    }
+
+    /* API Card */
+    .api-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .api-card:active {
+      transform: scale(0.98);
+      background: #fafafa;
+    }
+
+    .api-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .api-card-icon {
+      font-size: 28px;
+    }
+
+    .api-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+      flex: 1;
+    }
+
+    .api-card-tag {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .api-card-tag.image { background: #fff3e0; color: #ff9800; }
+    .api-card-tag.music { background: #e8f5e9; color: #4caf50; }
+    .api-card-tag.tts { background: #e3f2fd; color: #2196f3; }
+
+    .api-card-desc {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* Error Code */
+    .api-error-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .api-error-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px;
+      background: #f9f9f9;
+      border-radius: 6px;
+    }
+
+    .api-error-code {
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e53e3e;
+      background: #fff0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .api-error-msg {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    /* Integration Steps */
+    .api-steps {
+      counter-reset: step;
+    }
+
+    .api-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .api-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #1A73E8;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .api-step-content {
+      flex: 1;
+    }
+
+    .api-step-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .api-step-desc {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* Menu List */
+    .menu-list {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 12px;
+      border-bottom: 1px solid #f5f5f5;
+      cursor: pointer;
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-icon {
+      font-size: 18px;
+      margin-right: 10px;
+    }
+
+    .menu-text {
+      flex: 1;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .menu-arrow {
+      font-size: 20px;
+      color: #ccc;
+      font-weight: 300;
+    }
+
+    /* Copy Button */
+    .copy-btn {
+      padding: 4px 12px;
+      background: #1A73E8;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .copy-btn:active {
+      background: #1557b0;
+    }
+
+    .copy-btn.copied {
+      background: #52c41a;
+    }
+
+    /* Footer */
+    .footer-tip {
+      text-align: center;
+      font-size: 11px;
+      color: #ccc;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 16px;
+    }
+
+    /* Response Example */
+    .api-response-success {
+      border-left: 3px solid #52c41a;
+    }
+
+    .api-response-error {
+      border-left: 3px solid #e53e3e;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- API Header -->
+    <div class="api-header">
+      <div class="api-header-icon">🔌</div>
+      <div class="api-header-title">API 开放平台</div>
+      <div class="api-header-desc">
+        通过 API 接口访问 AI Creator 能力，支持图片生成、音乐创作、语音合成等功能。安全可靠，简单易用。
+      </div>
+    </div>
+
+    <!-- Quick Start -->
+    <div class="api-section">
+      <div class="api-section-header">
+        <span class="api-section-title">🚀 快速开始</span>
+      </div>
+      
+      <div class="api-steps">
+        <div class="api-step">
+          <div class="api-step-num">1</div>
+          <div class="api-step-content">
+            <div class="api-step-title">获取 API Key</div>
+            <div class="api-step-desc">在「我的」页面生成你的专属 API Key</div>
+          </div>
+        </div>
+        <div class="api-step">
+          <div class="api-step-num">2</div>
+          <div class="api-step-content">
+            <div class="api-step-title">配置 MiniMax 凭证</div>
+            <div class="api-step-desc">配置你的 MiniMax API Key 和 Group ID 以使用生成功能</div>
+          </div>
+        </div>
+        <div class="api-step">
+          <div class="api-step-num">3</div>
+          <div class="api-step-content">
+            <div class="api-step-title">调用 API</div>
+            <div class="api-step-desc">使用以下接口进行开发，参考示例代码</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API List -->
+    <div class="api-section">
+      <div class="api-section-header">
+        <span class="api-section-title">📡 接口列表</span>
+      </div>
+
+      <!-- Image Generation API -->
+      <div class="api-card" onclick="toggleApiDetail('image-api')">
+        <div class="api-card-header">
+          <span class="api-card-icon">🖼️</span>
+          <span class="api-card-title">图片生成</span>
+          <span class="api-card-tag image">POST</span>
+        </div>
+        <div class="api-card-desc">基于文本描述生成高质量图片，支持多种风格和尺寸</div>
+      </div>
+      
+      <div id="image-api" class="api-detail" style="display:none; margin-top: 12px;">
+        <div class="api-endpoint">
+          <span class="api-endpoint-method post">POST</span>
+          <span class="api-endpoint-path">/v1/images/generations</span>
+        </div>
+        
+        <table class="api-params-table">
+          <thead>
+            <tr>
+              <th>参数</th>
+              <th>类型</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="param-name">prompt</span><span class="param-required">必填</span></td>
+              <td>string</td>
+              <td>图片描述文本</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">style</span></td>
+              <td>string</td>
+              <td>风格：vivid / natural</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">size</span></td>
+              <td>string</td>
+              <td>尺寸：1024x1024 / 512x512 / 256x256</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">model</span></td>
+              <td>string</td>
+              <td>模型：image-01（默认）</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="font-size:12px;color:#666;margin:8px 0;">请求示例：</div>
+        <div class="api-code-block">
+          <pre><span class="comment">// 使用 apiService</span>
+<span class="keyword">import</span> { generateImage } <span class="keyword">from</span> <span class="string">'./services/apiService.js'</span>;
+
+<span class="keyword">const</span> result = <span class="keyword">await</span> generateImage({
+  <span class="key">prompt</span>: <span class="string">"一只可爱的橘猫在阳光下打盹"</span>,
+  <span class="key">style</span>: <span class="string">"vivid"</span>,
+  <span class="key">size</span>: <span class="string">"1024x1024"</span>
+});
+
+console.log(result.data[<span class="number">0</span>].url); <span class="comment">// 图片 URL</span></pre>
+        </div>
+
+        <div style="font-size:12px;color:#666;margin:8px 0;">响应示例：</div>
+        <div class="api-code-block api-response-success">
+          <pre>{
+  <span class="key">"success"</span>: <span class="number">true</span>,
+  <span class="key">"data"</span>: [{
+    <span class="key">"url"</span>: <span class="string">"https://example.com/image.jpg"</span>,
+    <span class="key">"revised_prompt"</span>: <span class="string">"一只可爱的橘猫在阳光下打盹"</span>
+  }]
+}</pre>
+        </div>
+      </div>
+
+      <!-- Music Generation API -->
+      <div class="api-card" onclick="toggleApiDetail('music-api')">
+        <div class="api-card-header">
+          <span class="api-card-icon">🎵</span>
+          <span class="api-card-title">音乐生成</span>
+          <span class="api-card-tag music">POST</span>
+        </div>
+        <div class="api-card-desc">根据描述生成背景音乐或完整歌曲，支持多种音乐风格</div>
+      </div>
+
+      <div id="music-api" class="api-detail" style="display:none; margin-top: 12px;">
+        <div class="api-endpoint">
+          <span class="api-endpoint-method post">POST</span>
+          <span class="api-endpoint-path">/v1/audio/generations</span>
+        </div>
+        
+        <table class="api-params-table">
+          <thead>
+            <tr>
+              <th>参数</th>
+              <th>类型</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="param-name">prompt</span><span class="param-required">必填</span></td>
+              <td>string</td>
+              <td>音乐描述或主题</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">lyrics</span></td>
+              <td>string</td>
+              <td>歌词（可选）</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">duration</span></td>
+              <td>number</td>
+              <td>时长（秒），默认 180</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">model</span></td>
+              <td>string</td>
+              <td>模型：music-2.6（默认）</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="font-size:12px;color:#666;margin:8px 0;">请求示例：</div>
+        <div class="api-code-block">
+          <pre><span class="comment">// 使用 apiService</span>
+<span class="keyword">import</span> { generateMusic } <span class="keyword">from</span> <span class="string">'./services/apiService.js'</span>;
+
+<span class="keyword">const</span> result = <span class="keyword">await</span> generateMusic({
+  <span class="key">prompt</span>: <span class="string">"轻松愉悦的夏日海滩背景音乐"</span>,
+  <span class="key">duration</span>: <span class="number">60</span>
+});
+
+console.log(result.data[<span class="number">0</span>].url); <span class="comment">// 音乐 URL</span></pre>
+        </div>
+
+        <div style="font-size:12px;color:#666;margin:8px 0;">响应示例：</div>
+        <div class="api-code-block api-response-success">
+          <pre>{
+  <span class="key">"success"</span>: <span class="number">true</span>,
+  <span class="key">"data"</span>: [{
+    <span class="key">"url"</span>: <span class="string">"https://example.com/music.mp3"</span>,
+    <span class="key">"duration"</span>: <span class="number">60</span>
+  }]
+}</pre>
+        </div>
+      </div>
+
+      <!-- TTS API -->
+      <div class="api-card" onclick="toggleApiDetail('tts-api')">
+        <div class="api-card-header">
+          <span class="api-card-icon">🎤</span>
+          <span class="api-card-title">语音合成 (TTS)</span>
+          <span class="api-card-tag tts">POST</span>
+        </div>
+        <div class="api-card-desc">文本转语音，支持多种音色和语速调节</div>
+      </div>
+
+      <div id="tts-api" class="api-detail" style="display:none; margin-top: 12px;">
+        <div class="api-endpoint">
+          <span class="api-endpoint-method post">POST</span>
+          <span class="api-endpoint-path">/v1/audio/speech</span>
+        </div>
+        
+        <table class="api-params-table">
+          <thead>
+            <tr>
+              <th>参数</th>
+              <th>类型</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="param-name">input</span><span class="param-required">必填</span></td>
+              <td>string</td>
+              <td>要转换的文本</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">voice</span></td>
+              <td>string</td>
+              <td>音色 ID</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">speed</span></td>
+              <td>number</td>
+              <td>语速 0.5-2.0，默认 1.0</td>
+            </tr>
+            <tr>
+              <td><span class="param-name">format</span></td>
+              <td>string</td>
+              <td>音频格式：mp3 / wav / opus</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="font-size:12px;color:#666;margin:8px 0;">请求示例：</div>
+        <div class="api-code-block">
+          <pre><span class="comment">// 使用 apiService</span>
+<span class="keyword">import</span> { generateTTS } <span class="keyword">from</span> <span class="string">'./services/apiService.js'</span>;
+
+<span class="keyword">const</span> result = <span class="keyword">await</span> generateTTS({
+  <span class="key">input</span>: <span class="string">"你好，欢迎使用 AI Creator"</span>,
+  <span class="key">voice</span>: <span class="string">"female-shaonv"</span>,
+  <span class="key">speed</span>: <span class="number">1.0</span>
+});
+
+console.log(result.data.audio); <span class="comment">// base64 音频数据</span></pre>
+        </div>
+
+        <div style="font-size:12px;color:#666;margin:8px 0;">响应示例：</div>
+        <div class="api-code-block api-response-success">
+          <pre>{
+  <span class="key">"success"</span>: <span class="number">true</span>,
+  <span class="key">"data"</span>: {
+    <span class="key">"audio"</span>: <span class="string">"base64_encoded_audio_data..."</span>
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Status API -->
+    <div class="api-section">
+      <div class="api-section-header">
+        <span class="api-section-title">📋 任务查询</span>
+      </div>
+
+      <div class="api-endpoint">
+        <span class="api-endpoint-method get">GET</span>
+        <span class="api-endpoint-path">/v1/tasks/{task_id}</span>
+      </div>
+
+      <div style="font-size:12px;color:#666;margin:8px 0;">响应示例：</div>
+      <div class="api-code-block api-response-success">
+        <pre>{
+  <span class="key">"task_id"</span>: <span class="string">"task_abc123"</span>,
+  <span class="key">"status"</span>: <span class="string">"completed"</span>,
+  <span class="key">"progress"</span>: <span class="number">100</span>,
+  <span class="key">"result"</span>: { ... }
+}</pre>
+      </div>
+    </div>
+
+    <!-- Error Codes -->
+    <div class="api-section">
+      <div class="api-section-header">
+        <span class="api-section-title">⚠️ 错误码说明</span>
+      </div>
+
+      <div class="api-error-list">
+        <div class="api-error-item">
+          <span class="api-error-code">401</span>
+          <span class="api-error-msg">API Key 无效或已失效，请检查并更新</span>
+        </div>
+        <div class="api-error-item">
+          <span class="api-error-code">403</span>
+          <span class="api-error-msg">API Key 未启用或额度不足</span>
+        </div>
+        <div class="api-error-item">
+          <span class="api-error-code">429</span>
+          <span class="api-error-msg">请求过于频繁，请降低调用频率</span>
+        </div>
+        <div class="api-error-item">
+          <span class="api-error-code">500</span>
+          <span class="api-error-msg">服务端内部错误，请稍后重试</span>
+        </div>
+        <div class="api-error-item">
+          <span class="api-error-code">1001</span>
+          <span class="api-error-msg">缺少必要参数，请检查请求参数</span>
+        </div>
+        <div class="api-error-item">
+          <span class="api-error-code">1002</span>
+          <span class="api-error-msg">参数格式错误，请检查参数类型和范围</span>
+        </div>
+        <div class="api-error-item">
+          <span class="api-error-code">2001</span>
+          <span class="api-error-msg">MiniMax API Key 未配置</span>
+        </div>
+        <div class="api-error-item">
+          <span class="api-error-code">2002</span>
+          <span class="api-error-msg">MiniMax API 调用失败</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Integration Guide -->
+    <div class="api-section">
+      <div class="api-section-header">
+        <span class="api-section-title">📖 集成示例</span>
+      </div>
+
+      <div style="font-size:12px;color:#666;margin:8px 0;">Node.js 调用示例：</div>
+      <div class="api-code-block">
+        <pre><span class="comment">// 完整集成示例</span>
+<span class="keyword">import</span> {
+  generateImage,
+  generateMusic,
+  generateTTS,
+  getApiKey,
+  setApiKey
+} <span class="keyword">from</span> <span class="string">'./services/apiService.js'</span>;
+
+<span class="comment">// 1. 设置你的 API Key</span>
+setApiKey(<span class="string">'your-platform-api-key'</span>);
+
+<span class="comment">// 2. 生成图片</span>
+<span class="keyword">async function</span> createImage() {
+  <span class="keyword">try</span> {
+    <span class="keyword">const</span> image = <span class="keyword">await</span> generateImage({
+      <span class="key">prompt</span>: <span class="string">"未来城市天际线"</span>,
+      <span class="key">size</span>: <span class="string">"1024x1024"</span>
+    });
+    console.log(<span class="string">'Generated:'</span>, image);
+  } <span class="keyword">catch</span> (e) {
+    console.error(<span class="string">'Error:'</span>, e.message);
+  }
+}
+
+<span class="comment">// 3. 生成音乐</span>
+<span class="keyword">async function</span> createMusic() {
+  <span class="keyword">const</span> music = <span class="keyword">await</span> generateMusic({
+    <span class="key">prompt</span>: <span class="string">"轻快的电子音乐"</span>,
+    <span class="key">duration</span>: <span class="number">30</span>
+  });
+  <span class="keyword">return</span> music;
+}
+
+<span class="comment">// 4. 语音合成</span>
+<span class="keyword">async function</span> textToSpeech() {
+  <span class="keyword">const</span> audio = <span class="keyword">await</span> generateTTS({
+    <span class="key">input</span>: <span class="string">"欢迎使用 AI Creator"</span>,
+    <span class="key">voice</span>: <span class="string">"female-shaonv"</span>
+  });
+  <span class="keyword">return</span> audio;
+}</pre>
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <div class="menu-list">
+      <div class="menu-item" onclick="onBack()">
+        <span class="menu-icon">←</span>
+        <span class="menu-text">返回上一页</span>
+        <span class="menu-arrow">›</span>
+      </div>
+    </div>
+
+    <div class="footer-tip">
+      <span>AI Creator API v1.0</span>
+      <span>·</span>
+      <span>Base URL: https://api.minimax.chat/v1</span>
+    </div>
+  </div>
+
+  <script>
+    function toggleApiDetail(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function onBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.navigateTo('/pages/my.html');
+      }
+    }
+
+    // Copy code on click
+    document.querySelectorAll('.api-code-block pre').forEach(pre => {
+      pre.style.cursor = 'pointer';
+      pre.title = '点击复制代码';
+      pre.onclick = function() {
+        const code = this.textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          showToast('代码已复制', 'success');
+        }).catch(() => {
+          showToast('复制失败', 'error');
+        });
+      };
+    });
+
+    function showToast(msg, type) {
+      if (window.showToast) {
+        window.showToast(msg, type);
+      } else {
+        alert(msg);
+      }
+    }
+  </script>
+</body>
+</html>

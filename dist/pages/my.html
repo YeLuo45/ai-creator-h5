@@ -475,6 +475,58 @@
       <button class="btn-save" onclick="onSaveApiKey()">保存配置</button>
     </div>
 
+    <!-- Platform API Key Management -->
+    <div class="section-card" id="platformApiSection">
+      <div class="section-header">
+        <span class="section-title">🔑 平台 API Key</span>
+        <span class="status-badge" id="platformApiStatus">未生成</span>
+      </div>
+
+      <div class="config-tip">
+        用于访问 AI Creator API 开放平台的凭证，生成后可调用各类 AI 生成接口。
+      </div>
+
+      <div class="input-group" id="platformApiKeyGroup" style="display:none;">
+        <span class="input-label">API Key</span>
+        <input class="input-field" id="platformApiKeyDisplay" type="text" readonly placeholder="点击生成" />
+      </div>
+
+      <div class="api-usage-stats" id="apiUsageStats" style="display:none; margin: 12px 0;">
+        <div class="usage-title">📊 今日调用统计</div>
+        <div class="usage-grid">
+          <div class="usage-item">
+            <span class="usage-icon">🖼️</span>
+            <span class="usage-num" id="usageImageCount">0</span>
+            <span class="usage-label">图片</span>
+          </div>
+          <div class="usage-item">
+            <span class="usage-icon">🎵</span>
+            <span class="usage-num" id="usageMusicCount">0</span>
+            <span class="usage-label">音乐</span>
+          </div>
+          <div class="usage-item">
+            <span class="usage-icon">🎤</span>
+            <span class="usage-num" id="usageTtsCount">0</span>
+            <span class="usage-label">语音</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="platform-api-btns">
+        <button class="btn-generate" id="btnGenerateApiKey" onclick="onGenerateApiKey()">🔑 生成 API Key</button>
+        <button class="btn-toggle-api" id="btnToggleApi" onclick="onToggleApiKey()" style="display:none;">启用</button>
+      </div>
+
+      <div class="platform-api-guide">
+        <span class="guide-title">💡 使用说明</span>
+        <span class="guide-text">
+          1. 点击生成获取专属 API Key<br>
+          2. 启用 Key 后即可通过接口调用 AI 能力<br>
+          3. 查看 <a href="javascript:void(0)" onclick="onViewApiDoc()" style="color:#1A73E8;">API 文档</a> 了解详细用法
+        </span>
+      </div>
+    </div>
+
     <!-- API Quota Card -->
     <div class="quota-card" id="quotaCard" onclick="showQuotaPanel()">
       <div class="quota-header">
@@ -1157,7 +1209,89 @@
     window.pageInit = function() {
       refresh();
       initCryptoUI();
+      loadPlatformApiKey();
     };
+
+    // ========== Platform API Key Management ==========
+    async function loadPlatformApiKey() {
+      try {
+        const { getApiKey, isApiKeyEnabled, getApiStatsSummary } = await import('../services/apiService.js');
+        
+        const apiKey = getApiKey();
+        const enabled = isApiKeyEnabled();
+        const stats = getApiStatsSummary();
+
+        const statusBadge = document.getElementById('platformApiStatus');
+        const keyGroup = document.getElementById('platformApiKeyGroup');
+        const keyDisplay = document.getElementById('platformApiKeyDisplay');
+        const toggleBtn = document.getElementById('btnToggleApi');
+        const usageStats = document.getElementById('apiUsageStats');
+        const genBtn = document.getElementById('btnGenerateApiKey');
+
+        if (apiKey) {
+          keyGroup.style.display = 'flex';
+          keyDisplay.value = apiKey;
+          statusBadge.textContent = enabled ? '已启用' : '已禁用';
+          statusBadge.className = 'status-badge ' + (enabled ? 'success' : 'warning');
+          toggleBtn.style.display = 'inline-block';
+          toggleBtn.textContent = enabled ? '禁用' : '启用';
+          genBtn.textContent = '🔄 重新生成';
+          usageStats.style.display = 'block';
+          
+          // Update stats
+          document.getElementById('usageImageCount').textContent = stats.imageCount;
+          document.getElementById('usageMusicCount').textContent = stats.musicCount;
+          document.getElementById('usageTtsCount').textContent = stats.ttsCount;
+        } else {
+          statusBadge.textContent = '未生成';
+          statusBadge.className = 'status-badge warning';
+          keyGroup.style.display = 'none';
+          toggleBtn.style.display = 'none';
+          usageStats.style.display = 'none';
+        }
+      } catch (e) {
+        console.error('[PlatformAPI] Failed to load:', e);
+      }
+    }
+
+    async function onGenerateApiKey() {
+      try {
+        const { generateApiKey, setApiKey } = await import('../services/apiService.js');
+        
+        const newKey = generateApiKey();
+        setApiKey(newKey);
+        
+        showToast('API Key 已生成', 'success');
+        loadPlatformApiKey();
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(newKey).then(() => {
+          showToast('Key 已复制到剪贴板', 'success');
+        }).catch(() => {});
+      } catch (e) {
+        console.error('[PlatformAPI] Generate error:', e);
+        showToast('生成失败', 'error');
+      }
+    }
+
+    async function onToggleApiKey() {
+      try {
+        const { isApiKeyEnabled, setApiKeyEnabled } = await import('../services/apiService.js');
+        
+        const current = isApiKeyEnabled();
+        setApiKeyEnabled(!current);
+        
+        showToast(!current ? 'API Key 已启用' : 'API Key 已禁用', 'success');
+        loadPlatformApiKey();
+      } catch (e) {
+        console.error('[PlatformAPI] Toggle error:', e);
+        showToast('操作失败', 'error');
+      }
+    }
+
+    function onViewApiDoc() {
+      window.navigateTo('/pages/api.html');
+    }
   </script>
 </body>
 </html>
