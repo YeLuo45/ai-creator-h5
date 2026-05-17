@@ -5,7 +5,13 @@
   "scripts": {
     "build": "cp -r pages services utils components src data index.html app.css lib dist/ && echo 'Build complete'",
     "dev": "npm run build && echo 'Development server ready'",
-    "serve": "npx serve dist -l 3000"
+    "serve": "npx serve dist -l 3000",
+    "tauri": "tauri",
+    "tauri-dev": "tauri dev",
+    "tauri-build": "tauri build"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "@tauri-apps/api": "^2.11.0",
+    "@tauri-apps/cli": "^2.11.2"
+  }
 }
