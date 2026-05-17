@@ -176,6 +176,31 @@
       cursor: pointer;
     }
 
+    /* Lock Button */
+    .btn-lock {
+      width: 100%;
+      padding: 12px 0;
+      background: #666;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    .btn-lock:active {
+      opacity: 0.85;
+    }
+
+    /* Crypto Toggle Label */
+    .crypto-toggle-label {
+      font-size: 14px;
+      color: #666;
+      margin-right: 8px;
+    }
+
     .api-guide {
       margin-top: 12px;
       padding: 10px;
@@ -524,6 +549,50 @@
         <span class="menu-text">关于我们</span>
         <span class="menu-arrow">›</span>
       </div>
+    </div>
+
+    <!-- Privacy & Encryption Settings -->
+    <div class="section-card" id="privacySection">
+      <div class="section-header">
+        <span class="section-title">🔐 隐私设置</span>
+        <span class="status-badge" id="cryptoStatusBadge">未启用</span>
+      </div>
+      
+      <div class="config-tip">
+        启用端到端加密，保护你的敏感模板和数据。设置解锁密码后可通过锁定按钮手动加密。
+      </div>
+
+      <!-- Encryption Toggle -->
+      <div class="input-group">
+        <span class="input-label">加密功能</span>
+        <span class="crypto-toggle-label" id="cryptoToggleLabel">关闭</span>
+        <span class="btn-toggle" id="cryptoToggleBtn" onclick="toggleCrypto()">🔒</span>
+      </div>
+
+      <!-- Set Password -->
+      <div class="input-group" id="cryptoPasswordGroup" style="display:none;">
+        <span class="input-label">解锁密码</span>
+        <input class="input-field" id="cryptoPasswordInput" type="password" placeholder="设置 4-8 位密码" />
+      </div>
+
+      <!-- Auto-lock Timeout -->
+      <div class="input-group" id="cryptoTimeoutGroup" style="display:none;">
+        <span class="input-label">自动锁定</span>
+        <select class="input-field" id="cryptoTimeoutSelect" onchange="onTimeoutChange()">
+          <option value="1">1 分钟</option>
+          <option value="5" selected>5 分钟</option>
+          <option value="10">10 分钟</option>
+          <option value="30">30 分钟</option>
+          <option value="0">从不</option>
+        </select>
+      </div>
+
+      <button class="btn-save" id="cryptoSaveBtn" onclick="saveCryptoSettings()">保存加密设置</button>
+
+      <!-- Lock Button (shown when unlocked) -->
+      <button class="btn-lock" id="lockBtn" onclick="manualLock()" style="display:none;">
+        🔒 立即锁定
+      </button>
     </div>
 
     <div class="footer-tip">
@@ -971,6 +1040,124 @@
         setTimeout(() => overlay.remove(), 300);
       }
     }
+
+    // ========== Crypto/Encryption Functions ==========
+    let cryptoEnabled = false;
+    let cryptoUnlocked = false;
+
+    async function initCryptoUI() {
+      try {
+        // Load crypto service
+        await import('../services/cryptoService.js');
+        
+        const status = window.CryptoService.getStatus();
+        cryptoEnabled = status.enabled;
+        cryptoUnlocked = !status.locked;
+        
+        updateCryptoUI();
+        
+        // Listen for state changes
+        window.addEventListener('cryptoStateChange', (e) => {
+          cryptoUnlocked = !e.detail.locked;
+          updateCryptoUI();
+        });
+      } catch (e) {
+        console.error('[Crypto] Failed to initialize:', e);
+      }
+    }
+
+    function updateCryptoUI() {
+      const badge = document.getElementById('cryptoStatusBadge');
+      const toggleLabel = document.getElementById('cryptoToggleLabel');
+      const toggleBtn = document.getElementById('cryptoToggleBtn');
+      const passwordGroup = document.getElementById('cryptoPasswordGroup');
+      const timeoutGroup = document.getElementById('cryptoTimeoutGroup');
+      const saveBtn = document.getElementById('cryptoSaveBtn');
+      const lockBtn = document.getElementById('lockBtn');
+      
+      if (cryptoEnabled) {
+        badge.textContent = cryptoUnlocked ? '已启用' : '已锁定';
+        badge.className = cryptoUnlocked ? 'status-badge success' : 'status-badge warning';
+        toggleLabel.textContent = '已开启';
+        toggleBtn.textContent = cryptoUnlocked ? '🔓' : '🔒';
+        passwordGroup.style.display = 'flex';
+        timeoutGroup.style.display = 'flex';
+        lockBtn.style.display = cryptoUnlocked ? 'block' : 'none';
+      } else {
+        badge.textContent = '未启用';
+        badge.className = 'status-badge warning';
+        toggleLabel.textContent = '关闭';
+        toggleBtn.textContent = '🔒';
+        passwordGroup.style.display = 'none';
+        timeoutGroup.style.display = 'none';
+        lockBtn.style.display = 'none';
+      }
+    }
+
+    function toggleCrypto() {
+      cryptoEnabled = !cryptoEnabled;
+      updateCryptoUI();
+    }
+
+    async function saveCryptoSettings() {
+      const password = document.getElementById('cryptoPasswordInput').value;
+      
+      if (!cryptoEnabled) {
+        showToast('请先开启加密功能', 'none');
+        return;
+      }
+      
+      if (password.length < 4 || password.length > 8) {
+        showToast('密码长度需为 4-8 位', 'none');
+        return;
+      }
+      
+      showLoading('保存中...');
+      
+      try {
+        const result = await window.CryptoService.init(password);
+        
+        if (result.success) {
+          cryptoEnabled = true;
+          cryptoUnlocked = false;
+          updateCryptoUI();
+          hideLoading();
+          showToast(result.isNew ? '加密已启用' : '密码已更新', 'success');
+        } else {
+          hideLoading();
+          showToast(result.error || '保存失败', 'error');
+        }
+      } catch (e) {
+        hideLoading();
+        console.error('[Crypto] Save error:', e);
+        showToast('保存失败', 'error');
+      }
+    }
+
+    async function manualLock() {
+      if (window.CryptoService) {
+        window.CryptoService.lock();
+        cryptoUnlocked = false;
+        updateCryptoUI();
+        showToast('已锁定', 'info');
+      }
+    }
+
+    function onTimeoutChange() {
+      const select = document.getElementById('cryptoTimeoutSelect');
+      const minutes = parseInt(select.value) || 0;
+      
+      if (window.CryptoService) {
+        window.CryptoService.setAutoLockTimeout(minutes);
+        showToast(minutes > 0 ? `自动锁定：${minutes} 分钟` : '已关闭自动锁定', 'success');
+      }
+    }
+
+    // Initialize crypto UI on page load
+    window.pageInit = function() {
+      refresh();
+      initCryptoUI();
+    };
   </script>
 </body>
 </html>

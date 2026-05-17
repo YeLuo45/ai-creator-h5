@@ -1031,3 +1031,136 @@ html, body {
   border-color: #e53e3e;
   color: #e53e3e;
 }
+
+/* ========== Crypto/Encryption Styles ========== */
+.crypto-status-locked {
+  color: #fa8c16;
+}
+
+.crypto-status-unlocked {
+  color: #52c41a;
+}
+
+.crypto-toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crypto-toggle-switch input[type="checkbox"] {
+  width: 40px;
+  height: 22px;
+  appearance: none;
+  background: #ccc;
+  border-radius: 11px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.crypto-toggle-switch input[type="checkbox"]::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+
+.crypto-toggle-switch input[type="checkbox"]:checked {
+  background: #52c41a;
+}
+
+.crypto-toggle-switch input[type="checkbox"]:checked::before {
+  transform: translateX(18px);
+}
+
+/* Lock overlay for encrypted content */
+.lock-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+}
+
+.lock-overlay-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.lock-overlay-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.lock-overlay-desc {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
+  text-align: center;
+  padding: 0 40px;
+}
+
+.lock-overlay-input {
+  width: 80%;
+  max-width: 280px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+  outline: none;
+}
+
+.lock-overlay-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lock-overlay-btn {
+  margin-top: 16px;
+  padding: 12px 40px;
+  background: #1A73E8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.lock-overlay-btn:active {
+  opacity: 0.85;
+}
+
+.lock-overlay-error {
+  color: #ff6b6b;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+/* Template lock icon */
+.template-lock-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: rgba(250, 140, 22, 0.15);
+  border-radius: 50%;
+  font-size: 10px;
+  color: #fa8c16;
+  margin-left: 4px;
+}
