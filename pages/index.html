@@ -263,6 +263,15 @@
         </div>
         <span class="feature-arrow">›</span>
       </div>
+
+      <div class="feature-card" onclick="goToRolesV2()">
+        <div class="feature-icon" style="background: rgba(139, 92, 246, 0.15)">🎭</div>
+        <div class="feature-content">
+          <span class="feature-name">角色协作</span>
+          <span class="feature-desc">多角色组合创作</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
     </div>
 
     <!-- API Key 提示 -->
@@ -353,6 +362,10 @@
 
     function goToWorkflow() {
       window.location.hash = '/pages/workflow.html';
+    }
+
+    function goToRolesV2() {
+      window.location.hash = '/pages/roles-v2.html';
     }
 
     // Init
