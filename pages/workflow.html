@@ -34,7 +34,7 @@
     .workflow-container {
       display: grid;
       grid-template-rows: 56px 1fr 40px;
-      grid-template-columns: 220px 1fr 280px;
+      grid-template-columns: 220px 1fr 320px;
       height: 100vh;
     }
 
@@ -65,6 +65,9 @@
       cursor: pointer;
       font-size: 13px;
       transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .toolbar-btn:hover { background: var(--bg-node); }
@@ -72,6 +75,12 @@
     .toolbar-btn.primary:hover { background: var(--primary-dark); }
     .toolbar-btn.danger { border-color: var(--error); color: var(--error); }
     .toolbar-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .toolbar-btn .shortcut {
+      font-size: 10px;
+      opacity: 0.6;
+      margin-left: 4px;
+    }
 
     /* Node Palette */
     .node-palette {
@@ -179,6 +188,7 @@
     .workflow-node:hover { border-color: var(--primary); }
     .workflow-node.selected { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3); }
     .workflow-node.running { border-color: var(--warning); animation: pulse 1s infinite; }
+    .workflow-node.completed { border-color: var(--success); }
     .workflow-node.error { border-color: var(--error); }
     .workflow-node.disabled { opacity: 0.5; }
 
@@ -193,7 +203,27 @@
       gap: 8px;
       padding: 8px 12px;
       border-bottom: 1px solid var(--border);
+      position: relative;
     }
+
+    .node-status-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      border: 2px solid var(--bg-node);
+    }
+
+    .node-status-badge.running { background: var(--warning); }
+    .node-status-badge.completed { background: var(--success); }
+    .node-status-badge.error { background: var(--error); }
 
     .node-icon {
       width: 28px;
@@ -219,6 +249,21 @@
       padding: 8px 12px;
       font-size: 12px;
       color: var(--text-dim);
+    }
+
+    .node-progress {
+      height: 3px;
+      background: var(--bg-dark);
+      border-radius: 2px;
+      margin: 0 12px 8px;
+      overflow: hidden;
+    }
+
+    .node-progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s;
     }
 
     /* Ports */
@@ -251,6 +296,10 @@
       animation: flow 0.5s linear infinite;
     }
 
+    .connection-line.completed {
+      stroke: var(--success);
+    }
+
     @keyframes flow {
       from { stroke-dashoffset: 12; }
       to { stroke-dashoffset: 0; }
@@ -260,6 +309,31 @@
     .property-panel {
       background: var(--bg-panel);
       border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      font-size: 12px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .panel-tab:hover { background: var(--bg-node); }
+    .panel-tab.active { border-color: var(--primary); color: var(--primary); }
+
+    .panel-content {
+      flex: 1;
       padding: 16px;
       overflow-y: auto;
     }
@@ -306,6 +380,80 @@
       font-size: 13px;
     }
 
+    /* Log Panel */
+    .log-panel {
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      max-height: 200px;
+    }
+
+    .log-panel.collapsed {
+      max-height: 40px;
+    }
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      height: 40px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      gap: 8px;
+    }
+
+    .log-header:hover { background: var(--bg-node); }
+
+    .log-toggle {
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+
+    .log-panel.collapsed .log-toggle {
+      transform: rotate(-90deg);
+    }
+
+    .log-title {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .log-count {
+      font-size: 10px;
+      background: var(--primary);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: auto;
+    }
+
+    .log-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 16px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .log-entry {
+      display: flex;
+      gap: 8px;
+      padding: 2px 0;
+    }
+
+    .log-time {
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .log-message { color: var(--text); }
+    .log-message.info { color: var(--primary); }
+    .log-message.success { color: var(--success); }
+    .log-message.warning { color: var(--warning); }
+    .log-message.error { color: var(--error); }
+
     /* Status Bar */
     .status-bar {
       grid-column: 1 / -1;
@@ -340,19 +488,118 @@
       50% { opacity: 0.3; }
     }
 
-    .log-container {
+    /* Progress Bar */
+    .progress-container {
       flex: 1;
       display: flex;
+      align-items: center;
       gap: 8px;
-      overflow: hidden;
     }
 
-    .log-messages {
+    .progress-bar {
       flex: 1;
-      color: var(--text-dim);
-      white-space: nowrap;
+      height: 4px;
+      background: var(--bg-dark);
+      border-radius: 2px;
       overflow: hidden;
-      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      font-size: 11px;
+      color: var(--text-dim);
+      min-width: 40px;
+    }
+
+    /* Version Panel */
+    .version-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .version-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--bg-node);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .version-item:hover { border-color: var(--primary); }
+    .version-item.current { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+
+    .version-info { display: flex; flex-direction: column; gap: 2px; }
+    .version-name { font-size: 13px; font-weight: 500; }
+    .version-time { font-size: 11px; color: var(--text-dim); }
+
+    .version-actions { display: flex; gap: 6px; }
+
+    /* Result Panel */
+    .result-item {
+      padding: 10px 12px;
+      background: var(--bg-node);
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .result-node { font-size: 13px; font-weight: 500; }
+    .result-status { font-size: 11px; padding: 2px 8px; border-radius: 4px; }
+    .result-status.success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .result-status.error { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+    .result-data {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: monospace;
+      word-break: break-all;
+    }
+
+    /* Shortcuts Help */
+    .shortcuts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .shortcut-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: var(--bg-node);
+      border-radius: 4px;
+    }
+
+    .shortcut-keys {
+      display: flex;
+      gap: 4px;
+    }
+
+    .shortcut-key {
+      padding: 2px 6px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 10px;
+      font-family: monospace;
     }
 
     /* Template Modal */
@@ -381,6 +628,17 @@
       padding: 16px 20px;
       border-bottom: 1px solid var(--border);
       font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 18px;
     }
 
     .modal-body {
@@ -416,6 +674,27 @@
 
     .btn-small:hover { background: var(--bg-dark); }
     .btn-small.primary { background: var(--primary); border-color: var(--primary); }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -423,16 +702,31 @@
     <!-- Toolbar -->
     <div class="toolbar">
       <span class="toolbar-title">🎨 AI 创作工作流</span>
-      <button class="toolbar-btn" id="btn-new">新建</button>
-      <button class="toolbar-btn" id="btn-save">保存</button>
-      <button class="toolbar-btn" id="btn-load">加载</button>
-      <button class="toolbar-btn primary" id="btn-run">▶ 运行</button>
-      <button class="toolbar-btn" id="btn-pause" disabled>⏸ 暂停</button>
-      <button class="toolbar-btn danger" id="btn-stop" disabled>⏹ 停止</button>
+      <button class="toolbar-btn" id="btn-new" title="新建工作流">
+        📄 新建
+        <span class="shortcut">Ctrl+N</span>
+      </button>
+      <button class="toolbar-btn" id="btn-save" title="保存工作流">
+        💾 保存
+        <span class="shortcut">Ctrl+S</span>
+      </button>
+      <button class="toolbar-btn" id="btn-load" title="加载工作流">
+        📂 加载
+      </button>
+      <button class="toolbar-btn" id="btn-undo" title="撤销" disabled>
+        ↩️ 撤销
+        <span class="shortcut">Ctrl+Z</span>
+      </button>
+      <button class="toolbar-btn primary" id="btn-run" title="运行工作流">
+        ▶ 运行
+      </button>
+      <button class="toolbar-btn" id="btn-pause" disabled title="暂停">⏸</button>
+      <button class="toolbar-btn danger" id="btn-stop" disabled title="停止">⏹</button>
       <div style="flex:1"></div>
-      <button class="toolbar-btn" id="btn-zoom-out">➖</button>
-      <button class="toolbar-btn" id="btn-zoom-in">➕</button>
-      <button class="toolbar-btn" id="btn-reset-zoom">重置</button>
+      <button class="toolbar-btn" id="btn-zoom-out" title="缩小">➖</button>
+      <span id="zoom-level" style="font-size:12px;color:var(--text-dim);min-width:40px;text-align:center;">100%</span>
+      <button class="toolbar-btn" id="btn-zoom-in" title="放大">➕</button>
+      <button class="toolbar-btn" id="btn-reset-zoom" title="重置缩放">重置</button>
     </div>
 
     <!-- Node Palette -->
@@ -501,27 +795,113 @@
             <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
               <polygon points="0 0, 10 3.5, 0 7" fill="#6366F1"/>
             </marker>
+            <marker id="arrowhead-success" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#10B981"/>
+            </marker>
+            <marker id="arrowhead-running" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#F59E0B"/>
+            </marker>
           </defs>
         </svg>
       </div>
     </div>
 
     <!-- Property Panel -->
-    <div class="property-panel" id="property-panel">
-      <div class="panel-title">属性</div>
-      <div id="panel-content">
-        <div class="panel-section">
-          <div class="panel-label">工作流名称</div>
-          <input type="text" class="panel-input" id="workflow-name" placeholder="未命名工作流">
+    <div class="property-panel">
+      <div class="panel-tabs">
+        <div class="panel-tab active" data-tab="properties">属性</div>
+        <div class="panel-tab" data-tab="versions">版本</div>
+        <div class="panel-tab" data-tab="results">结果</div>
+        <div class="panel-tab" data-tab="shortcuts">快捷键</div>
+      </div>
+      <div class="panel-content" id="panel-content">
+        <!-- Properties Tab (default) -->
+        <div id="tab-properties" class="tab-content">
+          <div class="panel-title">属性</div>
+          <div id="props-content">
+            <div class="panel-section">
+              <div class="panel-label">工作流名称</div>
+              <input type="text" class="panel-input" id="workflow-name" placeholder="未命名工作流">
+            </div>
+            <div class="panel-section">
+              <div class="panel-label">描述</div>
+              <input type="text" class="panel-input" id="workflow-desc" placeholder="描述你的工作流...">
+            </div>
+            <div style="color: var(--text-dim); font-size: 12px; margin-top: 24px; text-align: center;">
+              从左侧拖拽节点到画布<br>或点击节点查看属性
+            </div>
+          </div>
         </div>
-        <div class="panel-section">
-          <div class="panel-label">描述</div>
-          <input type="text" class="panel-input" id="workflow-desc" placeholder="描述你的工作流...">
+
+        <!-- Version History Tab -->
+        <div id="tab-versions" class="tab-content" style="display:none;">
+          <div class="panel-title">版本历史</div>
+          <div class="version-list" id="version-list">
+            <div style="color:var(--text-dim);font-size:12px;text-align:center;padding:20px;">
+              暂无版本记录<br>保存工作流后将自动创建版本
+            </div>
+          </div>
         </div>
-        <div style="color: var(--text-dim); font-size: 12px; margin-top: 24px; text-align: center;">
-          从左侧拖拽节点到画布<br>或点击节点查看属性
+
+        <!-- Execution Results Tab -->
+        <div id="tab-results" class="tab-content" style="display:none;">
+          <div class="panel-title">执行结果</div>
+          <div id="result-list">
+            <div style="color:var(--text-dim);font-size:12px;text-align:center;padding:20px;">
+              运行工作流后可查看执行结果
+            </div>
+          </div>
+        </div>
+
+        <!-- Shortcuts Tab -->
+        <div id="tab-shortcuts" class="tab-content" style="display:none;">
+          <div class="panel-title">快捷键</div>
+          <div class="shortcuts-grid">
+            <div class="shortcut-item">
+              <span>新建</span>
+              <div class="shortcut-keys"><span class="shortcut-key">Ctrl</span><span class="shortcut-key">N</span></div>
+            </div>
+            <div class="shortcut-item">
+              <span>保存</span>
+              <div class="shortcut-keys"><span class="shortcut-key">Ctrl</span><span class="shortcut-key">S</span></div>
+            </div>
+            <div class="shortcut-item">
+              <span>撤销</span>
+              <div class="shortcut-keys"><span class="shortcut-key">Ctrl</span><span class="shortcut-key">Z</span></div>
+            </div>
+            <div class="shortcut-item">
+              <span>删除节点</span>
+              <div class="shortcut-keys"><span class="shortcut-key">Del</span></div>
+            </div>
+            <div class="shortcut-item">
+              <span>框选</span>
+              <div class="shortcut-keys"><span class="shortcut-key">Shift</span><span class="shortcut-key">拖拽</span></div>
+            </div>
+            <div class="shortcut-item">
+              <span>平移画布</span>
+              <div class="shortcut-keys"><span class="shortcut-key">Space</span><span class="shortcut-key">拖拽</span></div>
+            </div>
+            <div class="shortcut-item">
+              <span>缩放</span>
+              <div class="shortcut-keys"><span class="shortcut-key">滚轮</span></div>
+            </div>
+            <div class="shortcut-item">
+              <span>运行/暂停</span>
+              <div class="shortcut-keys"><span class="shortcut-key">F5</span></div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+
+    <!-- Log Panel -->
+    <div class="log-panel" id="log-panel">
+      <div class="log-header" id="log-header">
+        <span class="log-toggle">▼</span>
+        <span class="log-title">📋 执行日志</span>
+        <span class="log-count" id="log-count">0</span>
+      </div>
+      <div class="log-content" id="log-content"></div>
     </div>
 
     <!-- Status Bar -->
@@ -530,8 +910,14 @@
         <div class="status-dot idle" id="status-dot"></div>
         <span id="status-text">就绪</span>
       </div>
-      <div class="log-container">
-        <div class="log-messages" id="log-messages">就绪</div>
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+        <span class="progress-text" id="progress-text">0%</span>
+      </div>
+      <div style="margin-left:auto;font-size:11px;color:var(--text-dim);">
+        <span id="node-count">0</span> 节点 | <span id="conn-count">0</span> 连接
       </div>
     </div>
   </div>
@@ -539,7 +925,10 @@
   <!-- Save Modal -->
   <div class="modal-overlay" id="save-modal">
     <div class="modal">
-      <div class="modal-header">保存工作流</div>
+      <div class="modal-header">
+        <span>保存工作流</span>
+        <button class="modal-close" onclick="closeModal('save-modal')">×</button>
+      </div>
       <div class="modal-body">
         <div class="panel-section">
           <div class="panel-label">名称</div>
@@ -560,13 +949,21 @@
   <!-- Load Modal -->
   <div class="modal-overlay" id="load-modal">
     <div class="modal">
-      <div class="modal-header">加载工作流</div>
+      <div class="modal-header">
+        <span>加载工作流</span>
+        <button class="modal-close" onclick="closeModal('load-modal')">×</button>
+      </div>
       <div class="modal-body" id="template-list"></div>
     </div>
   </div>
 
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
   <script src="../services/workflowEngine.js"></script>
   <script src="../services/workflowStorage.js"></script>
+  <script src="../services/workflowLogger.js"></script>
+  <script src="../services/workflowLoggerUI.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -584,7 +981,13 @@
       panStart: null,
       draggingNode: null,
       dragOffset: null,
-      connecting: null
+      connecting: null,
+      executionResults: {},
+      versions: [],
+      undoStack: [],
+      redoStack: [],
+      isLogPanelCollapsed: false,
+      currentTab: 'properties'
     };
 
     const nodeNames = {
@@ -601,10 +1004,40 @@
 
     // ============ Init ============
     async function init() {
-      await WorkflowStorage.init();
-      bindEvents();
-      loadFromURL();
-      setupEngineEvents();
+      try {
+        await WorkflowStorage.init();
+        bindEvents();
+        loadFromURL();
+        setupEngineEvents();
+        setupPanelTabs();
+        updateNodeCount();
+        WorkflowLoggerUI.init(document.getElementById('log-content'), document.getElementById('log-count'));
+      } catch (e) {
+        console.error('Init error:', e);
+        showToast('初始化失败: ' + e.message);
+      }
+    }
+
+    // ============ Toast ============
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    // ============ Panel Tabs ============
+    function setupPanelTabs() {
+      document.querySelectorAll('.panel-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+          tab.classList.add('active');
+          const tabId = 'tab-' + tab.dataset.tab;
+          document.getElementById(tabId).style.display = 'block';
+          state.currentTab = tab.dataset.tab;
+        });
+      });
     }
 
     // ============ Engine Events ============
@@ -613,15 +1046,36 @@
         if (event === 'status') {
           updateStatus(data);
         } else if (event === 'nodeStart') {
-          highlightNode(data.nodeId);
+          highlightNode(data.nodeId, 'running');
+          WorkflowLogger.info(`开始执行: ${getNodeLabel(data.nodeId)}`);
+        } else if (event === 'nodeComplete') {
+          const success = data.result?.success;
+          highlightNode(data.nodeId, success ? 'completed' : 'error');
+          state.executionResults[data.nodeId] = data.result;
+          if (success) {
+            WorkflowLogger.success(`完成: ${getNodeLabel(data.nodeId)}`);
+          } else {
+            WorkflowLogger.error(`失败: ${getNodeLabel(data.nodeId)}`);
+          }
+          updateResultsTab();
+          updateProgress();
         } else if (event === 'log') {
-          appendLog(data.message);
+          WorkflowLogger.log(data.message);
         } else if (event === 'complete') {
           setStatus('idle', '执行完成');
+          WorkflowLogger.success('✓ 工作流执行完成');
+          updateProgress(100);
+          document.querySelectorAll('.workflow-node.running').forEach(n => n.classList.remove('running'));
         } else if (event === 'error') {
           setStatus('idle', `错误: ${data.error}`);
+          WorkflowLogger.error(`执行错误: ${data.error}`);
         }
       });
+    }
+
+    function getNodeLabel(nodeId) {
+      const node = state.workflow.nodes.find(n => n.id === nodeId);
+      return node ? (nodeNames[node.subtype] || node.subtype) : nodeId;
     }
 
     function updateStatus({ running, paused }) {
@@ -658,16 +1112,113 @@
       document.getElementById('status-text').textContent = message;
     }
 
-    function appendLog(message) {
-      const logEl = document.getElementById('log-messages');
-      const time = new Date().toLocaleTimeString();
-      logEl.textContent = `[${time}] ${message}`;
+    function highlightNode(nodeId, status) {
+      document.querySelectorAll('.workflow-node').forEach(n => {
+        if (!n.classList.contains('running')) {
+          // keep existing status unless overridden
+        }
+      });
+      const nodeEl = document.querySelector(`[data-node-id="${nodeId}"]`);
+      if (nodeEl) {
+        nodeEl.classList.remove('running', 'completed', 'error');
+        if (status) nodeEl.classList.add(status);
+        updateNodeBadge(nodeEl, status);
+      }
     }
 
-    function highlightNode(nodeId) {
-      document.querySelectorAll('.workflow-node').forEach(n => n.classList.remove('running'));
-      const nodeEl = document.querySelector(`[data-node-id="${nodeId}"]`);
-      if (nodeEl) nodeEl.classList.add('running');
+    function updateNodeBadge(nodeEl, status) {
+      let badge = nodeEl.querySelector('.node-status-badge');
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.className = 'node-status-badge';
+        nodeEl.querySelector('.node-header').appendChild(badge);
+      }
+      badge.className = 'node-status-badge ' + (status || '');
+      badge.textContent = status === 'running' ? '▶' : status === 'completed' ? '✓' : status === 'error' ? '✗' : '';
+    }
+
+    function updateProgress(percent) {
+      const fill = document.getElementById('progress-fill');
+      const text = document.getElementById('progress-text');
+      if (percent !== undefined) {
+        fill.style.width = percent + '%';
+        text.textContent = percent + '%';
+      } else {
+        const total = state.workflow.nodes.length;
+        const completed = Object.keys(state.executionResults).filter(id => state.executionResults[id]?.success).length;
+        const p = total > 0 ? Math.round((completed / total) * 100) : 0;
+        fill.style.width = p + '%';
+        text.textContent = p + '%';
+      }
+    }
+
+    function updateResultsTab() {
+      const list = document.getElementById('result-list');
+      if (Object.keys(state.executionResults).length === 0) {
+        list.innerHTML = '<div style="color:var(--text-dim);font-size:12px;text-align:center;padding:20px;">运行工作流后可查看执行结果</div>';
+        return;
+      }
+      let html = '';
+      for (const [nodeId, result] of Object.entries(state.executionResults)) {
+        const node = state.workflow.nodes.find(n => n.id === nodeId);
+        const name = node ? (nodeNames[node.subtype] || node.subtype) : nodeId;
+        html += `
+          <div class="result-item">
+            <div class="result-header">
+              <span class="result-node">${escHtml(name)}</span>
+              <span class="result-status ${result.success ? 'success' : 'error'}">${result.success ? '成功' : '失败'}</span>
+            </div>
+            <div class="result-data">${escHtml(JSON.stringify(result.output || {}))}</div>
+          </div>
+        `;
+      }
+      list.innerHTML = html;
+    }
+
+    // ============ Undo/Redo ============
+    function pushUndoState() {
+      const snapshot = JSON.stringify(state.workflow);
+      state.undoStack.push(snapshot);
+      if (state.undoStack.length > 50) state.undoStack.shift();
+      state.redoStack = [];
+      updateUndoButton();
+    }
+
+    function undo() {
+      if (state.undoStack.length === 0) return;
+      const current = JSON.stringify(state.workflow);
+      state.redoStack.push(current);
+      const prev = JSON.parse(state.undoStack.pop());
+      state.workflow = prev;
+      renderAllNodes();
+      renderConnections();
+      selectNode(null);
+      saveToURL();
+      updateUndoButton();
+      showToast('已撤销');
+    }
+
+    function redo() {
+      if (state.redoStack.length === 0) return;
+      const current = JSON.stringify(state.workflow);
+      state.undoStack.push(current);
+      const next = JSON.parse(state.redoStack.pop());
+      state.workflow = next;
+      renderAllNodes();
+      renderConnections();
+      selectNode(null);
+      saveToURL();
+      updateUndoButton();
+      showToast('已重做');
+    }
+
+    function updateUndoButton() {
+      document.getElementById('btn-undo').disabled = state.undoStack.length === 0;
+    }
+
+    function renderAllNodes() {
+      document.querySelectorAll('.workflow-node').forEach(n => n.remove());
+      state.workflow.nodes.forEach(n => renderNode(n));
     }
 
     // ============ Event Binding ============
@@ -676,6 +1227,7 @@
       document.getElementById('btn-new').onclick = newWorkflow;
       document.getElementById('btn-save').onclick = () => openModal('save-modal');
       document.getElementById('btn-load').onclick = loadTemplateList;
+      document.getElementById('btn-undo').onclick = undo;
       document.getElementById('btn-run').onclick = runWorkflow;
       document.getElementById('btn-pause').onclick = pauseWorkflow;
       document.getElementById('btn-stop').onclick = stopWorkflow;
@@ -695,7 +1247,8 @@
       canvas.addEventListener('mousedown', handleCanvasMouseDown);
       canvas.addEventListener('mousemove', handleCanvasMouseMove);
       canvas.addEventListener('mouseup', handleCanvasMouseUp);
-      canvas.addEventListener('wheel', handleCanvasWheel);
+      canvas.addEventListener('mouseleave', handleCanvasMouseUp);
+      canvas.addEventListener('wheel', handleCanvasWheel, { passive: false });
 
       // Canvas click (deselect)
       canvas.addEventListener('click', e => {
@@ -704,23 +1257,9 @@
         }
       });
 
-      // Keyboard
-      document.addEventListener('keydown', e => {
-        if (e.code === 'Space' && !e.target.matches('input')) {
-          e.preventDefault();
-          state.isPanning = true;
-          canvas.style.cursor = 'grab';
-        }
-        if (e.key === 'Delete' && state.selectedNodeId) {
-          deleteNode(state.selectedNodeId);
-        }
-      });
-      document.addEventListener('keyup', e => {
-        if (e.code === 'Space') {
-          state.isPanning = false;
-          canvas.style.cursor = '';
-        }
-      });
+      // Keyboard shortcuts
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keyup', handleKeyUp);
 
       // Property panel inputs
       document.getElementById('workflow-name').oninput = e => {
@@ -731,6 +1270,56 @@
         state.workflow.description = e.target.value;
         saveToURL();
       };
+
+      // Log panel toggle
+      document.getElementById('log-header').onclick = toggleLogPanel;
+    }
+
+    function handleKeyDown(e) {
+      if (e.target.matches('input, textarea, select')) return;
+      
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        saveWorkflow();
+      } else if (e.ctrlKey && e.key === 'n') {
+        e.preventDefault();
+        newWorkflow();
+      } else if (e.ctrlKey && e.key === 'z') {
+        e.preventDefault();
+        undo();
+      } else if (e.ctrlKey && e.key === 'y') {
+        e.preventDefault();
+        redo();
+      } else if (e.key === 'F5') {
+        e.preventDefault();
+        if (WorkflowEngine.isRunning) {
+          pauseWorkflow();
+        } else {
+          runWorkflow();
+        }
+      } else if (e.key === ' ' && !state.isPanning) {
+        e.preventDefault();
+        state.isPanning = true;
+        document.getElementById('canvas-container').style.cursor = 'grab';
+      } else if (e.key === 'Delete' && state.selectedNodeId) {
+        deleteNode(state.selectedNodeId);
+      } else if (e.key === 'Escape') {
+        selectNode(null);
+        closeModal('save-modal');
+        closeModal('load-modal');
+      }
+    }
+
+    function handleKeyUp(e) {
+      if (e.code === 'Space') {
+        state.isPanning = false;
+        document.getElementById('canvas-container').style.cursor = '';
+      }
+    }
+
+    function toggleLogPanel() {
+      state.isLogPanelCollapsed = !state.isLogPanelCollapsed;
+      document.getElementById('log-panel').classList.toggle('collapsed', state.isLogPanelCollapsed);
     }
 
     // ============ Drag & Drop from Palette ============
@@ -745,6 +1334,7 @@
       const x = (e.clientX - rect.left - state.pan.x) / state.zoom;
       const y = (e.clientY - rect.top - state.pan.y) / state.zoom;
 
+      pushUndoState();
       addNode(type, subtype, x, y);
     }
 
@@ -756,6 +1346,7 @@
       renderNode(node);
       selectNode(id);
       saveToURL();
+      updateNodeCount();
       return node;
     }
 
@@ -777,7 +1368,9 @@
         <div class="node-header">
           <div class="node-icon">${icon}</div>
           <span class="node-name">${nodeNames[node.subtype] || node.subtype}</span>
+          <div class="node-status-badge"></div>
         </div>
+        <div class="node-progress"><div class="node-progress-bar"></div></div>
         <div class="node-body">${getNodeDesc(node)}</div>
         <div class="node-port in"></div>
         <div class="node-port ${node.type === 'logic' && node.subtype === 'condition' ? 'true' : 'out'}"></div>
@@ -817,6 +1410,7 @@
     }
 
     function deleteNode(nodeId) {
+      pushUndoState();
       state.workflow.nodes = state.workflow.nodes.filter(n => n.id !== nodeId);
       state.workflow.connections = state.workflow.connections.filter(c => c.from !== nodeId && c.to !== nodeId);
       const el = document.querySelector(`[data-node-id="${nodeId}"]`);
@@ -824,6 +1418,7 @@
       if (state.selectedNodeId === nodeId) selectNode(null);
       renderConnections();
       saveToURL();
+      updateNodeCount();
     }
 
     function selectNode(nodeId) {
@@ -837,7 +1432,7 @@
     }
 
     function updatePropertyPanel(nodeId) {
-      const content = document.getElementById('panel-content');
+      const content = document.getElementById('props-content');
       if (!nodeId) {
         content.innerHTML = `
           <div class="panel-section">
@@ -847,6 +1442,9 @@
           <div class="panel-section">
             <div class="panel-label">描述</div>
             <input type="text" class="panel-input" id="workflow-desc" value="${escHtml(state.workflow.description)}" placeholder="描述你的工作流...">
+          </div>
+          <div style="color: var(--text-dim); font-size: 12px; margin-top: 24px; text-align: center;">
+            从左侧拖拽节点到画布<br>或点击节点查看属性
           </div>
         `;
         document.getElementById('workflow-name').oninput = e => { state.workflow.name = e.target.value; saveToURL(); };
@@ -937,38 +1535,80 @@
       // Bind config changes
       setTimeout(() => {
         if (node.type === 'creator' && node.subtype === 'character') {
-          document.getElementById('node-config-style').onchange = e => { node.config.style = e.target.value; renderNode(node); saveToURL(); };
-          document.getElementById('node-config-desc').oninput = e => { node.config.description = e.target.value; renderNode(node); saveToURL(); };
+          const styleEl = document.getElementById('node-config-style');
+          const descEl = document.getElementById('node-config-desc');
+          if (styleEl) styleEl.onchange = e => { pushUndoState(); node.config.style = e.target.value; renderNode(node); saveToURL(); };
+          if (descEl) descEl.oninput = e => { node.config.description = e.target.value; renderNode(node); saveToURL(); };
         } else if (node.type === 'creator' && node.subtype === 'music') {
-          document.getElementById('node-config-mood').onchange = e => { node.config.mood = e.target.value; renderNode(node); saveToURL(); };
-          document.getElementById('node-config-duration').oninput = e => { node.config.duration = parseInt(e.target.value); renderNode(node); saveToURL(); };
+          const moodEl = document.getElementById('node-config-mood');
+          const durEl = document.getElementById('node-config-duration');
+          if (moodEl) moodEl.onchange = e => { pushUndoState(); node.config.mood = e.target.value; renderNode(node); saveToURL(); };
+          if (durEl) durEl.oninput = e => { node.config.duration = parseInt(e.target.value) || 60; renderNode(node); saveToURL(); };
         } else if (node.type === 'creator' && node.subtype === 'tts') {
-          document.getElementById('node-config-voice').onchange = e => { node.config.voice = e.target.value; renderNode(node); saveToURL(); };
+          const voiceEl = document.getElementById('node-config-voice');
+          if (voiceEl) voiceEl.onchange = e => { pushUndoState(); node.config.voice = e.target.value; renderNode(node); saveToURL(); };
         } else if (node.type === 'logic' && node.subtype === 'loop') {
-          document.getElementById('node-config-count').oninput = e => { node.config.count = parseInt(e.target.value); renderNode(node); saveToURL(); };
+          const countEl = document.getElementById('node-config-count');
+          if (countEl) countEl.oninput = e => { node.config.count = parseInt(e.target.value) || 3; renderNode(node); saveToURL(); };
         } else if (node.type === 'logic' && node.subtype === 'condition') {
-          document.getElementById('node-config-field').oninput = e => { node.config.field = e.target.value; renderNode(node); saveToURL(); };
-          document.getElementById('node-config-value').oninput = e => { node.config.value = e.target.value; renderNode(node); saveToURL(); };
+          const fieldEl = document.getElementById('node-config-field');
+          const valueEl = document.getElementById('node-config-value');
+          if (fieldEl) fieldEl.oninput = e => { node.config.field = e.target.value; renderNode(node); saveToURL(); };
+          if (valueEl) valueEl.oninput = e => { node.config.value = e.target.value; renderNode(node); saveToURL(); };
         }
       }, 0);
     }
 
     // ============ Connections ============
+    let tempConnectionLine = null;
+
     function startConnection(fromId, fromPort, e) {
       state.connecting = { fromId, fromPort };
+      
+      // Create temporary line
+      const svg = document.getElementById('connections-svg');
+      tempConnectionLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      tempConnectionLine.setAttribute('class', 'connection-line');
+      tempConnectionLine.setAttribute('stroke', 'var(--primary)');
+      tempConnectionLine.setAttribute('stroke-width', '2');
+      tempConnectionLine.setAttribute('stroke-dasharray', '5,5');
+      svg.appendChild(tempConnectionLine);
+
       document.addEventListener('mousemove', handleConnectionMove);
       document.addEventListener('mouseup', handleConnectionEnd);
     }
 
     function handleConnectionMove(e) {
-      if (!state.connecting) return;
-      // Visual feedback would go here
+      if (!state.connecting || !tempConnectionLine) return;
+      
+      const canvas = document.getElementById('workflow-canvas');
+      const rect = canvas.getBoundingClientRect();
+      const fromEl = document.querySelector(`[data-node-id="${state.connecting.fromId}"]`);
+      if (!fromEl) return;
+
+      const fromPort = fromEl.querySelector(`.node-port.${state.connecting.fromPort}`);
+      if (!fromPort) return;
+
+      const fromRect = fromPort.getBoundingClientRect();
+      const x1 = fromRect.left + fromRect.width / 2 - rect.left;
+      const y1 = fromRect.top + fromRect.height / 2 - rect.top;
+      const x2 = (e.clientX - rect.left);
+      const y2 = (e.clientY - rect.top);
+
+      const dx = Math.abs(x2 - x1) * 0.5;
+      const path = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+      tempConnectionLine.setAttribute('d', path);
     }
 
     function handleConnectionEnd(e) {
       document.removeEventListener('mousemove', handleConnectionMove);
       document.removeEventListener('mouseup', handleConnectionEnd);
       
+      if (tempConnectionLine) {
+        tempConnectionLine.remove();
+        tempConnectionLine = null;
+      }
+
       if (!state.connecting) return;
 
       const targetEl = e.target.closest('.workflow-node');
@@ -979,6 +1619,7 @@
         // Remove existing connection to this node's input
         state.workflow.connections = state.workflow.connections.filter(c => !(c.to === toId && c.toPort === 'in'));
         
+        pushUndoState();
         state.workflow.connections.push({
           from: state.connecting.fromId,
           fromPort: state.connecting.fromPort,
@@ -987,13 +1628,14 @@
         });
         renderConnections();
         saveToURL();
+        updateNodeCount();
       }
       state.connecting = null;
     }
 
     function renderConnections() {
       const svg = document.getElementById('connections-svg');
-      svg.querySelectorAll('.connection-line').forEach(l => l.remove());
+      svg.querySelectorAll('.connection-line:not([stroke-dasharray])').forEach(l => l.remove());
 
       for (const conn of state.workflow.connections) {
         const fromEl = document.querySelector(`[data-node-id="${conn.from}"]`);
@@ -1019,7 +1661,20 @@
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         line.setAttribute('d', path);
         line.setAttribute('class', 'connection-line');
-        line.setAttribute('marker-end', 'url(#arrowhead)');
+        
+        // Check if this connection is from a completed or running node
+        const fromNode = state.workflow.nodes.find(n => n.id === conn.from);
+        if (fromNode) {
+          const result = state.executionResults[conn.from];
+          if (result?.success) {
+            line.setAttribute('marker-end', 'url(#arrowhead-success)');
+          } else if (state.executionResults[conn.from]) {
+            line.setAttribute('marker-end', 'url(#arrowhead)');
+          } else {
+            line.setAttribute('marker-end', 'url(#arrowhead)');
+          }
+        }
+        
         svg.appendChild(line);
       }
     }
@@ -1029,6 +1684,7 @@
       if (state.isPanning || e.button === 1) {
         state.panStart = { x: e.clientX - state.pan.x, y: e.clientY - state.pan.y };
         state.isPanning = true;
+        document.getElementById('canvas-container').style.cursor = 'grabbing';
         e.preventDefault();
       }
     }
@@ -1050,7 +1706,6 @@
             el.style.top = node.y + 'px';
           }
           renderConnections();
-          saveToURL();
         }
       } else if (state.panStart) {
         state.pan.x = e.clientX - state.panStart.x;
@@ -1061,10 +1716,16 @@
 
     function handleCanvasMouseUp(e) {
       if (state.draggingNode) {
+        pushUndoState();
+        saveToURL();
         state.draggingNode = null;
         state.dragOffset = null;
       }
-      state.panStart = null;
+      if (state.panStart) {
+        state.panStart = null;
+        state.isPanning = false;
+        document.getElementById('canvas-container').style.cursor = '';
+      }
     }
 
     function handleCanvasWheel(e) {
@@ -1075,6 +1736,7 @@
 
     function setZoom(zoom) {
       state.zoom = Math.max(0.3, Math.min(2, zoom));
+      document.getElementById('zoom-level').textContent = Math.round(state.zoom * 100) + '%';
       applyTransform();
     }
 
@@ -1083,13 +1745,26 @@
       canvas.style.transform = `translate(${state.pan.x}px, ${state.pan.y}px) scale(${state.zoom})`;
     }
 
+    function updateNodeCount() {
+      document.getElementById('node-count').textContent = state.workflow.nodes.length;
+      document.getElementById('conn-count').textContent = state.workflow.connections.length;
+    }
+
     // ============ Workflow Operations ============
     function newWorkflow() {
+      if (state.workflow.nodes.length > 0 && !confirm('确定新建工作流？当前未保存的内容将丢失。')) return;
+      pushUndoState();
       state.workflow = { id: null, name: '未命名工作流', description: '', nodes: [], connections: [] };
       document.querySelectorAll('.workflow-node').forEach(n => n.remove());
       renderConnections();
       selectNode(null);
+      state.executionResults = {};
+      updateProgress(0);
       saveToURL();
+      updateNodeCount();
+      WorkflowLogger.clear();
+      WorkflowLogger.info('已创建新工作流');
+      showToast('新建工作流');
     }
 
     async function saveWorkflow() {
@@ -1102,9 +1777,64 @@
       const id = await WorkflowStorage.save(state.workflow);
       state.workflow.id = id;
       
+      // Add to version history
+      const version = {
+        id: Date.now(),
+        name: name,
+        description: desc,
+        timestamp: Date.now(),
+        workflow: JSON.parse(JSON.stringify(state.workflow))
+      };
+      state.versions.unshift(version);
+      if (state.versions.length > 20) state.versions.pop();
+      updateVersionList();
+
       closeModal('save-modal');
-      appendLog(`已保存: ${name}`);
+      WorkflowLogger.success(`已保存: ${name}`);
       saveToURL();
+      showToast('已保存');
+    }
+
+    function updateVersionList() {
+      const list = document.getElementById('version-list');
+      if (state.versions.length === 0) {
+        list.innerHTML = '<div style="color:var(--text-dim);font-size:12px;text-align:center;padding:20px;">暂无版本记录<br>保存工作流后将自动创建版本</div>';
+        return;
+      }
+      let html = '';
+      state.versions.forEach((v, i) => {
+        const date = new Date(v.timestamp);
+        const timeStr = date.toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        html += `
+          <div class="version-item" onclick="restoreVersion(${i})">
+            <div class="version-info">
+              <div class="version-name">${escHtml(v.name)}</div>
+              <div class="version-time">${timeStr}</div>
+            </div>
+            <div class="version-actions">
+              <button class="btn-small" onclick="event.stopPropagation();restoreVersion(${i})">恢复</button>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    function restoreVersion(index) {
+      const version = state.versions[index];
+      if (!version) return;
+      if (!confirm('确定要恢复此版本？当前工作流将被替换。')) return;
+      
+      pushUndoState();
+      state.workflow = JSON.parse(JSON.stringify(version.workflow));
+      document.querySelectorAll('.workflow-node').forEach(n => n.remove());
+      state.workflow.nodes.forEach(n => renderNode(n));
+      renderConnections();
+      selectNode(null);
+      saveToURL();
+      updateNodeCount();
+      WorkflowLogger.info(`已恢复版本: ${version.name}`);
+      showToast('已恢复版本');
     }
 
     async function loadTemplateList() {
@@ -1121,7 +1851,7 @@
               <p>${t.description}</p>
             </div>
             <div class="template-actions">
-              <button class="btn-small primary" onclick="loadWorkflow(${JSON.stringify(t).replace(/"/g, '&quot;')})">加载</button>
+              <button class="btn-small primary" onclick="loadWorkflow(${JSON.stringify(t).replace(/\"/g, '&quot;')})">加载</button>
             </div>
           </div>
         `;
@@ -1137,7 +1867,7 @@
                 <p>${escHtml(t.description || '')}</p>
               </div>
               <div class="template-actions">
-                <button class="btn-small primary" onclick="loadWorkflow(${JSON.stringify(t).replace(/"/g, '&quot;')})">加载</button>
+                <button class="btn-small primary" onclick="loadWorkflow(${JSON.stringify(t).replace(/\"/g, '&quot;')})">加载</button>
                 <button class="btn-small danger" onclick="deleteWorkflow(${t.id})">删除</button>
               </div>
             </div>
@@ -1150,14 +1880,19 @@
     }
 
     function loadWorkflow(workflow) {
+      pushUndoState();
       state.workflow = { ...workflow, id: workflow.id || null };
       document.querySelectorAll('.workflow-node').forEach(n => n.remove());
       state.workflow.nodes.forEach(n => renderNode(n));
       renderConnections();
       selectNode(null);
+      state.executionResults = {};
+      updateProgress(0);
       closeModal('load-modal');
-      appendLog(`已加载: ${workflow.name}`);
+      WorkflowLogger.info(`已加载: ${workflow.name}`);
       saveToURL();
+      updateNodeCount();
+      showToast('已加载: ' + workflow.name);
     }
 
     async function deleteWorkflow(id) {
@@ -1169,29 +1904,45 @@
 
     function runWorkflow() {
       if (state.workflow.nodes.length === 0) {
-        appendLog('请先添加节点');
+        WorkflowLogger.warning('请先添加节点');
+        showToast('请先添加节点');
         return;
       }
+      state.executionResults = {};
+      updateProgress(0);
+      WorkflowLogger.info('开始执行工作流: ' + state.workflow.name);
       WorkflowEngine.run(state.workflow);
     }
 
     function pauseWorkflow() {
       if (WorkflowEngine.isPaused) {
         WorkflowEngine.resume();
+        WorkflowLogger.info('已恢复执行');
       } else {
         WorkflowEngine.pause();
+        WorkflowLogger.warning('已暂停');
       }
     }
 
     function stopWorkflow() {
       WorkflowEngine.stop();
-      document.querySelectorAll('.workflow-node').forEach(n => n.classList.remove('running'));
+      document.querySelectorAll('.workflow-node').forEach(n => {
+        n.classList.remove('running', 'completed', 'error');
+        const badge = n.querySelector('.node-status-badge');
+        if (badge) badge.textContent = '';
+      });
+      WorkflowLogger.warning('已停止执行');
+      updateProgress(0);
     }
 
     // ============ URL State ============
     function saveToURL() {
-      const data = btoa(JSON.stringify(state.workflow));
-      history.replaceState(null, '', '#' + data);
+      try {
+        const data = btoa(JSON.stringify(state.workflow));
+        history.replaceState(null, '', '#' + data);
+      } catch (e) {
+        console.error('Failed to save to URL:', e);
+      }
     }
 
     function loadFromURL() {
@@ -1202,8 +1953,10 @@
           state.workflow = workflow;
           workflow.nodes.forEach(n => renderNode(n));
           renderConnections();
+          WorkflowLogger.info('已从URL加载工作流');
         } catch (e) {
           console.error('Failed to load workflow from URL', e);
+          WorkflowLogger.error('加载工作流失败');
         }
       }
     }
@@ -1225,8 +1978,18 @@
       });
     });
 
+    // Palette search
+    document.getElementById('palette-search').addEventListener('input', e => {
+      const query = e.target.value.toLowerCase();
+      document.querySelectorAll('.palette-node').forEach(node => {
+        const text = node.textContent.toLowerCase();
+        node.style.display = text.includes(query) ? '' : 'none';
+      });
+    });
+
     // ============ Utilities ============
     function escHtml(str) {
+      if (str == null) return '';
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
