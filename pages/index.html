@@ -245,6 +245,15 @@
         </div>
         <span class="feature-arrow">›</span>
       </div>
+
+      <div class="feature-card" onclick="goToMarket()">
+        <div class="feature-icon" style="background: rgba(102, 126, 234, 0.15)">🏪</div>
+        <div class="feature-content">
+          <span class="feature-name">模板市场</span>
+          <span class="feature-desc">发现优质模板</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
     </div>
 
     <!-- API Key 提示 -->
@@ -327,6 +336,10 @@
 
     function goToFavorites() {
       window.location.hash = '/pages/favorites.html';
+    }
+
+    function goToMarket() {
+      window.location.hash = '/pages/market.html';
     }
 
     // Init
