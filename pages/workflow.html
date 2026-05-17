@@ -881,6 +881,8 @@
       <button class="toolbar-btn" id="btn-reset-zoom" title="重置缩放">重置</button>
       <button class="toolbar-btn" id="btn-stats" title="性能统计">📊</button>
       <button class="toolbar-btn" id="btn-history" title="执行历史">📋</button>
+      <button class="toolbar-btn" id="btn-version" title="版本历史" onclick="showVersionHistory()">📜 版本</button>
+      <button class="toolbar-btn" id="btn-branch" title="分支管理" onclick="showBranchPanel()">🌿 分支</button>
     </div>
 
     <!-- Real-time Status Bar -->
@@ -1161,6 +1163,17 @@
     </div>
   </div>
 
+  <!-- Branch Management Modal -->
+  <div class="modal-overlay" id="branch-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>分支管理</span>
+        <button class="modal-close" onclick="closeModal('branch-modal')">×</button>
+      </div>
+      <div class="modal-body" id="branch-list"></div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
@@ -1180,6 +1193,9 @@
   <script src="../services/workflowMonitor.js"></script>
   <script src="../services/workflowHistory.js"></script>
   <script src="../services/workflowStatsUI.js"></script>
+  <script src="../services/workflowVersion.js"></script>
+  <script src="../services/workflowDiff.js"></script>
+  <script src="../services/workflowVersionUI.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -1228,6 +1244,7 @@
         await WorkflowStorage.init();
         await WorkflowHistory.init();
         WorkflowStatsUI.initStatsPanel();
+        initVersionPanel();
         bindEvents();
         loadFromURL();
         setupEngineEvents();
@@ -2185,17 +2202,11 @@
       const id = await WorkflowStorage.save(state.workflow);
       state.workflow.id = id;
       
-      // Add to version history
-      const version = {
-        id: Date.now(),
+      // 使用新的版本服务保存版本
+      await autoSaveVersion(state.workflow, {
         name: name,
-        description: desc,
-        timestamp: Date.now(),
-        workflow: JSON.parse(JSON.stringify(state.workflow))
-      };
-      state.versions.unshift(version);
-      if (state.versions.length > 20) state.versions.pop();
-      updateVersionList();
+        summary: desc || state.workflow.nodes?.length + ' 个节点'
+      });
 
       closeModal('save-modal');
       WorkflowLogger.success(`已保存: ${name}`);
@@ -2380,6 +2391,13 @@
       WorkflowLogger.info('开始执行工作流: ' + state.workflow.name);
       WorkflowMonitor.initTotalNodes(state.workflow.nodes.length);
       WorkflowMonitor.startMonitor();
+      
+      // 自动保存版本
+      autoSaveVersion(state.workflow, {
+        name: state.workflow.name + ' (执行前)',
+        summary: '执行前自动保存'
+      });
+      
       WorkflowEngine.run(state.workflow);
     }
 
