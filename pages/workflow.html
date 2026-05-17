@@ -705,6 +705,52 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+
+    /* AI Recommend Panel */
+    .ai-recommend-panel.active {
+      display: flex !important;
+    }
+
+    /* Gallery Filter Buttons */
+    .gallery-filter-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .gallery-filter-btn:hover {
+      background: var(--bg-node);
+    }
+
+    .gallery-filter-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    /* Template Card Styles */
+    .template-card:hover {
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    /* AI Assist Button Animation */
+    .ai-assist-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .ai-assist-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Recommend Item Animation */
+    .recommend-item:hover {
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
   </style>
 </head>
 <body>
@@ -1010,6 +1056,9 @@
   <script src="../services/workflowLoop.js"></script>
   <script src="../services/workflowSubflow.js"></script>
   <script src="../services/workflowVersionManager.js"></script>
+  <script src="../services/workflowAIRecommend.js"></script>
+  <script src="../services/templateGallery.js"></script>
+  <script src="../services/workflowRecommendUI.js"></script>
   <script>
     // ============ State ============
     const state = {
