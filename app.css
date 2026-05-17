@@ -1164,3 +1164,249 @@ html, body {
   color: #fa8c16;
   margin-left: 4px;
 }
+
+/* ========== Quality Assessment Panel ========== */
+.quality-panel {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 16px 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.3s ease;
+}
+
+.quality-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.quality-panel-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quality-score-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1A73E8, #4facfe);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+}
+
+.quality-score-value {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.quality-score-label {
+  font-size: 10px;
+  opacity: 0.85;
+}
+
+.quality-level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.quality-level-badge.s-rank {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.quality-level-badge.a-rank {
+  background: linear-gradient(135deg, #1A73E8, #4facfe);
+  color: #fff;
+}
+
+.quality-level-badge.b-rank {
+  background: linear-gradient(135deg, #52c41a, #73d13d);
+  color: #fff;
+}
+
+.quality-level-badge.c-rank {
+  background: linear-gradient(135deg, #fa8c16, #ffc53d);
+  color: #fff;
+}
+
+.quality-level-badge.d-rank {
+  background: linear-gradient(135deg, #ff4d4f, #ff7875);
+  color: #fff;
+}
+
+.quality-summary {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.quality-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.quality-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quality-metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.quality-metric-label {
+  font-size: 13px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quality-metric-score {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A73E8;
+}
+
+.quality-metric-bar {
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.quality-metric-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.quality-metric-fill.excellent {
+  background: linear-gradient(90deg, #52c41a, #73d13d);
+}
+
+.quality-metric-fill.good {
+  background: linear-gradient(90deg, #1A73E8, #4facfe);
+}
+
+.quality-metric-fill.average {
+  background: linear-gradient(90deg, #fa8c16, #ffc53d);
+}
+
+.quality-metric-fill.poor {
+  background: linear-gradient(90deg, #ff4d4f, #ff7875);
+}
+
+.quality-percentile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: linear-gradient(135deg, #f0f4ff, #e8f0ff);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.quality-percentile-icon {
+  font-size: 18px;
+}
+
+.quality-percentile-text {
+  font-size: 13px;
+  color: #1A73E8;
+}
+
+.quality-percentile-value {
+  font-weight: 600;
+}
+
+.quality-suggestions {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+}
+
+.quality-suggestions-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quality-suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.quality-suggestion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.quality-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.quality-suggestion-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.quality-suggestion-icon.improve {
+  color: #fa8c16;
+}
+
+.quality-suggestion-icon.good {
+  color: #52c41a;
+}
+
+/* Responsive adjustments for quality panel */
+@media (max-width: 375px) {
+  .quality-score-circle {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .quality-score-value {
+    font-size: 22px;
+  }
+}

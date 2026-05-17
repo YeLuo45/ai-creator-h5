@@ -1184,6 +1184,120 @@
           </div>
         `;
       }
+      
+      // 显示质量评估
+      showQualityAssessment(result, state.type);
+    }
+    
+    // 显示质量评估面板
+    async function showQualityAssessment(result, type) {
+      try {
+        const { QualityService } = await import('../services/qualityService.js');
+        let evaluation;
+        
+        if (type === 'image') {
+          evaluation = await QualityService.evaluateImage({
+            url: result.url,
+            revised_prompt: result.revised_prompt,
+            style: document.getElementById('styleSelect')?.value || 'vivid',
+            size: document.getElementById('sizeSelect')?.value || '1024x1024',
+            prompt: document.getElementById('promptInput')?.value || ''
+          });
+        } else if (type === 'music') {
+          evaluation = await QualityService.evaluateMusic({
+            musicUrl: result.musicUrl,
+            duration: result.duration || 60,
+            genre: document.getElementById('genreSelect')?.value || 'pop',
+            lyrics: result.lyrics || '',
+            prompt: document.getElementById('promptInput')?.value || ''
+          });
+        } else if (type === 'tts') {
+          const promptText = document.getElementById('promptInput')?.value || '';
+          evaluation = await QualityService.evaluateTTS({
+            filePath: result.filePath,
+            voice: document.getElementById('voiceSelect')?.value || 'female-shaonv',
+            text: promptText,
+            charCount: promptText.length
+          });
+        }
+        
+        if (evaluation) {
+          const qualityHTML = buildQualityPanelHTML(evaluation);
+          const container = document.getElementById('resultView');
+          const resultContainer = container.querySelector('.result-container');
+          if (resultContainer) {
+            resultContainer.insertAdjacentHTML('beforebegin', qualityHTML);
+          }
+        }
+      } catch (e) {
+        console.error('质量评估失败:', e);
+      }
+    }
+    
+    // 构建质量评估面板HTML
+    function buildQualityPanelHTML(evaluation) {
+      const { score, metrics, percentile, suggestions, summary, type } = evaluation;
+      const level = score >= 90 ? 'S' : score >= 80 ? 'A' : score >= 70 ? 'B' : score >= 60 ? 'C' : 'D';
+      const levelClass = level.toLowerCase() + '-rank';
+      
+      const typeIcons = { image: '🖼️', music: '🎵', tts: '🎤' };
+      
+      let metricsHTML = '';
+      for (const [key, metric] of Object.entries(metrics)) {
+        const fillClass = metric.score >= 85 ? 'excellent' : metric.score >= 70 ? 'good' : metric.score >= 50 ? 'average' : 'poor';
+        const icon = metric.score >= 70 ? '✅' : '💡';
+        metricsHTML += `
+          <div class="quality-metric-item">
+            <div class="quality-metric-header">
+              <span class="quality-metric-label">${icon} ${metric.label}</span>
+              <span class="quality-metric-score">${metric.score}分</span>
+            </div>
+            <div class="quality-metric-bar">
+              <div class="quality-metric-fill ${fillClass}" style="width: ${metric.score}%;"></div>
+            </div>
+          </div>
+        `;
+      }
+      
+      let suggestionsHTML = '';
+      for (const suggestion of suggestions) {
+        const isPositive = suggestion.includes('优秀') || suggestion.includes('良好') || suggestion.includes('不错');
+        suggestionsHTML += `
+          <li class="quality-suggestion-item">
+            <span class="quality-suggestion-icon ${isPositive ? 'good' : 'improve'}">${isPositive ? '✨' : '💡'}</span>
+            <span>${suggestion}</span>
+          </li>
+        `;
+      }
+      
+      return `
+        <div class="quality-panel" id="qualityPanel">
+          <div class="quality-panel-header">
+            <div class="quality-panel-title">
+              ${typeIcons[type] || '📊'} 质量评估
+              <span class="quality-level-badge ${levelClass}">${level}</span>
+            </div>
+            <div class="quality-score-circle">
+              <span class="quality-score-value">${score}</span>
+              <span class="quality-score-label">质量分</span>
+            </div>
+          </div>
+          <div class="quality-percentile">
+            <span class="quality-percentile-icon">🏆</span>
+            <span class="quality-percentile-text">超过了 <span class="quality-percentile-value">${percentile}%</span> 的创作</span>
+          </div>
+          <div class="quality-summary">${summary}</div>
+          <div class="quality-metrics">
+            ${metricsHTML}
+          </div>
+          <div class="quality-suggestions">
+            <div class="quality-suggestions-title">💬 优化建议</div>
+            <ul class="quality-suggestions-list">
+              ${suggestionsHTML}
+            </ul>
+          </div>
+        </div>
+      `;
     }
 
     function hideResult() {
