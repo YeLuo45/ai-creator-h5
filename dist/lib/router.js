@@ -199,6 +199,10 @@ window.router.register('/pages/market.html', async (container, params) => {
   await loadPage('pages/market.html', params);
 });
 
+window.router.register('/pages/analytics.html', async (container, params) => {
+  await loadPage('pages/analytics.html', params);
+});
+
 // Navigation helpers
 window.navigateTo = function(path) {
   window.location.hash = path;
