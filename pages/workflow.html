@@ -144,6 +144,14 @@
     .palette-node[data-type="creator"] .icon { background: #2563EB; }
     .palette-node[data-type="logic"] .icon { background: #D97706; }
     .palette-node[data-type="output"] .icon { background: #059669; }
+    .palette-node[data-type="loop"] .icon { background: #EC4899; }
+    .palette-node[data-type="subflow"] .icon { background: #8B5CF6; }
+
+    /* Loop node type badge colors */
+    .workflow-node[data-subtype="forLoop"] .node-icon { background: #EC4899; }
+    .workflow-node[data-subtype="whileLoop"] .node-icon { background: #F97316; }
+    .workflow-node[data-subtype="doWhileLoop"] .node-icon { background: #EF4444; }
+    .workflow-node[data-subtype="subflowCall"] .node-icon { background: #8B5CF6; }
 
     /* Canvas */
     .canvas-container {
@@ -281,6 +289,8 @@
     .node-port.out { right: -6px; top: 50%; transform: translateY(-50%); }
     .node-port.true { right: -6px; top: 30%; }
     .node-port.false { right: -6px; bottom: 30%; }
+    .node-port.body { right: -6px; top: 70%; transform: translateY(-50%); }
+    .node-port.body { background: #EC4899; }
 
     /* Connection Lines */
     .connection-line {
@@ -713,6 +723,12 @@
       <button class="toolbar-btn" id="btn-load" title="加载工作流">
         📂 加载
       </button>
+      <button class="toolbar-btn" id="btn-import" title="导入 JSON">
+        📥 导入
+      </button>
+      <button class="toolbar-btn" id="btn-export" title="导出 JSON">
+        📤 导出
+      </button>
       <button class="toolbar-btn" id="btn-undo" title="撤销" disabled>
         ↩️ 撤销
         <span class="shortcut">Ctrl+Z</span>
@@ -758,6 +774,30 @@
         <div class="palette-node" draggable="true" data-type="creator" data-subtype="poster">
           <div class="icon">🖼️</div>
           <span>海报生成</span>
+        </div>
+      </div>
+
+      <div class="palette-category">
+        <div class="palette-category-title">循环</div>
+        <div class="palette-node" draggable="true" data-type="loop" data-subtype="forLoop">
+          <div class="icon">🔁</div>
+          <span>For 循环</span>
+        </div>
+        <div class="palette-node" draggable="true" data-type="loop" data-subtype="whileLoop">
+          <div class="icon">⏳</div>
+          <span>While 循环</span>
+        </div>
+        <div class="palette-node" draggable="true" data-type="loop" data-subtype="doWhileLoop">
+          <div class="icon">🔂</div>
+          <span>Do-While 循环</span>
+        </div>
+      </div>
+
+      <div class="palette-category">
+        <div class="palette-category-title">子流程</div>
+        <div class="palette-node" draggable="true" data-type="subflow" data-subtype="subflowCall">
+          <div class="icon">📦</div>
+          <span>子流程调用</span>
         </div>
       </div>
 
@@ -960,10 +1000,16 @@
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
+  <!-- Hidden file input for import -->
+  <input type="file" id="file-import" accept=".json" style="display:none">
+
   <script src="../services/workflowEngine.js"></script>
   <script src="../services/workflowStorage.js"></script>
   <script src="../services/workflowLogger.js"></script>
   <script src="../services/workflowLoggerUI.js"></script>
+  <script src="../services/workflowLoop.js"></script>
+  <script src="../services/workflowSubflow.js"></script>
+  <script src="../services/workflowVersionManager.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -999,7 +1045,11 @@
       loop: '循环',
       condition: '条件分支',
       save: '保存本地',
-      share: '分享'
+      share: '分享',
+      forLoop: 'For 循环',
+      whileLoop: 'While 循环',
+      doWhileLoop: 'Do-While 循环',
+      subflowCall: '子流程调用'
     };
 
     // ============ Init ============
@@ -1237,6 +1287,9 @@
 
       // Modal
       document.getElementById('btn-confirm-save').onclick = saveWorkflow;
+      document.getElementById('btn-import').onclick = () => document.getElementById('file-import').click();
+      document.getElementById('btn-export').onclick = exportWorkflowJSON;
+      document.getElementById('file-import').onchange = importWorkflowJSON;
 
       // Canvas drag & drop
       const canvas = document.getElementById('canvas-container');
@@ -1361,20 +1414,28 @@
       el.style.left = node.x + 'px';
       el.style.top = node.y + 'px';
 
-      const icons = { trigger: '⚡', creator: '🎨', logic: '⚙️', output: '📤' };
+      const icons = { trigger: '⚡', creator: '🎨', logic: '⚙️', output: '📤', loop: '🔄', subflow: '📦' };
       const icon = icons[node.type] || '📦';
+
+      // Special icon for loop subtypes
+      let nodeIcon = icon;
+      if (node.type === 'loop') {
+        if (node.subtype === 'forLoop') nodeIcon = '🔁';
+        else if (node.subtype === 'whileLoop') nodeIcon = '⏳';
+        else if (node.subtype === 'doWhileLoop') nodeIcon = '🔂';
+      }
 
       el.innerHTML = `
         <div class="node-header">
-          <div class="node-icon">${icon}</div>
+          <div class="node-icon">${nodeIcon}</div>
           <span class="node-name">${nodeNames[node.subtype] || node.subtype}</span>
           <div class="node-status-badge"></div>
         </div>
         <div class="node-progress"><div class="node-progress-bar"></div></div>
         <div class="node-body">${getNodeDesc(node)}</div>
         <div class="node-port in"></div>
-        <div class="node-port ${node.type === 'logic' && node.subtype === 'condition' ? 'true' : 'out'}"></div>
-        ${node.type === 'logic' && node.subtype === 'condition' ? '<div class="node-port false"></div>' : ''}
+        ${node.type === 'logic' && node.subtype === 'condition' ? '<div class="node-port true"></div><div class="node-port false"></div>' : '<div class="node-port out"></div>'}
+        ${node.type === 'loop' ? '<div class="node-port body"></div>' : ''}
       `;
 
       // Drag to move
@@ -1406,6 +1467,10 @@
       if (node.subtype === 'poster') return node.config.template || '默认模板';
       if (node.subtype === 'loop') return `循环 ${node.config.count || 3} 次`;
       if (node.subtype === 'condition') return node.config.field || '类型判断';
+      if (node.subtype === 'forLoop') return `For ${node.config.variable || 'i'}=0 to ${node.config.count || 3}`;
+      if (node.subtype === 'whileLoop') return `While ${node.config.condition || 'true'}`;
+      if (node.subtype === 'doWhileLoop') return `Do-While ${node.config.condition || 'true'}`;
+      if (node.subtype === 'subflowCall') return node.config.workflowName || '选择子流程';
       return '';
     }
 
@@ -1518,6 +1583,62 @@
             <input type="text" class="panel-input" id="node-config-value" value="${escHtml(node.config.value || 'video')}" placeholder="值">
           </div>
         `;
+      } else if (node.type === 'loop' && node.subtype === 'forLoop') {
+        configFields = `
+          <div class="panel-section">
+            <div class="panel-label">循环变量名</div>
+            <input type="text" class="panel-input" id="node-config-variable" value="${escHtml(node.config.variable || 'i')}" placeholder="变量名">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">循环次数</div>
+            <input type="number" class="panel-input" id="node-config-count" value="${node.config.count || 3}">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">最大迭代次数</div>
+            <input type="number" class="panel-input" id="node-config-max" value="${node.config.maxIterations || 100}">
+          </div>
+        `;
+      } else if (node.type === 'loop' && node.subtype === 'whileLoop') {
+        configFields = `
+          <div class="panel-section">
+            <div class="panel-label">循环变量名</div>
+            <input type="text" class="panel-input" id="node-config-variable" value="${escHtml(node.config.variable || 'i')}" placeholder="变量名">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">循环条件</div>
+            <input type="text" class="panel-input" id="node-config-condition" value="${escHtml(node.config.condition || 'i < 5')}" placeholder="如: i < 5">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">最大迭代次数</div>
+            <input type="number" class="panel-input" id="node-config-max" value="${node.config.maxIterations || 100}">
+          </div>
+        `;
+      } else if (node.type === 'loop' && node.subtype === 'doWhileLoop') {
+        configFields = `
+          <div class="panel-section">
+            <div class="panel-label">循环变量名</div>
+            <input type="text" class="panel-input" id="node-config-variable" value="${escHtml(node.config.variable || 'i')}" placeholder="变量名">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">循环条件</div>
+            <input type="text" class="panel-input" id="node-config-condition" value="${escHtml(node.config.condition || 'i < 5')}" placeholder="如: i < 5">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">最大迭代次数</div>
+            <input type="number" class="panel-input" id="node-config-max" value="${node.config.maxIterations || 100}">
+          </div>
+        `;
+      } else if (node.type === 'subflow') {
+        configFields = `
+          <div class="panel-section">
+            <div class="panel-label">子流程名称</div>
+            <input type="text" class="panel-input" id="node-config-workflow-name" value="${escHtml(node.config.workflowName || '')}" placeholder="子流程名称">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">子流程 ID</div>
+            <input type="text" class="panel-input" id="node-config-workflow-id" value="${escHtml(node.config.workflowId || '')}" placeholder="子流程唯一标识">
+          </div>
+        `;
       }
 
       content.innerHTML = `
@@ -1555,6 +1676,25 @@
           const valueEl = document.getElementById('node-config-value');
           if (fieldEl) fieldEl.oninput = e => { node.config.field = e.target.value; renderNode(node); saveToURL(); };
           if (valueEl) valueEl.oninput = e => { node.config.value = e.target.value; renderNode(node); saveToURL(); };
+        } else if (node.type === 'loop' && node.subtype === 'forLoop') {
+          const varEl = document.getElementById('node-config-variable');
+          const cntEl = document.getElementById('node-config-count');
+          const maxEl = document.getElementById('node-config-max');
+          if (varEl) varEl.oninput = e => { node.config.variable = e.target.value; renderNode(node); saveToURL(); };
+          if (cntEl) cntEl.oninput = e => { node.config.count = parseInt(e.target.value) || 3; renderNode(node); saveToURL(); };
+          if (maxEl) maxEl.oninput = e => { node.config.maxIterations = parseInt(e.target.value) || 100; renderNode(node); saveToURL(); };
+        } else if (node.type === 'loop' && (node.subtype === 'whileLoop' || node.subtype === 'doWhileLoop')) {
+          const varEl = document.getElementById('node-config-variable');
+          const condEl = document.getElementById('node-config-condition');
+          const maxEl = document.getElementById('node-config-max');
+          if (varEl) varEl.oninput = e => { node.config.variable = e.target.value; renderNode(node); saveToURL(); };
+          if (condEl) condEl.oninput = e => { node.config.condition = e.target.value; renderNode(node); saveToURL(); };
+          if (maxEl) maxEl.oninput = e => { node.config.maxIterations = parseInt(e.target.value) || 100; renderNode(node); saveToURL(); };
+        } else if (node.type === 'subflow') {
+          const nameEl = document.getElementById('node-config-workflow-name');
+          const idEl = document.getElementById('node-config-workflow-id');
+          if (nameEl) nameEl.oninput = e => { node.config.workflowName = e.target.value; renderNode(node); saveToURL(); };
+          if (idEl) idEl.oninput = e => { node.config.workflowId = e.target.value; renderNode(node); saveToURL(); };
         }
       }, 0);
     }
@@ -1900,6 +2040,65 @@
         await WorkflowStorage.delete(id);
         loadTemplateList();
       }
+    }
+
+    // ============ Import/Export JSON ============
+    function exportWorkflowJSON() {
+      const json = JSON.stringify(state.workflow, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (state.workflow.name || 'workflow') + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      WorkflowLogger.success('已导出工作流 JSON');
+      showToast('已导出 JSON');
+    }
+
+    function importWorkflowJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const workflow = JSON.parse(event.target.result);
+          if (!workflow.nodes || !Array.isArray(workflow.nodes)) {
+            throw new Error('无效的工作流格式');
+          }
+          // Assign new IDs to avoid conflicts
+          const idMap = {};
+          workflow.nodes = workflow.nodes.map(node => {
+            const newId = 'n' + Date.now() + Math.random().toString(36).slice(2, 6);
+            idMap[node.id] = newId;
+            return { ...node, id: newId };
+          });
+          workflow.connections = (workflow.connections || []).map(conn => ({
+            ...conn,
+            from: idMap[conn.from] || conn.from,
+            to: idMap[conn.to] || conn.to
+          }));
+          workflow.id = null; // Reset ID for new save
+          pushUndoState();
+          state.workflow = workflow;
+          document.querySelectorAll('.workflow-node').forEach(n => n.remove());
+          state.workflow.nodes.forEach(n => renderNode(n));
+          renderConnections();
+          selectNode(null);
+          state.executionResults = {};
+          updateProgress(0);
+          closeModal('load-modal');
+          WorkflowLogger.success(`已导入: ${workflow.name || '工作流'}`);
+          saveToURL();
+          updateNodeCount();
+          showToast('已导入: ' + (workflow.name || '工作流'));
+        } catch (err) {
+          WorkflowLogger.error('导入失败: ' + err.message);
+          showToast('导入失败: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = ''; // Reset input
     }
 
     function runWorkflow() {
