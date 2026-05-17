@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 创作工作流 - AI Creator H5</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    :root {
+      --primary: #6366F1;
+      --primary-dark: #4F46E5;
+      --bg-dark: #0F0F1A;
+      --bg-panel: #1A1A2E;
+      --bg-node: #252542;
+      --border: #333355;
+      --text: #E0E0FF;
+      --text-dim: #8888AA;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --error: #EF4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Layout */
+    .workflow-container {
+      display: grid;
+      grid-template-rows: 56px 1fr 40px;
+      grid-template-columns: 220px 1fr 280px;
+      height: 100vh;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      grid-column: 1 / -1;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+    }
+
+    .toolbar-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-right: 24px;
+    }
+
+    .toolbar-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .toolbar-btn:hover { background: var(--bg-node); }
+    .toolbar-btn.primary { background: var(--primary); border-color: var(--primary); }
+    .toolbar-btn.primary:hover { background: var(--primary-dark); }
+    .toolbar-btn.danger { border-color: var(--error); color: var(--error); }
+    .toolbar-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Node Palette */
+    .node-palette {
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .palette-search {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .palette-category {
+      margin-bottom: 12px;
+    }
+
+    .palette-category-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+      padding: 0 4px;
+    }
+
+    .palette-node {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 4px;
+      cursor: grab;
+      font-size: 13px;
+      transition: border-color 0.2s;
+    }
+
+    .palette-node:hover { border-color: var(--primary); }
+    .palette-node:active { cursor: grabbing; }
+
+    .palette-node .icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .palette-node[data-type="trigger"] .icon { background: #7C3AED; }
+    .palette-node[data-type="creator"] .icon { background: #2563EB; }
+    .palette-node[data-type="logic"] .icon { background: #D97706; }
+    .palette-node[data-type="output"] .icon { background: #059669; }
+
+    /* Canvas */
+    .canvas-container {
+      position: relative;
+      background: var(--bg-dark);
+      overflow: hidden;
+    }
+
+    .canvas-bg {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .workflow-canvas {
+      position: absolute;
+      inset: 0;
+      transform-origin: 0 0;
+    }
+
+    .connections-svg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    /* Nodes */
+    .workflow-node {
+      position: absolute;
+      min-width: 140px;
+      background: var(--bg-node);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: move;
+      user-select: none;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .workflow-node:hover { border-color: var(--primary); }
+    .workflow-node.selected { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3); }
+    .workflow-node.running { border-color: var(--warning); animation: pulse 1s infinite; }
+    .workflow-node.error { border-color: var(--error); }
+    .workflow-node.disabled { opacity: 0.5; }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3); }
+      50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.1); }
+    }
+
+    .node-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .node-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .workflow-node[data-type="trigger"] .node-icon { background: #7C3AED; }
+    .workflow-node[data-type="creator"] .node-icon { background: #2563EB; }
+    .workflow-node[data-type="logic"] .node-icon { background: #D97706; }
+    .workflow-node[data-type="output"] .node-icon { background: #059669; }
+
+    .node-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .node-body {
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* Ports */
+    .node-port {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 2px solid var(--bg-node);
+      cursor: crosshair;
+    }
+
+    .node-port.in { left: -6px; top: 50%; transform: translateY(-50%); }
+    .node-port.out { right: -6px; top: 50%; transform: translateY(-50%); }
+    .node-port.true { right: -6px; top: 30%; }
+    .node-port.false { right: -6px; bottom: 30%; }
+
+    /* Connection Lines */
+    .connection-line {
+      fill: none;
+      stroke: var(--primary);
+      stroke-width: 2;
+      opacity: 0.7;
+    }
+
+    .connection-line.running {
+      stroke: var(--warning);
+      stroke-dasharray: 8 4;
+      animation: flow 0.5s linear infinite;
+    }
+
+    @keyframes flow {
+      from { stroke-dashoffset: 12; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Property Panel */
+    .property-panel {
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border);
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .panel-section {
+      margin-bottom: 16px;
+    }
+
+    .panel-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .panel-input {
+      width: 100%;
+      padding: 8px 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .panel-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .panel-select {
+      width: 100%;
+      padding: 8px 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    /* Status Bar */
+    .status-bar {
+      grid-column: 1 / -1;
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 12px;
+      gap: 16px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-dim);
+    }
+
+    .status-dot.running { background: var(--warning); animation: blink 1s infinite; }
+    .status-dot.paused { background: var(--primary); }
+    .status-dot.idle { background: var(--success); }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .log-container {
+      flex: 1;
+      display: flex;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .log-messages {
+      flex: 1;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Template Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 480px;
+      max-height: 70vh;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .modal-body {
+      padding: 16px 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .template-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--bg-node);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .template-info h4 { font-size: 14px; margin-bottom: 4px; }
+    .template-info p { font-size: 12px; color: var(--text-dim); }
+
+    .template-actions { display: flex; gap: 8px; }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .btn-small:hover { background: var(--bg-dark); }
+    .btn-small.primary { background: var(--primary); border-color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="workflow-container">
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <span class="toolbar-title">🎨 AI 创作工作流</span>
+      <button class="toolbar-btn" id="btn-new">新建</button>
+      <button class="toolbar-btn" id="btn-save">保存</button>
+      <button class="toolbar-btn" id="btn-load">加载</button>
+      <button class="toolbar-btn primary" id="btn-run">▶ 运行</button>
+      <button class="toolbar-btn" id="btn-pause" disabled>⏸ 暂停</button>
+      <button class="toolbar-btn danger" id="btn-stop" disabled>⏹ 停止</button>
+      <div style="flex:1"></div>
+      <button class="toolbar-btn" id="btn-zoom-out">➖</button>
+      <button class="toolbar-btn" id="btn-zoom-in">➕</button>
+      <button class="toolbar-btn" id="btn-reset-zoom">重置</button>
+    </div>
+
+    <!-- Node Palette -->
+    <div class="node-palette">
+      <input type="text" class="palette-search" placeholder="搜索节点..." id="palette-search">
+      
+      <div class="palette-category">
+        <div class="palette-category-title">触发</div>
+        <div class="palette-node" draggable="true" data-type="trigger" data-subtype="manual">
+          <div class="icon">⚡</div>
+          <span>手动触发</span>
+        </div>
+      </div>
+
+      <div class="palette-category">
+        <div class="palette-category-title">创作</div>
+        <div class="palette-node" draggable="true" data-type="creator" data-subtype="character">
+          <div class="icon">👤</div>
+          <span>角色生成</span>
+        </div>
+        <div class="palette-node" draggable="true" data-type="creator" data-subtype="music">
+          <div class="icon">🎵</div>
+          <span>配乐生成</span>
+        </div>
+        <div class="palette-node" draggable="true" data-type="creator" data-subtype="tts">
+          <div class="icon">🎙️</div>
+          <span>配音生成</span>
+        </div>
+        <div class="palette-node" draggable="true" data-type="creator" data-subtype="poster">
+          <div class="icon">🖼️</div>
+          <span>海报生成</span>
+        </div>
+      </div>
+
+      <div class="palette-category">
+        <div class="palette-category-title">逻辑</div>
+        <div class="palette-node" draggable="true" data-type="logic" data-subtype="loop">
+          <div class="icon">🔄</div>
+          <span>循环</span>
+        </div>
+        <div class="palette-node" draggable="true" data-type="logic" data-subtype="condition">
+          <div class="icon">❓</div>
+          <span>条件分支</span>
+        </div>
+      </div>
+
+      <div class="palette-category">
+        <div class="palette-category-title">输出</div>
+        <div class="palette-node" draggable="true" data-type="output" data-subtype="save">
+          <div class="icon">💾</div>
+          <span>保存本地</span>
+        </div>
+        <div class="palette-node" draggable="true" data-type="output" data-subtype="share">
+          <div class="icon">📤</div>
+          <span>分享</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas -->
+    <div class="canvas-container" id="canvas-container">
+      <div class="canvas-bg"></div>
+      <div class="workflow-canvas" id="workflow-canvas">
+        <svg class="connections-svg" id="connections-svg">
+          <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#6366F1"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Property Panel -->
+    <div class="property-panel" id="property-panel">
+      <div class="panel-title">属性</div>
+      <div id="panel-content">
+        <div class="panel-section">
+          <div class="panel-label">工作流名称</div>
+          <input type="text" class="panel-input" id="workflow-name" placeholder="未命名工作流">
+        </div>
+        <div class="panel-section">
+          <div class="panel-label">描述</div>
+          <input type="text" class="panel-input" id="workflow-desc" placeholder="描述你的工作流...">
+        </div>
+        <div style="color: var(--text-dim); font-size: 12px; margin-top: 24px; text-align: center;">
+          从左侧拖拽节点到画布<br>或点击节点查看属性
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-dot idle" id="status-dot"></div>
+        <span id="status-text">就绪</span>
+      </div>
+      <div class="log-container">
+        <div class="log-messages" id="log-messages">就绪</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Modal -->
+  <div class="modal-overlay" id="save-modal">
+    <div class="modal">
+      <div class="modal-header">保存工作流</div>
+      <div class="modal-body">
+        <div class="panel-section">
+          <div class="panel-label">名称</div>
+          <input type="text" class="panel-input" id="save-name" placeholder="工作流名称">
+        </div>
+        <div class="panel-section">
+          <div class="panel-label">描述</div>
+          <input type="text" class="panel-input" id="save-desc" placeholder="描述（可选）">
+        </div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+          <button class="btn-small" onclick="closeModal('save-modal')">取消</button>
+          <button class="btn-small primary" id="btn-confirm-save">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Modal -->
+  <div class="modal-overlay" id="load-modal">
+    <div class="modal">
+      <div class="modal-header">加载工作流</div>
+      <div class="modal-body" id="template-list"></div>
+    </div>
+  </div>
+
+  <script src="../services/workflowEngine.js"></script>
+  <script src="../services/workflowStorage.js"></script>
+  <script>
+    // ============ State ============
+    const state = {
+      workflow: {
+        id: null,
+        name: '未命名工作流',
+        description: '',
+        nodes: [],
+        connections: []
+      },
+      selectedNodeId: null,
+      zoom: 1,
+      pan: { x: 0, y: 0 },
+      isPanning: false,
+      panStart: null,
+      draggingNode: null,
+      dragOffset: null,
+      connecting: null
+    };
+
+    const nodeNames = {
+      manual: '手动触发',
+      character: '角色生成',
+      music: '配乐生成',
+      tts: '配音生成',
+      poster: '海报生成',
+      loop: '循环',
+      condition: '条件分支',
+      save: '保存本地',
+      share: '分享'
+    };
+
+    // ============ Init ============
+    async function init() {
+      await WorkflowStorage.init();
+      bindEvents();
+      loadFromURL();
+      setupEngineEvents();
+    }
+
+    // ============ Engine Events ============
+    function setupEngineEvents() {
+      WorkflowEngine.subscribe((event, data) => {
+        if (event === 'status') {
+          updateStatus(data);
+        } else if (event === 'nodeStart') {
+          highlightNode(data.nodeId);
+        } else if (event === 'log') {
+          appendLog(data.message);
+        } else if (event === 'complete') {
+          setStatus('idle', '执行完成');
+        } else if (event === 'error') {
+          setStatus('idle', `错误: ${data.error}`);
+        }
+      });
+    }
+
+    function updateStatus({ running, paused }) {
+      const dot = document.getElementById('status-dot');
+      const text = document.getElementById('status-text');
+      const btnRun = document.getElementById('btn-run');
+      const btnPause = document.getElementById('btn-pause');
+      const btnStop = document.getElementById('btn-stop');
+
+      if (running && paused) {
+        dot.className = 'status-dot paused';
+        text.textContent = '已暂停';
+        btnRun.disabled = true;
+        btnPause.disabled = true;
+        btnStop.disabled = false;
+      } else if (running) {
+        dot.className = 'status-dot running';
+        text.textContent = '执行中';
+        btnRun.disabled = true;
+        btnPause.disabled = false;
+        btnStop.disabled = false;
+      } else {
+        dot.className = 'status-dot idle';
+        text.textContent = '就绪';
+        btnRun.disabled = false;
+        btnPause.disabled = true;
+        btnStop.disabled = true;
+      }
+    }
+
+    function setStatus(type, message) {
+      const dot = document.getElementById('status-dot');
+      dot.className = `status-dot ${type}`;
+      document.getElementById('status-text').textContent = message;
+    }
+
+    function appendLog(message) {
+      const logEl = document.getElementById('log-messages');
+      const time = new Date().toLocaleTimeString();
+      logEl.textContent = `[${time}] ${message}`;
+    }
+
+    function highlightNode(nodeId) {
+      document.querySelectorAll('.workflow-node').forEach(n => n.classList.remove('running'));
+      const nodeEl = document.querySelector(`[data-node-id="${nodeId}"]`);
+      if (nodeEl) nodeEl.classList.add('running');
+    }
+
+    // ============ Event Binding ============
+    function bindEvents() {
+      // Toolbar
+      document.getElementById('btn-new').onclick = newWorkflow;
+      document.getElementById('btn-save').onclick = () => openModal('save-modal');
+      document.getElementById('btn-load').onclick = loadTemplateList;
+      document.getElementById('btn-run').onclick = runWorkflow;
+      document.getElementById('btn-pause').onclick = pauseWorkflow;
+      document.getElementById('btn-stop').onclick = stopWorkflow;
+      document.getElementById('btn-zoom-in').onclick = () => setZoom(state.zoom + 0.1);
+      document.getElementById('btn-zoom-out').onclick = () => setZoom(state.zoom - 0.1);
+      document.getElementById('btn-reset-zoom').onclick = () => setZoom(1);
+
+      // Modal
+      document.getElementById('btn-confirm-save').onclick = saveWorkflow;
+
+      // Canvas drag & drop
+      const canvas = document.getElementById('canvas-container');
+      canvas.addEventListener('dragover', e => e.preventDefault());
+      canvas.addEventListener('drop', handleCanvasDrop);
+
+      // Canvas pan
+      canvas.addEventListener('mousedown', handleCanvasMouseDown);
+      canvas.addEventListener('mousemove', handleCanvasMouseMove);
+      canvas.addEventListener('mouseup', handleCanvasMouseUp);
+      canvas.addEventListener('wheel', handleCanvasWheel);
+
+      // Canvas click (deselect)
+      canvas.addEventListener('click', e => {
+        if (e.target === canvas || e.target.classList.contains('canvas-bg')) {
+          selectNode(null);
+        }
+      });
+
+      // Keyboard
+      document.addEventListener('keydown', e => {
+        if (e.code === 'Space' && !e.target.matches('input')) {
+          e.preventDefault();
+          state.isPanning = true;
+          canvas.style.cursor = 'grab';
+        }
+        if (e.key === 'Delete' && state.selectedNodeId) {
+          deleteNode(state.selectedNodeId);
+        }
+      });
+      document.addEventListener('keyup', e => {
+        if (e.code === 'Space') {
+          state.isPanning = false;
+          canvas.style.cursor = '';
+        }
+      });
+
+      // Property panel inputs
+      document.getElementById('workflow-name').oninput = e => {
+        state.workflow.name = e.target.value;
+        saveToURL();
+      };
+      document.getElementById('workflow-desc').oninput = e => {
+        state.workflow.description = e.target.value;
+        saveToURL();
+      };
+    }
+
+    // ============ Drag & Drop from Palette ============
+    function handleCanvasDrop(e) {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('type');
+      const subtype = e.dataTransfer.getData('subtype');
+      if (!type || !subtype) return;
+
+      const canvas = document.getElementById('canvas-container');
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left - state.pan.x) / state.zoom;
+      const y = (e.clientY - rect.top - state.pan.y) / state.zoom;
+
+      addNode(type, subtype, x, y);
+    }
+
+    // ============ Node Management ============
+    function addNode(type, subtype, x, y) {
+      const id = 'n' + Date.now() + Math.random().toString(36).slice(2, 6);
+      const node = { id, type, subtype, x, y, config: {} };
+      state.workflow.nodes.push(node);
+      renderNode(node);
+      selectNode(id);
+      saveToURL();
+      return node;
+    }
+
+    function renderNode(node) {
+      const existing = document.querySelector(`[data-node-id="${node.id}"]`);
+      if (existing) existing.remove();
+
+      const el = document.createElement('div');
+      el.className = 'workflow-node';
+      el.dataset.nodeId = node.id;
+      el.dataset.type = node.type;
+      el.style.left = node.x + 'px';
+      el.style.top = node.y + 'px';
+
+      const icons = { trigger: '⚡', creator: '🎨', logic: '⚙️', output: '📤' };
+      const icon = icons[node.type] || '📦';
+
+      el.innerHTML = `
+        <div class="node-header">
+          <div class="node-icon">${icon}</div>
+          <span class="node-name">${nodeNames[node.subtype] || node.subtype}</span>
+        </div>
+        <div class="node-body">${getNodeDesc(node)}</div>
+        <div class="node-port in"></div>
+        <div class="node-port ${node.type === 'logic' && node.subtype === 'condition' ? 'true' : 'out'}"></div>
+        ${node.type === 'logic' && node.subtype === 'condition' ? '<div class="node-port false"></div>' : ''}
+      `;
+
+      // Drag to move
+      el.addEventListener('mousedown', e => {
+        if (e.target.classList.contains('node-port')) return;
+        e.stopPropagation();
+        state.draggingNode = node.id;
+        const rect = el.getBoundingClientRect();
+        state.dragOffset = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        selectNode(node.id);
+      });
+
+      // Port connections
+      el.querySelectorAll('.node-port').forEach(port => {
+        port.addEventListener('mousedown', e => {
+          e.stopPropagation();
+          startConnection(node.id, port.classList.contains('in') ? 'in' : (port.classList.contains('true') ? 'true' : port.classList.contains('false') ? 'false' : 'out'), e);
+        });
+      });
+
+      document.getElementById('workflow-canvas').appendChild(el);
+    }
+
+    function getNodeDesc(node) {
+      if (node.subtype === 'manual') return '点击运行触发';
+      if (node.subtype === 'character') return node.config.description || '随机风格';
+      if (node.subtype === 'music') return node.config.mood || '欢快';
+      if (node.subtype === 'tts') return node.config.voice || '女声';
+      if (node.subtype === 'poster') return node.config.template || '默认模板';
+      if (node.subtype === 'loop') return `循环 ${node.config.count || 3} 次`;
+      if (node.subtype === 'condition') return node.config.field || '类型判断';
+      return '';
+    }
+
+    function deleteNode(nodeId) {
+      state.workflow.nodes = state.workflow.nodes.filter(n => n.id !== nodeId);
+      state.workflow.connections = state.workflow.connections.filter(c => c.from !== nodeId && c.to !== nodeId);
+      const el = document.querySelector(`[data-node-id="${nodeId}"]`);
+      if (el) el.remove();
+      if (state.selectedNodeId === nodeId) selectNode(null);
+      renderConnections();
+      saveToURL();
+    }
+
+    function selectNode(nodeId) {
+      state.selectedNodeId = nodeId;
+      document.querySelectorAll('.workflow-node').forEach(n => n.classList.remove('selected'));
+      if (nodeId) {
+        const el = document.querySelector(`[data-node-id="${nodeId}"]`);
+        if (el) el.classList.add('selected');
+      }
+      updatePropertyPanel(nodeId);
+    }
+
+    function updatePropertyPanel(nodeId) {
+      const content = document.getElementById('panel-content');
+      if (!nodeId) {
+        content.innerHTML = `
+          <div class="panel-section">
+            <div class="panel-label">工作流名称</div>
+            <input type="text" class="panel-input" id="workflow-name" value="${escHtml(state.workflow.name)}" placeholder="未命名工作流">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">描述</div>
+            <input type="text" class="panel-input" id="workflow-desc" value="${escHtml(state.workflow.description)}" placeholder="描述你的工作流...">
+          </div>
+        `;
+        document.getElementById('workflow-name').oninput = e => { state.workflow.name = e.target.value; saveToURL(); };
+        document.getElementById('workflow-desc').oninput = e => { state.workflow.description = e.target.value; saveToURL(); };
+        return;
+      }
+
+      const node = state.workflow.nodes.find(n => n.id === nodeId);
+      if (!node) return;
+
+      let configFields = '';
+      if (node.type === 'creator') {
+        if (node.subtype === 'character') {
+          configFields = `
+            <div class="panel-section">
+              <div class="panel-label">风格</div>
+              <select class="panel-select" id="node-config-style">
+                <option value="anime" ${node.config.style === 'anime' ? 'selected' : ''}>动漫</option>
+                <option value="realistic" ${node.config.style === 'realistic' ? 'selected' : ''}>写实</option>
+                <option value="cartoon" ${node.config.style === 'cartoon' ? 'selected' : ''}>卡通</option>
+              </select>
+            </div>
+            <div class="panel-section">
+              <div class="panel-label">描述</div>
+              <input type="text" class="panel-input" id="node-config-desc" value="${escHtml(node.config.description || '')}" placeholder="角色描述...">
+            </div>
+          `;
+        } else if (node.subtype === 'music') {
+          configFields = `
+            <div class="panel-section">
+              <div class="panel-label">情绪</div>
+              <select class="panel-select" id="node-config-mood">
+                <option value="happy" ${node.config.mood === 'happy' ? 'selected' : ''}>欢快</option>
+                <option value="epic" ${node.config.mood === 'epic' ? 'selected' : ''}>史诗</option>
+                <option value="sad" ${node.config.mood === 'sad' ? 'selected' : ''}>忧伤</option>
+                <option value="tense" ${node.config.mood === 'tense' ? 'selected' : ''}>紧张</option>
+              </select>
+            </div>
+            <div class="panel-section">
+              <div class="panel-label">时长（秒）</div>
+              <input type="number" class="panel-input" id="node-config-duration" value="${node.config.duration || 60}">
+            </div>
+          `;
+        } else if (node.subtype === 'tts') {
+          configFields = `
+            <div class="panel-section">
+              <div class="panel-label">音色</div>
+              <select class="panel-select" id="node-config-voice">
+                <option value="female-youth" ${node.config.voice === 'female-youth' ? 'selected' : ''}>女声-年轻</option>
+                <option value="male-adult" ${node.config.voice === 'male-adult' ? 'selected' : ''}>男声-成熟</option>
+                <option value="female-mature" ${node.config.voice === 'female-mature' ? 'selected' : ''}>女声-成熟</option>
+              </select>
+            </div>
+          `;
+        }
+      } else if (node.type === 'logic' && node.subtype === 'loop') {
+        configFields = `
+          <div class="panel-section">
+            <div class="panel-label">循环次数</div>
+            <input type="number" class="panel-input" id="node-config-count" value="${node.config.count || 3}">
+          </div>
+        `;
+      } else if (node.type === 'logic' && node.subtype === 'condition') {
+        configFields = `
+          <div class="panel-section">
+            <div class="panel-label">字段</div>
+            <input type="text" class="panel-input" id="node-config-field" value="${escHtml(node.config.field || 'type')}" placeholder="字段名">
+          </div>
+          <div class="panel-section">
+            <div class="panel-label">条件</div>
+            <input type="text" class="panel-input" id="node-config-value" value="${escHtml(node.config.value || 'video')}" placeholder="值">
+          </div>
+        `;
+      }
+
+      content.innerHTML = `
+        <div class="panel-title">${nodeNames[node.subtype] || node.subtype}</div>
+        <div class="panel-section">
+          <div class="panel-label">类型</div>
+          <div style="color: var(--text);">${node.type}</div>
+        </div>
+        ${configFields}
+        <div style="margin-top: 16px;">
+          <button class="btn-small danger" onclick="deleteNode('${node.id}')">🗑️ 删除节点</button>
+        </div>
+      `;
+
+      // Bind config changes
+      setTimeout(() => {
+        if (node.type === 'creator' && node.subtype === 'character') {
+          document.getElementById('node-config-style').onchange = e => { node.config.style = e.target.value; renderNode(node); saveToURL(); };
+          document.getElementById('node-config-desc').oninput = e => { node.config.description = e.target.value; renderNode(node); saveToURL(); };
+        } else if (node.type === 'creator' && node.subtype === 'music') {
+          document.getElementById('node-config-mood').onchange = e => { node.config.mood = e.target.value; renderNode(node); saveToURL(); };
+          document.getElementById('node-config-duration').oninput = e => { node.config.duration = parseInt(e.target.value); renderNode(node); saveToURL(); };
+        } else if (node.type === 'creator' && node.subtype === 'tts') {
+          document.getElementById('node-config-voice').onchange = e => { node.config.voice = e.target.value; renderNode(node); saveToURL(); };
+        } else if (node.type === 'logic' && node.subtype === 'loop') {
+          document.getElementById('node-config-count').oninput = e => { node.config.count = parseInt(e.target.value); renderNode(node); saveToURL(); };
+        } else if (node.type === 'logic' && node.subtype === 'condition') {
+          document.getElementById('node-config-field').oninput = e => { node.config.field = e.target.value; renderNode(node); saveToURL(); };
+          document.getElementById('node-config-value').oninput = e => { node.config.value = e.target.value; renderNode(node); saveToURL(); };
+        }
+      }, 0);
+    }
+
+    // ============ Connections ============
+    function startConnection(fromId, fromPort, e) {
+      state.connecting = { fromId, fromPort };
+      document.addEventListener('mousemove', handleConnectionMove);
+      document.addEventListener('mouseup', handleConnectionEnd);
+    }
+
+    function handleConnectionMove(e) {
+      if (!state.connecting) return;
+      // Visual feedback would go here
+    }
+
+    function handleConnectionEnd(e) {
+      document.removeEventListener('mousemove', handleConnectionMove);
+      document.removeEventListener('mouseup', handleConnectionEnd);
+      
+      if (!state.connecting) return;
+
+      const targetEl = e.target.closest('.workflow-node');
+      if (targetEl && targetEl.dataset.nodeId !== state.connecting.fromId) {
+        const toId = targetEl.dataset.nodeId;
+        const toPort = 'in';
+        
+        // Remove existing connection to this node's input
+        state.workflow.connections = state.workflow.connections.filter(c => !(c.to === toId && c.toPort === 'in'));
+        
+        state.workflow.connections.push({
+          from: state.connecting.fromId,
+          fromPort: state.connecting.fromPort,
+          to: toId,
+          toPort: toPort
+        });
+        renderConnections();
+        saveToURL();
+      }
+      state.connecting = null;
+    }
+
+    function renderConnections() {
+      const svg = document.getElementById('connections-svg');
+      svg.querySelectorAll('.connection-line').forEach(l => l.remove());
+
+      for (const conn of state.workflow.connections) {
+        const fromEl = document.querySelector(`[data-node-id="${conn.from}"]`);
+        const toEl = document.querySelector(`[data-node-id="${conn.to}"]`);
+        if (!fromEl || !toEl) continue;
+
+        const fromPort = fromEl.querySelector(`.node-port.${conn.fromPort}`);
+        const toPort = toEl.querySelector('.node-port.in');
+        if (!fromPort || !toPort) continue;
+
+        const canvasRect = document.getElementById('workflow-canvas').getBoundingClientRect();
+        const fromRect = fromPort.getBoundingClientRect();
+        const toRect = toPort.getBoundingClientRect();
+
+        const x1 = fromRect.left + fromRect.width / 2 - canvasRect.left;
+        const y1 = fromRect.top + fromRect.height / 2 - canvasRect.top;
+        const x2 = toRect.left + toRect.width / 2 - canvasRect.left;
+        const y2 = toRect.top + toRect.height / 2 - canvasRect.top;
+
+        const dx = Math.abs(x2 - x1) * 0.5;
+        const path = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        line.setAttribute('d', path);
+        line.setAttribute('class', 'connection-line');
+        line.setAttribute('marker-end', 'url(#arrowhead)');
+        svg.appendChild(line);
+      }
+    }
+
+    // ============ Canvas Pan & Zoom ============
+    function handleCanvasMouseDown(e) {
+      if (state.isPanning || e.button === 1) {
+        state.panStart = { x: e.clientX - state.pan.x, y: e.clientY - state.pan.y };
+        state.isPanning = true;
+        e.preventDefault();
+      }
+    }
+
+    function handleCanvasMouseMove(e) {
+      if (state.draggingNode) {
+        const canvas = document.getElementById('canvas-container');
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left - state.pan.x) / state.zoom - state.dragOffset.x;
+        const y = (e.clientY - rect.top - state.pan.y) / state.zoom - state.dragOffset.y;
+        
+        const node = state.workflow.nodes.find(n => n.id === state.draggingNode);
+        if (node) {
+          node.x = Math.max(0, x);
+          node.y = Math.max(0, y);
+          const el = document.querySelector(`[data-node-id="${state.draggingNode}"]`);
+          if (el) {
+            el.style.left = node.x + 'px';
+            el.style.top = node.y + 'px';
+          }
+          renderConnections();
+          saveToURL();
+        }
+      } else if (state.panStart) {
+        state.pan.x = e.clientX - state.panStart.x;
+        state.pan.y = e.clientY - state.panStart.y;
+        applyTransform();
+      }
+    }
+
+    function handleCanvasMouseUp(e) {
+      if (state.draggingNode) {
+        state.draggingNode = null;
+        state.dragOffset = null;
+      }
+      state.panStart = null;
+    }
+
+    function handleCanvasWheel(e) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      setZoom(state.zoom + delta);
+    }
+
+    function setZoom(zoom) {
+      state.zoom = Math.max(0.3, Math.min(2, zoom));
+      applyTransform();
+    }
+
+    function applyTransform() {
+      const canvas = document.getElementById('workflow-canvas');
+      canvas.style.transform = `translate(${state.pan.x}px, ${state.pan.y}px) scale(${state.zoom})`;
+    }
+
+    // ============ Workflow Operations ============
+    function newWorkflow() {
+      state.workflow = { id: null, name: '未命名工作流', description: '', nodes: [], connections: [] };
+      document.querySelectorAll('.workflow-node').forEach(n => n.remove());
+      renderConnections();
+      selectNode(null);
+      saveToURL();
+    }
+
+    async function saveWorkflow() {
+      const name = document.getElementById('save-name').value.trim() || state.workflow.name;
+      const desc = document.getElementById('save-desc').value.trim();
+      
+      state.workflow.name = name;
+      state.workflow.description = desc;
+      
+      const id = await WorkflowStorage.save(state.workflow);
+      state.workflow.id = id;
+      
+      closeModal('save-modal');
+      appendLog(`已保存: ${name}`);
+      saveToURL();
+    }
+
+    async function loadTemplateList() {
+      const list = document.getElementById('template-list');
+      const samples = WorkflowStorage.getSampleWorkflows();
+      const customs = await WorkflowStorage.list();
+      
+      let html = '<div style="margin-bottom: 16px;"><strong>示例模板</strong></div>';
+      for (const t of samples) {
+        html += `
+          <div class="template-item">
+            <div class="template-info">
+              <h4>${t.name}</h4>
+              <p>${t.description}</p>
+            </div>
+            <div class="template-actions">
+              <button class="btn-small primary" onclick="loadWorkflow(${JSON.stringify(t).replace(/"/g, '&quot;')})">加载</button>
+            </div>
+          </div>
+        `;
+      }
+      
+      if (customs.length > 0) {
+        html += '<div style="margin: 16px 0;"><strong>自定义模板</strong></div>';
+        for (const t of customs) {
+          html += `
+            <div class="template-item">
+              <div class="template-info">
+                <h4>${escHtml(t.name)}</h4>
+                <p>${escHtml(t.description || '')}</p>
+              </div>
+              <div class="template-actions">
+                <button class="btn-small primary" onclick="loadWorkflow(${JSON.stringify(t).replace(/"/g, '&quot;')})">加载</button>
+                <button class="btn-small danger" onclick="deleteWorkflow(${t.id})">删除</button>
+              </div>
+            </div>
+          `;
+        }
+      }
+      
+      list.innerHTML = html || '<div style="color: var(--text-dim); text-align: center;">暂无模板</div>';
+      openModal('load-modal');
+    }
+
+    function loadWorkflow(workflow) {
+      state.workflow = { ...workflow, id: workflow.id || null };
+      document.querySelectorAll('.workflow-node').forEach(n => n.remove());
+      state.workflow.nodes.forEach(n => renderNode(n));
+      renderConnections();
+      selectNode(null);
+      closeModal('load-modal');
+      appendLog(`已加载: ${workflow.name}`);
+      saveToURL();
+    }
+
+    async function deleteWorkflow(id) {
+      if (confirm('确定删除此模板？')) {
+        await WorkflowStorage.delete(id);
+        loadTemplateList();
+      }
+    }
+
+    function runWorkflow() {
+      if (state.workflow.nodes.length === 0) {
+        appendLog('请先添加节点');
+        return;
+      }
+      WorkflowEngine.run(state.workflow);
+    }
+
+    function pauseWorkflow() {
+      if (WorkflowEngine.isPaused) {
+        WorkflowEngine.resume();
+      } else {
+        WorkflowEngine.pause();
+      }
+    }
+
+    function stopWorkflow() {
+      WorkflowEngine.stop();
+      document.querySelectorAll('.workflow-node').forEach(n => n.classList.remove('running'));
+    }
+
+    // ============ URL State ============
+    function saveToURL() {
+      const data = btoa(JSON.stringify(state.workflow));
+      history.replaceState(null, '', '#' + data);
+    }
+
+    function loadFromURL() {
+      const hash = location.hash.slice(1);
+      if (hash) {
+        try {
+          const workflow = JSON.parse(atob(hash));
+          state.workflow = workflow;
+          workflow.nodes.forEach(n => renderNode(n));
+          renderConnections();
+        } catch (e) {
+          console.error('Failed to load workflow from URL', e);
+        }
+      }
+    }
+
+    // ============ Modal ============
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // ============ Palette Drag ============
+    document.querySelectorAll('.palette-node').forEach(node => {
+      node.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('type', node.dataset.type);
+        e.dataTransfer.setData('subtype', node.dataset.subtype);
+      });
+    });
+
+    // ============ Utilities ============
+    function escHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Start
+    init();
+  </script>
+</body>
+</html>

@@ -254,6 +254,15 @@
         </div>
         <span class="feature-arrow">›</span>
       </div>
+
+      <div class="feature-card" onclick="goToWorkflow()">
+        <div class="feature-icon" style="background: rgba(99, 102, 241, 0.15)">🔗</div>
+        <div class="feature-content">
+          <span class="feature-name">工作流编排</span>
+          <span class="feature-desc">自动化创作流水线</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
     </div>
 
     <!-- API Key 提示 -->
@@ -340,6 +349,10 @@
 
     function goToMarket() {
       window.location.hash = '/pages/market.html';
+    }
+
+    function goToWorkflow() {
+      window.location.hash = '/pages/workflow.html';
     }
 
     // Init
