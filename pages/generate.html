@@ -706,6 +706,35 @@
       color: #999;
       margin-top: 2px;
     }
+
+    /* Role Selector */
+    .role-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, #f0f4ff, #e8f0ff);
+      border: 1px solid #d0d9ff;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #1A73E8;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .role-selector:active {
+      background: linear-gradient(135deg, #e8f0ff, #dce5ff);
+    }
+
+    .role-arrow {
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .role-option.selected {
+      background: #e8f0ff !important;
+      border: 2px solid #1A73E8 !important;
+    }
   </style>
 </head>
 <body>
@@ -729,6 +758,12 @@
           <span id="typeLabel">🖼️ 图片生成</span>
           <span class="credits-info" id="creditsInfo">剩余 0 积分</span>
         </div>
+
+        <button class="role-selector" id="roleSelector" onclick="openRoleSelector()">
+          <span id="roleSelectorIcon">🎭</span>
+          <span id="roleSelectorName">选择角色</span>
+          <span class="role-arrow">▼</span>
+        </button>
 
         <button class="template-btn" id="templateBtn" onclick="openTemplatePanel()">
           📋 模板中心
@@ -869,6 +904,14 @@
       batchSize: 5,
       batchResults: [],
       batchProgress: 0,
+      selectedRole: localStorage.getItem('selected_role') || null,
+    };
+
+    // Role mapping for each creation type
+    const roleTypeMap = {
+      image: ['illustrator', 'designer'],
+      music: ['musician'],
+      tts: ['voiceActor']
     };
 
     const typeLabels = {
@@ -1035,7 +1078,96 @@
       hideResult();
       loadMemoryRecommendations();
       setupOfflineListeners();
+      updateRoleSelector();
     };
+
+    // ========== Role Selector Functions ==========
+    const roleData = {
+      illustrator: { name: '插画师', icon: '🎨' },
+      musician: { name: '音乐人', icon: '🎵' },
+      voiceActor: { name: '配音师', icon: '🎤' },
+      designer: { name: '设计师', icon: '✨' }
+    };
+
+    function updateRoleSelector() {
+      state.selectedRole = localStorage.getItem('selected_role');
+      const iconEl = document.getElementById('roleSelectorIcon');
+      const nameEl = document.getElementById('roleSelectorName');
+      
+      if (state.selectedRole && roleData[state.selectedRole]) {
+        iconEl.textContent = roleData[state.selectedRole].icon;
+        nameEl.textContent = roleData[state.selectedRole].name;
+      } else {
+        iconEl.textContent = '🎭';
+        nameEl.textContent = '选择角色';
+      }
+    }
+
+    function openRoleSelector() {
+      // Find available roles for current type
+      const availableRoles = roleTypeMap[state.type] || [];
+      
+      if (availableRoles.length === 0) {
+        showToast('当前类型暂不支持角色选择', 'warning');
+        return;
+      }
+
+      // Build role selection UI
+      let roleHTML = '<div style="padding: 16px;">';
+      roleHTML += '<div style="font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center;">选择 AI 角色</div>';
+      
+      availableRoles.forEach(roleType => {
+        const role = roleData[roleType];
+        const isSelected = state.selectedRole === roleType;
+        roleHTML += `
+          <div class="role-option ${isSelected ? 'selected' : ''}" 
+               onclick="selectRole('${roleType}')"
+               style="display: flex; align-items: center; gap: 12px; padding: 14px; background: ${isSelected ? '#e8f0ff' : '#f9f9f9'}; border-radius: 10px; margin-bottom: 8px; cursor: pointer; border: 2px solid ${isSelected ? '#1A73E8' : 'transparent'};">
+            <span style="font-size: 24px;">${role.icon}</span>
+            <div style="flex: 1;">
+              <div style="font-size: 14px; font-weight: 600; color: #1a1a1a;">${role.name}</div>
+            </div>
+            ${isSelected ? '<span style="color: #1A73E8;">✓</span>' : ''}
+          </div>
+        `;
+      });
+      
+      roleHTML += '<button onclick="clearRoleSelection()" style="width: 100%; padding: 12px; background: #f5f5f5; border: none; border-radius: 8px; margin-top: 8px; cursor: pointer; color: #666; font-size: 14px;">清除选择</button>';
+      roleHTML += '</div>';
+
+      const overlay = document.getElementById('templateOverlay');
+      const panel = document.getElementById('templatePanel');
+      const grid = document.getElementById('templateGrid');
+      
+      grid.innerHTML = roleHTML;
+      panel.classList.add('active');
+      overlay.classList.add('active');
+    }
+
+    window.selectRole = function(roleType) {
+      localStorage.setItem('selected_role', roleType);
+      state.selectedRole = roleType;
+      updateRoleSelector();
+      closeTemplatePanel();
+      showToast('已选择 ' + roleData[roleType].name + ' 角色', 'success');
+    };
+
+    window.clearRoleSelection = function() {
+      localStorage.removeItem('selected_role');
+      state.selectedRole = null;
+      updateRoleSelector();
+      closeTemplatePanel();
+      showToast('已清除角色选择', 'success');
+    };
+
+    // Listen for role selection from roles.html
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'roleSelected') {
+        localStorage.setItem('selected_role', e.data.roleType);
+        state.selectedRole = e.data.roleType;
+        updateRoleSelector();
+      }
+    });
 
     // Memory Recommendation Functions
     async function loadMemoryRecommendations() {
@@ -1416,14 +1548,33 @@
       }
     }
 
+    // Get role prompt prefix for current selected role
+    function getRolePromptPrefix() {
+      const selectedRole = localStorage.getItem('selected_role');
+      if (!selectedRole) return '';
+      
+      const rolePrefixes = {
+        illustrator: 'As a professional AI illustrator with expertise in creating stunning visual artwork, I specialize in detailed illustration, character design, and artistic composition. Create a beautiful, professionally crafted illustration with careful attention to lighting, color harmony, and artistic detail. ',
+        musician: 'As a professional AI music composer and producer, I create original music with sophisticated arrangements, melismatic melodies, and professional audio production quality. Compose an original musical piece with excellent melody, harmony, rhythm, and production value. ',
+        voiceActor: 'As a professional AI voice actor and voice synthesis specialist, I create natural, expressive, and emotionally resonant speech with professional vocal quality, proper diction, and authentic emotional delivery. ',
+        designer: 'As a professional AI designer specializing in visual communication and design aesthetics, I create stunning, professional designs with excellent composition, color theory, typography, and modern design principles. '
+      };
+      
+      return rolePrefixes[selectedRole] || '';
+    }
+
     async function doGenerateImage(prompt) {
       showLoading('AI 创作中...');
       try {
+        // Prepend role prompt prefix if role is selected
+        const rolePrefix = getRolePromptPrefix();
+        const enhancedPrompt = rolePrefix + prompt;
+        
         const { generateImage, saveImageHistory } = await import('../services/imageService.js');
         const { recordImageGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
         const style = document.getElementById('styleSelect').value;
         const size = document.getElementById('sizeSelect').value;
-        const res = await generateImage({ prompt, style, size });
+        const res = await generateImage({ prompt: enhancedPrompt, style, size });
         const url = res.data?.[0]?.url;
         if (!url) throw new Error('未获取到生成结果');
         saveImageHistory({ prompt, url, style, size });
@@ -1451,11 +1602,15 @@
     async function doGenerateMusic(prompt) {
       showLoading('音乐生成中（可能需要30-60秒）...');
       try {
+        // Prepend role prompt prefix if role is selected
+        const rolePrefix = getRolePromptPrefix();
+        const enhancedPrompt = rolePrefix + prompt;
+        
         const { generateFullMusic, saveMusicHistory } = await import('../services/musicService.js');
         const { recordMusicGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
         const genre = document.getElementById('genreSelect').value;
         const duration = parseInt(document.getElementById('durationSelect').value);
-        const res = await generateFullMusic({ prompt, genre, duration });
+        const res = await generateFullMusic({ prompt: enhancedPrompt, genre, duration });
         saveMusicHistory({
           prompt,
           musicUrl: res.musicUrl,
@@ -1487,10 +1642,14 @@
     async function doGenerateTTS(prompt) {
       showLoading('语音合成中...');
       try {
+        // Prepend role prompt prefix if role is selected
+        const rolePrefix = getRolePromptPrefix();
+        const enhancedPrompt = rolePrefix + prompt;
+        
         const { generateSpeech, saveB64AudioAsDataUrl, saveTTSHistory } = await import('../services/ttsService.js');
         const { recordAudioGenerated, checkAndUnlockAchievements, showNewAchievements } = await import('../services/achievementService.js');
         const voice = document.getElementById('voiceSelect').value;
-        const res = await generateSpeech({ input: prompt, voice, format: 'mp3' });
+        const res = await generateSpeech({ input: enhancedPrompt, voice, format: 'mp3' });
         if (!res.b64_audio) throw new Error('未获取到音频数据');
         const dataUrl = saveB64AudioAsDataUrl(res.b64_audio, 'mp3');
         const voiceName = { 'female-shaonv': '少女声音', 'male-qn-qingse': '青年男声', 'female-yujie': '御姐声音', 'male-qn-jingxing': '激情男声' }[voice] || voice;
