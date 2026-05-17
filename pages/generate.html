@@ -1327,11 +1327,154 @@
       showToast('音频已保存到历史记录', 'success');
     }
 
-    function onShare() {
-      if (navigator.share) {
-        navigator.share({ title: 'AI Creator', text: '看看我创作的图片', url: window.location.href });
-      } else {
-        showToast('已准备分享', 'success');
+    async function onShare() {
+      if (!state.result) return;
+      
+      // 动态加载分享服务
+      const { ShareService } = await import('../services/shareService.js');
+      
+      // 创建分享数据
+      const shareData = ShareService.generateShareCard(
+        state.type,
+        state.prompt || '',
+        state.result.url || state.result.musicUrl || state.result.filePath || '',
+        ShareService.getDefaultTitle(state.type),
+        {
+          coverUrl: state.result.coverUrl || '',
+          duration: state.result.duration || 0,
+          style: state.result.style || '',
+          size: state.result.size || ''
+        }
+      );
+      
+      // 创建短链
+      const shortUrl = ShareService.createShortUrl(shareData);
+      shareData.shortUrl = shortUrl;
+      state.shareData = shareData;
+      
+      // 显示分享面板
+      showSharePanel(shareData);
+    }
+    
+    function showSharePanel(shareData) {
+      // 如果已存在面板则移除
+      const existing = document.getElementById('sharePanel');
+      if (existing) existing.remove();
+      
+      const overlay = document.createElement('div');
+      overlay.id = 'shareOverlay';
+      overlay.className = 'share-overlay';
+      overlay.onclick = closeSharePanel;
+      
+      const panel = document.createElement('div');
+      panel.id = 'sharePanel';
+      panel.className = 'share-panel';
+      
+      let previewContent = '';
+      if (state.type === 'image' && shareData.url) {
+        previewContent = `<img src="${shareData.url}" class="share-preview-img">`;
+      } else if (state.type === 'music') {
+        previewContent = `<div class="share-preview-music">
+          ${shareData.coverUrl ? `<img src="${shareData.coverUrl}" class="share-preview-cover">` : '<span class="share-preview-icon">🎵</span>'}
+        </div>`;
+      } else if (state.type === 'tts') {
+        previewContent = `<div class="share-preview-tts"><span class="share-preview-icon">🎤</span></div>`;
+      }
+      
+      panel.innerHTML = `
+        <div class="share-panel-header">
+          <span class="share-panel-title">分享创作</span>
+          <button class="share-panel-close" onclick="closeSharePanel()">×</button>
+        </div>
+        <div class="share-panel-preview">${previewContent}</div>
+        <div class="share-panel-prompt">"${shareData.prompt}"</div>
+        <div class="share-panel-channels">
+          <div class="share-channel-btn" onclick="doShareWechat()">
+            <div class="share-channel-icon wechat">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M8.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.936 1.526 5.55 3.926 7.227l-.926 2.781 3.252-1.626A11.394 11.394 0 0012 20.486c5.523 0 10-4.145 10-9.243C22 6.145 17.523 2 12 2z"/></svg>
+            </div>
+            <span>微信</span>
+          </div>
+          <div class="share-channel-btn" onclick="doShareTwitter()">
+            <div class="share-channel-icon twitter">𝕏</div>
+            <span>Twitter</span>
+          </div>
+          <div class="share-channel-btn" onclick="doShareTelegram()">
+            <div class="share-channel-icon telegram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.69-1.647-1.114-2.678-1.799-1.185-.78-2.647-1.506-4.015-1.901-2.218-.64-3.299-1.047-3.3-1.127-.003-.02.382-.527.532-.592.467-.206 1.511-.256 2.161-.155.955.145 6.071 4.153 6.578 4.463.083.05.374.153.746.009.598-.232.6-.232.672-.29.006-.002.014-.015.014-.015l-.027-.017s-.72-.3-2.148-1.108c-1.201-.68-2.015-1.03-2.277-1.083-.056-.01-.108-.016-.156-.016-.046.005-.156.063-.156.063l-.215-.135s-.77-.468-.914-.566c-.144-.099-.338-.14-.338-.14s-.014.021-.041.064c-.023.037-.067.118-.067.118l-.083.118s-.11.16-.126.188c-.015.027-.028.048-.05.073-.021.025-.044.05-.044.05s-.11.076-.26.144c-.147.067-.28.122-.28.122l-.026-.003s-.322.088-.794.207c-.473.119-.897.222-.897.222s-.054.018-.134.045c-.074.024-.175.055-.175.055s-.142.044-.329.108c-.186.063-1.213.551-1.346.647-.133.096-.273.193-.273.193s-.09.057-.086.28c.005.222.384 1.075 1.432 2.107 1.12 1.102 2.11 1.817 2.79 2.232.681.415 1.371.403 1.913.229.541-.175 1.347-.359 1.872-.438.525-.08 1.68-.164 2.473-.022.793.142 1.788.301 2.108.397.32.096.513.041.57.057.057.015.09.025.09.025s.045.012.054.022c.009.009.029.048.029.048s.054.078.118.145c.063.067.145.146.145.146s.075.066.186.156c.111.09.24.184.24.184s.085.064.194.138c.109.074.255.162.255.162s.147.09.317.188c.17.099.361.199.361.199s.154.07.344.147c.19.077.402.152.402.152s.177.064.41.136c.234.072.496.139.496.139s.24.053.548.104c.307.051.674.098.674.098.045 0 .091-.002.137-.005.046-.003.09-.009.134-.015l.003.002c.017-.006.034-.013.051-.02a1.8 1.8 0 00.086-.042l.003-.002s.17-.082.295-.153c.125-.072.262-.155.262-.155s.124-.07.288-.152c.164-.082.365-.177.365-.177s.17-.084.395-.184c.226-.099.495-.207.495-.207s.225-.099.534-.217c.309-.118.699-.251.699-.251s.253-.082.618-.177c.366-.095.83-.197 1.17-.245.34-.048.682-.065.943-.018.26.047.48.14.48.14s.172.076.244.118c.071.043.153.095.153.095s.117.072.25.144c.133.072.277.143.277.143s.134.065.289.126c.155.062.341.128.341.128s.158.058.346.112c.188.055.412.106.412.106s.197.043.447.076a12.2 12.2 0 00.894.073c.148.005.297.003.446-.002.15-.004.3-.012.448-.024.148-.012.297-.028.445-.046.148-.018.297-.04.444-.066.148-.025.295-.055.442-.088a12.3 12.3 0 00.874-.242c.138-.047.274-.098.41-.152.136-.054.27-.112.403-.174.133-.061.265-.126.394-.194.13-.068.257-.14.382-.217.126-.076.248-.156.368-.24.119-.083.236-.17.35-.26.114-.09.225-.185.332-.284.107-.099.211-.202.31-.309.1-.107.196-.218.288-.333.092-.115.179-.234.262-.357a7.4 7.4 0 00.23-.384c.07-.128.136-.26.197-.395.061-.135.118-.273.17-.414.052-.141.099-.285.141-.432.042-.146.079-.295.111-.446.032-.151.059-.304.081-.459a10.6 10.6 0 00.043-.936 9.9 9.9 0 00-.022-.466 9.1 9.1 0 00-.056-.46c-.024-.153-.054-.305-.088-.457a9.4 9.4 0 00-.124-.45 8.9 8.9 0 00-.157-.436 8.2 8.2 0 00-.19-.42 8.1 8.1 0 00-.223-.403 7.7 7.7 0 00-.252-.383 7.3 7.3 0 00-.28-.363 6.8 6.8 0 00-.307-.34 6.5 6.5 0 00-.332-.317 6.2 6.2 0 00-.357-.293 6 6 0 00-.38-.27 5.7 5.7 0 00-.4-.246 5.4 5.4 0 00-.42-.222 5.3 5.3 0 00-.44-.198 5.2 5.2 0 00-.456-.174 5.3 5.3 0 00-.472-.15 5.5 5.5 0 00-.485-.126 5.6 5.6 0 00-.497-.103 5.8 5.8 0 00-.508-.08 6 6 0 00-.517-.056c-.173-.01-.346-.012-.52-.01a6 6 0 00-.52.018c-.174.014-.346.035-.517.061a6.1 6.1 0 00-.513.09 6.3 6.3 0 00-.506.12z"/></svg>
+            </div>
+            <span>Telegram</span>
+          </div>
+          <div class="share-channel-btn" onclick="doCopyShareLink()">
+            <div class="share-channel-icon copy">🔗</div>
+            <span>复制链接</span>
+          </div>
+        </div>
+        <div class="share-panel-url">
+          <input type="text" id="shareShortUrl" value="${shareData.shortUrl}" readonly>
+          <button class="share-url-copy-btn" onclick="doCopyShareUrl()">复制</button>
+        </div>
+      `;
+      
+      overlay.appendChild(panel);
+      document.body.appendChild(overlay);
+      document.body.style.overflow = 'hidden';
+      
+      requestAnimationFrame(() => overlay.classList.add('active'));
+    }
+    
+    function closeSharePanel() {
+      const overlay = document.getElementById('shareOverlay');
+      const panel = document.getElementById('sharePanel');
+      if (overlay) {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+          overlay.remove();
+          document.body.style.overflow = '';
+        }, 300);
+      }
+    }
+    
+    function doShareWechat() {
+      if (!state.shareData) return;
+      const result = ShareService.shareToWechat(state.shareData);
+      showToast(result.message, result.success ? 'success' : 'error');
+      closeSharePanel();
+    }
+    
+    function doShareTwitter() {
+      if (!state.shareData) return;
+      ShareService.shareToTwitter(state.shareData);
+      closeSharePanel();
+    }
+    
+    function doShareTelegram() {
+      if (!state.shareData) return;
+      ShareService.shareToTelegram(state.shareData);
+      closeSharePanel();
+    }
+    
+    async function doCopyShareLink() {
+      if (!state.shareData) return;
+      const result = await ShareService.copyShareLink(state.shareData);
+      showToast(result.message, result.success ? 'success' : 'error');
+      closeSharePanel();
+    }
+    
+    async function doCopyShareUrl() {
+      const url = document.getElementById('shareShortUrl').value;
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('链接已复制', 'success');
+      } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = url;
+        textarea.style.cssText = 'position:fixed;opacity:0;';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('链接已复制', 'success');
       }
     }
 
