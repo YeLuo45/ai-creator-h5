@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Creator - 首页</title>
+  <style>
+    /* Index Page Styles */
+    .page {
+      padding-bottom: 80px;
+    }
+
+    .header {
+      padding: 24px 16px 20px;
+      background: linear-gradient(135deg, #1A73E8, #4facfe);
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .avatar-placeholder {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      overflow: hidden;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nickname {
+      font-size: 16px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .login-hint {
+      opacity: 0.8;
+    }
+
+    .credits {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* Banner */
+    .banner-swiper {
+      height: 140px;
+      margin: 12px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .banner-item {
+      height: 140px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .banner-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .banner-desc {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* Feature Grid */
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 16px 16px 8px;
+    }
+
+    .feature-grid {
+      padding: 0 16px;
+    }
+
+    .feature-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .feature-card:active {
+      transform: scale(0.98);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .feature-content {
+      flex: 1;
+    }
+
+    .feature-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .feature-arrow {
+      font-size: 24px;
+      color: #ccc;
+      font-weight: 300;
+    }
+
+    /* API Key Tip */
+    .api-key-tip {
+      margin: 16px;
+      padding: 12px;
+      background: #fff3cd;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: 1px solid #ffeaa7;
+    }
+
+    .tip-icon {
+      font-size: 16px;
+    }
+
+    .tip-text {
+      font-size: 13px;
+      color: #856404;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- 顶部区域 -->
+    <div class="header">
+      <div class="user-section" id="userSection">
+        <div class="avatar-placeholder" id="avatarWrap">
+          <span id="avatarIcon">👤</span>
+        </div>
+        <div class="user-info">
+          <span class="nickname login-hint" id="nickname">点击登录</span>
+          <span class="credits" id="creditsText">0 积分</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner -->
+    <div class="banner-swiper" id="bannerSwiper">
+      <div class="banner-item" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+        <span class="banner-title">AI 图片生成</span>
+        <span class="banner-desc">一句话，创造你的想象</span>
+      </div>
+      <div class="banner-item" style="background: linear-gradient(135deg, #f093fb, #f5576c)">
+        <span class="banner-title">AI 音乐创作</span>
+        <span class="banner-desc">输入描述，收获原创音乐</span>
+      </div>
+      <div class="banner-item" style="background: linear-gradient(135deg, #4facfe, #00f2fe)">
+        <span class="banner-title">AI 语音合成</span>
+        <span class="banner-desc">文字秒变专业配音</span>
+      </div>
+    </div>
+
+    <!-- 功能入口 -->
+    <div class="section-title">创作工具</div>
+    <div class="feature-grid">
+      <div class="feature-card" data-type="image" onclick="onFeatureTap('image')">
+        <div class="feature-icon" style="background: rgba(102, 126, 234, 0.15)">🖼️</div>
+        <div class="feature-content">
+          <span class="feature-name">图片生成</span>
+          <span class="feature-desc">text→image</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
+
+      <div class="feature-card" data-type="music" onclick="onFeatureTap('music')">
+        <div class="feature-icon" style="background: rgba(240, 147, 251, 0.15)">🎵</div>
+        <div class="feature-content">
+          <span class="feature-name">音乐生成</span>
+          <span class="feature-desc">text→music</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
+
+      <div class="feature-card" data-type="tts" onclick="onFeatureTap('tts')">
+        <div class="feature-icon" style="background: rgba(79, 172, 254, 0.15)">🎤</div>
+        <div class="feature-content">
+          <span class="feature-name">语音合成</span>
+          <span class="feature-desc">text→speech</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
+
+      <div class="feature-card" onclick="goToFavorites()">
+        <div class="feature-icon" style="background: rgba(255, 193, 7, 0.15)">⭐</div>
+        <div class="feature-content">
+          <span class="feature-name">我的收藏</span>
+          <span class="feature-desc">收藏夹管理</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
+
+      <div class="feature-card" onclick="goToMarket()">
+        <div class="feature-icon" style="background: rgba(102, 126, 234, 0.15)">🏪</div>
+        <div class="feature-content">
+          <span class="feature-name">模板市场</span>
+          <span class="feature-desc">发现优质模板</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
+
+      <div class="feature-card" onclick="goToWorkflow()">
+        <div class="feature-icon" style="background: rgba(99, 102, 241, 0.15)">🔗</div>
+        <div class="feature-content">
+          <span class="feature-name">工作流编排</span>
+          <span class="feature-desc">自动化创作流水线</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
+
+      <div class="feature-card" onclick="goToRolesV2()">
+        <div class="feature-icon" style="background: rgba(139, 92, 246, 0.15)">🎭</div>
+        <div class="feature-content">
+          <span class="feature-name">角色协作</span>
+          <span class="feature-desc">多角色组合创作</span>
+        </div>
+        <span class="feature-arrow">›</span>
+      </div>
+    </div>
+
+    <!-- API Key 提示 -->
+    <div class="api-key-tip" id="apiKeyTip" onclick="goToMy()" style="display:none;">
+      <span class="tip-icon">⚠️</span>
+      <span class="tip-text">未配置 API Key，点击前往配置</span>
+    </div>
+  </div>
+
+  <script>
+    // Page state
+    const state = {
+      userInfo: null,
+      credits: 0,
+      hasApiKey: false,
+    };
+
+    // Banner auto-scroll
+    let bannerIndex = 0;
+    const bannerItems = document.querySelectorAll('.banner-item');
+    function nextBanner() {
+      bannerItems.forEach((item, i) => item.style.display = i === bannerIndex ? 'flex' : 'none');
+      bannerIndex = (bannerIndex + 1) % bannerItems.length;
+    }
+    setInterval(nextBanner, 3000);
+    nextBanner();
+
+    function refreshUserInfo() {
+      const app = getApp();
+      state.userInfo = app.globalData.userInfo;
+      state.credits = Number(app.globalData.credits);
+      state.hasApiKey = app.hasApiKey();
+
+      const avatarIcon = document.getElementById('avatarIcon');
+      const nickname = document.getElementById('nickname');
+      const creditsText = document.getElementById('creditsText');
+      const apiKeyTip = document.getElementById('apiKeyTip');
+
+      if (state.userInfo) {
+        if (state.userInfo.avatarUrl) {
+          avatarIcon.innerHTML = `<img src="${state.userInfo.avatarUrl}" class="avatar-img" />`;
+        }
+        nickname.textContent = state.userInfo.nickname || 'H5用户';
+        nickname.classList.remove('login-hint');
+      }
+      creditsText.textContent = state.credits + ' 积分';
+      apiKeyTip.style.display = state.hasApiKey ? 'none' : 'flex';
+    }
+
+    function onLoginTap() {
+      const app = getApp();
+      if (!app.globalData.openid) {
+        app.doLogin().then(() => app.getUserProfile()).then(() => {
+          refreshUserInfo();
+          showToast('登录成功', 'success');
+        }).catch(e => handleError(e, '登录失败'));
+      }
+    }
+
+    document.getElementById('userSection').onclick = onLoginTap;
+
+    function onFeatureTap(type) {
+      const app = getApp();
+      if (!app.hasApiKey()) {
+        showModal({
+          title: '提示',
+          content: '请先配置 MiniMax API Key 才能使用',
+          confirmText: '去配置',
+        }).then(res => {
+          if (res.confirm) window.location.hash = '/pages/my.html';
+        });
+        return;
+      }
+      window.location.hash = '/pages/generate.html?type=' + type;
+    }
+
+    function goToMy() {
+      window.location.hash = '/pages/my.html';
+    }
+
+    function goToFavorites() {
+      window.location.hash = '/pages/favorites.html';
+    }
+
+    function goToMarket() {
+      window.location.hash = '/pages/market.html';
+    }
+
+    function goToWorkflow() {
+      window.location.hash = '/pages/workflow.html';
+    }
+
+    function goToRolesV2() {
+      window.location.hash = '/pages/roles-v2.html';
+    }
+
+    // Init
+    window.pageInit = function() {
+      refreshUserInfo();
+    };
+  </script>
+</body>
+</html>
