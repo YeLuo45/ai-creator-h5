@@ -4828,6 +4828,160 @@
     .security-empty { text-align: center; padding: 20px; color: var(--text-dim); font-size: 13px; }
 
     /* ========== End v23 Plugin Security CSS ========== */
+
+    /* ========== v24 Enterprise SSO + Multi-Tenancy CSS ========== */
+
+    /* Enterprise Admin Panel */
+    .enterprise-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 900px;
+      max-height: 88vh;
+      z-index: 1003;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .enterprise-panel.active { display: block; }
+    .enterprise-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .enterprise-title { font-size: 16px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .enterprise-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 20px; }
+    .enterprise-close:hover { color: var(--text); }
+    .enterprise-tabs { display: flex; gap: 4px; padding: 12px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .enterprise-tab { padding: 8px 16px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); cursor: pointer; font-size: 12px; transition: all 0.2s; }
+    .enterprise-tab:hover { color: var(--text); }
+    .enterprise-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .enterprise-content { padding: 16px 20px; max-height: calc(88vh - 130px); overflow-y: auto; }
+
+    /* Enterprise Stats Grid */
+    .enterprise-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .enterprise-stat { padding: 16px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 8px; text-align: center; }
+    .enterprise-stat-value { font-size: 24px; font-weight: 600; color: var(--primary); }
+    .enterprise-stat-value.success { color: var(--success); }
+    .enterprise-stat-value.warning { color: var(--warning); }
+    .enterprise-stat-value.danger { color: var(--error); }
+    .enterprise-stat-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    /* Enterprise Section */
+    .enterprise-section { background: var(--bg-node); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .enterprise-section-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+    /* SSO Config Form */
+    .sso-config-grid { display: grid; grid-template-columns: 140px 1fr; gap: 12px; align-items: center; margin-bottom: 12px; }
+    .sso-config-grid label { font-size: 13px; color: var(--text-dim); }
+    .sso-config-grid input, .sso-config-grid select { padding: 8px 12px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; }
+    .sso-config-grid input:focus, .sso-config-grid select:focus { outline: none; border-color: var(--primary); }
+    .sso-toggle { display: flex; align-items: center; gap: 8px; }
+    .sso-toggle input[type="checkbox"] { width: 40px; height: 20px; appearance: none; background: var(--bg-dark); border-radius: 10px; position: relative; cursor: pointer; transition: background 0.3s; }
+    .sso-toggle input[type="checkbox"]::before { content: ''; position: absolute; width: 16px; height: 16px; background: var(--text-dim); border-radius: 50%; top: 2px; left: 2px; transition: left 0.3s, background 0.3s; }
+    .sso-toggle input[type="checkbox"]:checked { background: var(--primary); }
+    .sso-toggle input[type="checkbox"]:checked::before { left: 22px; background: white; }
+
+    /* Tenant List */
+    .tenant-list { display: flex; flex-direction: column; gap: 8px; }
+    .tenant-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; transition: border-color 0.2s; }
+    .tenant-item:hover { border-color: var(--primary); }
+    .tenant-info { display: flex; flex-direction: column; gap: 4px; }
+    .tenant-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+    .tenant-id { font-size: 11px; color: var(--text-dim); }
+    .tenant-status { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .tenant-status.active { background: rgba(16,185,129,0.2); color: var(--success); }
+    .tenant-status.suspended { background: rgba(239,68,68,0.2); color: var(--error); }
+    .tenant-status.trial { background: rgba(245,158,11,0.2); color: var(--warning); }
+    .tenant-actions { display: flex; gap: 8px; }
+    .tenant-action-btn { padding: 6px 12px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 4px; color: var(--text); cursor: pointer; font-size: 12px; }
+    .tenant-action-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* User Directory Table */
+    .user-table { width: 100%; border-collapse: collapse; }
+    .user-table th, .user-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .user-table th { background: var(--bg-dark); color: var(--text-dim); font-weight: 500; }
+    .user-table tr:hover td { background: var(--bg-node); }
+    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 8px; }
+    .user-name-cell { display: flex; align-items: center; }
+    .user-role { padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 500; }
+    .user-role.admin { background: rgba(239,68,68,0.2); color: var(--error); }
+    .user-role.editor { background: rgba(99,102,241,0.2); color: var(--primary); }
+    .user-role.viewer { background: rgba(136,136,170,0.2); color: var(--text-dim); }
+
+    /* LDAP/AD Config */
+    .ldap-config-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ldap-config-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    .ldap-config-card h4 { font-size: 13px; color: var(--text); margin-bottom: 12px; }
+    .ldap-form-row { display: flex; gap: 12px; margin-bottom: 10px; }
+    .ldap-form-row label { width: 100px; font-size: 12px; color: var(--text-dim); line-height: 32px; }
+    .ldap-form-row input { flex: 1; padding: 6px 10px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; }
+    .ldap-test-btn { padding: 8px 16px; background: var(--primary); border: none; border-radius: 6px; color: white; cursor: pointer; font-size: 12px; }
+    .ldap-test-btn:hover { background: var(--primary-dark); }
+
+    /* Group Permission Mapping */
+    .group-permission-list { display: flex; flex-direction: column; gap: 8px; }
+    .group-permission-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--bg-dark); border-radius: 6px; }
+    .group-name { font-size: 13px; font-weight: 500; }
+    .group-permissions { display: flex; gap: 4px; }
+    .permission-badge { padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 500; background: rgba(99,102,241,0.2); color: var(--primary); }
+    .permission-badge.write { background: rgba(16,185,129,0.2); color: var(--success); }
+    .permission-badge.admin { background: rgba(239,68,68,0.2); color: var(--error); }
+
+    /* Quota Management */
+    .quota-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .quota-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    .quota-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .quota-card-title { font-size: 13px; font-weight: 500; }
+    .quota-card-value { font-size: 20px; font-weight: 600; color: var(--primary); }
+    .quota-progress { height: 6px; background: var(--bg-panel); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+    .quota-progress-bar { height: 100%; background: var(--primary); transition: width 0.3s; }
+    .quota-progress-bar.warning { background: var(--warning); }
+    .quota-progress-bar.danger { background: var(--error); }
+    .quota-detail { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    /* Usage Statistics */
+    .usage-chart { height: 200px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: flex-end; justify-content: space-around; padding: 16px; gap: 8px; }
+    .usage-bar { flex: 1; background: var(--primary); border-radius: 4px 4px 0 0; min-width: 20px; transition: height 0.3s; position: relative; }
+    .usage-bar:hover { background: var(--primary-dark); }
+    .usage-bar-label { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-dim); }
+
+    /* Security Policy Config */
+    .security-policy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .security-policy-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--bg-dark); border-radius: 8px; }
+    .security-policy-name { font-size: 13px; }
+    .security-policy-desc { font-size: 11px; color: var(--text-dim); }
+
+    /* Billing Info */
+    .billing-info { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .billing-card { background: var(--bg-dark); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    .billing-card-title { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+    .billing-card-value { font-size: 24px; font-weight: 600; color: var(--text); }
+    .billing-card-note { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    /* Toolbar buttons for v24 */
+    .toolbar-btn.enterprise-btn { border-color: var(--primary); color: var(--primary); }
+    .toolbar-btn.enterprise-btn:hover { background: rgba(99,102,241,0.1); }
+
+    /* Enterprise Empty State */
+    .enterprise-empty { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+    .enterprise-empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .enterprise-empty-text { font-size: 14px; margin-bottom: 16px; }
+
+    /* SSO Provider Icons */
+    .sso-provider-icon { width: 24px; height: 24px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 8px; }
+    .sso-provider-icon.saml { background: rgba(0,136,204,0.2); color: #0088cc; }
+    .sso-provider-icon.oauth { background: rgba(16,185,129,0.2); color: var(--success); }
+    .sso-provider-icon.oidc { background: rgba(239,68,68,0.2); color: var(--error); }
+    .sso-provider-icon.ldap { background: rgba(245,158,11,0.2); color: var(--warning); }
+
+    /* Sync Status Indicator */
+    .sync-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-dim); }
+    .sync-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+    .sync-status-dot.syncing { background: var(--warning); animation: pulse 1s infinite; }
+    .sync-status-dot.error { background: var(--error); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    /* ========== End v24 Enterprise SSO + Multi-Tenancy CSS ========== */
   </style>
 </head>
 <body>
@@ -5010,6 +5164,7 @@
       <button class="toolbar-btn audit-btn" id="btn-audit" title="审计日志" onclick="toggleAuditPanel()">📋 审计</button>
       <button class="toolbar-btn replay-btn" id="btn-replay" title="操作回放" onclick="toggleReplayPanel()">⏮ 回放</button>
       <button class="toolbar-btn security-btn" id="btn-security" title="插件安全" onclick="toggleSecurityPanel()">🔒 安全</button>
+      <button class="toolbar-btn enterprise-btn" id="btn-enterprise" title="企业管理员" onclick="toggleEnterprisePanel()">🏢 企业</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -5252,6 +5407,26 @@
         <button class="security-tab" data-tab="suggestions" onclick="switchSecurityTab('suggestions')">安全建议</button>
       </div>
       <div class="security-content" id="security-content">
+        <!-- Content populated by JS -->
+      </div>
+    </div>
+
+    <!-- Enterprise Admin Panel -->
+    <div class="enterprise-panel" id="enterprise-panel" role="dialog" aria-label="企业管理员面板">
+      <div class="enterprise-header">
+        <div class="enterprise-title">🏢 企业管理后台</div>
+        <button class="enterprise-close" onclick="closeEnterprisePanel()">×</button>
+      </div>
+      <div class="enterprise-tabs">
+        <button class="enterprise-tab active" data-tab="sso" onclick="switchEnterpriseTab('sso')">SSO配置</button>
+        <button class="enterprise-tab" data-tab="tenants" onclick="switchEnterpriseTab('tenants')">租户管理</button>
+        <button class="enterprise-tab" data-tab="directory" onclick="switchEnterpriseTab('directory')">用户目录</button>
+        <button class="enterprise-tab" data-tab="quotas" onclick="switchEnterpriseTab('quotas')">配额管理</button>
+        <button class="enterprise-tab" data-tab="usage" onclick="switchEnterpriseTab('usage')">使用统计</button>
+        <button class="enterprise-tab" data-tab="security" onclick="switchEnterpriseTab('security')">安全策略</button>
+        <button class="enterprise-tab" data-tab="billing" onclick="switchEnterpriseTab('billing')">账单计费</button>
+      </div>
+      <div class="enterprise-content" id="enterprise-content">
         <!-- Content populated by JS -->
       </div>
     </div>
@@ -13451,6 +13626,964 @@ function exportComplianceReport(format) {
 }
 
 // ============ End v23 Plugin Security ============
+
+// ============ v24 Enterprise SSO + Multi-Tenancy ============
+
+// Enterprise State Management
+const EnterpriseService = {
+  // SSO Configuration State
+  ssoConfig: {
+    enabled: false,
+    provider: 'saml', // saml, oauth, oidc
+    metadataUrl: '',
+    clientId: '',
+    clientSecret: '',
+    issuer: '',
+    redirectUri: '',
+    tenantIsolation: true,
+    userSyncEnabled: true,
+    lastSync: null
+  },
+
+  // Multi-Tenant State
+  tenants: [
+    { id: 'tenant-001', name: 'Acme Corporation', status: 'active', plan: 'enterprise', users: 150, workflows: 45, quota: { workflows: 100, users: 200, storage: 500 }, usage: { workflows: 45, users: 150, storage: 320 } },
+    { id: 'tenant-002', name: 'TechStart Inc', status: 'trial', plan: 'professional', users: 25, workflows: 12, quota: { workflows: 50, users: 50, storage: 100 }, usage: { workflows: 12, users: 25, storage: 45 } },
+    { id: 'tenant-003', name: 'Global Media Ltd', status: 'active', plan: 'enterprise', users: 320, workflows: 89, quota: { workflows: 200, users: 500, storage: 1000 }, usage: { workflows: 89, users: 320, storage: 680 } }
+  ],
+
+  // User Directory (LDAP/AD Simulation)
+  userDirectory: {
+    ldapEnabled: false,
+    ldapServer: '',
+    ldapPort: 389,
+    ldapBaseDN: '',
+    ldapBindDN: '',
+    ldapUseSSL: false,
+    syncInterval: 60, // minutes
+    lastSync: null,
+    users: [
+      { id: 'u001', username: 'john.doe', email: 'john.doe@acme.com', displayName: 'John Doe', department: 'Engineering', groups: ['admin', 'developers'], status: 'active', lastLogin: '2026-05-18T10:30:00Z' },
+      { id: 'u002', username: 'jane.smith', email: 'jane.smith@acme.com', displayName: 'Jane Smith', department: 'Marketing', groups: ['editors', 'marketing'], status: 'active', lastLogin: '2026-05-18T09:15:00Z' },
+      { id: 'u003', username: 'bob.wilson', email: 'bob.wilson@acme.com', displayName: 'Bob Wilson', department: 'Engineering', groups: ['developers'], status: 'active', lastLogin: '2026-05-17T16:45:00Z' },
+      { id: 'u004', username: 'alice.chen', email: 'alice.chen@acme.com', displayName: 'Alice Chen', department: 'Sales', groups: ['viewers', 'sales'], status: 'inactive', lastLogin: '2026-05-10T11:00:00Z' },
+      { id: 'u005', username: 'admin', email: 'admin@acme.com', displayName: 'System Admin', department: 'IT', groups: ['admin'], status: 'active', lastLogin: '2026-05-18T08:00:00Z' }
+    ],
+    groups: [
+      { name: 'admin', description: 'System Administrators', permissions: ['read', 'write', 'admin', 'delete'], memberCount: 2 },
+      { name: 'developers', description: 'Development Team', permissions: ['read', 'write'], memberCount: 15 },
+      { name: 'editors', description: 'Content Editors', permissions: ['read', 'write'], memberCount: 28 },
+      { name: 'viewers', description: 'Read-only Users', permissions: ['read'], memberCount: 45 },
+      { name: 'marketing', description: 'Marketing Team', permissions: ['read', 'write'], memberCount: 12 },
+      { name: 'sales', description: 'Sales Team', permissions: ['read'], memberCount: 30 }
+    ]
+  },
+
+  // Group Permission Mappings
+  groupPermissions: [
+    { group: 'admin', workflowCreate: true, workflowEdit: true, workflowDelete: true, workflowExecute: true, userManage: true, tenantManage: true, billing: true },
+    { group: 'developers', workflowCreate: true, workflowEdit: true, workflowDelete: false, workflowExecute: true, userManage: false, tenantManage: false, billing: false },
+    { group: 'editors', workflowCreate: true, workflowEdit: true, workflowDelete: false, workflowExecute: false, userManage: false, tenantManage: false, billing: false },
+    { group: 'viewers', workflowCreate: false, workflowEdit: false, workflowDelete: false, workflowExecute: false, userManage: false, tenantManage: false, billing: false },
+    { group: 'marketing', workflowCreate: true, workflowEdit: true, workflowDelete: false, workflowExecute: false, userManage: false, tenantManage: false, billing: false },
+    { group: 'sales', workflowCreate: false, workflowEdit: false, workflowDelete: false, workflowExecute: false, userManage: false, tenantManage: false, billing: false }
+  ],
+
+  // Usage Statistics
+  usageStats: {
+    daily: [
+      { date: '05-12', workflows: 120, users: 450, apiCalls: 12500 },
+      { date: '05-13', workflows: 135, users: 462, apiCalls: 13200 },
+      { date: '05-14', workflows: 128, users: 458, apiCalls: 11800 },
+      { date: '05-15', workflows: 142, users: 470, apiCalls: 14500 },
+      { date: '05-16', workflows: 155, users: 475, apiCalls: 15800 },
+      { date: '05-17', workflows: 148, users: 478, apiCalls: 14200 },
+      { date: '05-18', workflows: 160, users: 485, apiCalls: 16500 }
+    ],
+    monthly: [
+      { month: 'Jan', workflows: 2800, users: 380, apiCalls: 320000 },
+      { month: 'Feb', workflows: 3100, users: 395, apiCalls: 345000 },
+      { month: 'Mar', workflows: 2950, users: 410, apiCalls: 338000 },
+      { month: 'Apr', workflows: 3400, users: 435, apiCalls: 385000 },
+      { month: 'May', workflows: 3200, users: 485, apiCalls: 365000 }
+    ]
+  },
+
+  // Security Policies
+  securityPolicies: {
+    passwordMinLength: 12,
+    passwordRequireSpecial: true,
+    passwordRequireNumber: true,
+    passwordExpiryDays: 90,
+    mfaRequired: true,
+    sessionTimeoutMinutes: 30,
+    ipWhitelistEnabled: false,
+    ipWhitelist: [],
+    auditRetentionDays: 365,
+    dataEncryptionEnabled: true,
+    twoFactorMethods: ['authenticator', 'sms', 'email']
+  },
+
+  // Billing Info
+  billing: {
+    currentPlan: 'enterprise',
+    monthlyRate: 4999,
+    usageBasedFees: {
+      workflowExecutions: 0.001,
+      storagePerGB: 0.05,
+      apiCallsPer1000: 0.50
+    },
+    currentPeriod: { start: '2026-05-01', end: '2026-05-31' },
+    invoices: [
+      { id: 'INV-2026-04', date: '2026-04-30', amount: 4999, status: 'paid' },
+      { id: 'INV-2026-03', date: '2026-03-30', amount: 4999, status: 'paid' },
+      { id: 'INV-2026-02', date: '2026-02-28', amount: 4999, status: 'paid' }
+    ]
+  },
+
+  // Current tenant context
+  currentTenant: 'tenant-001',
+
+  // SSO Simulation
+  simulateSSO: function(provider, callback) {
+    setTimeout(() => {
+      const mockToken = 'sso_token_' + Date.now();
+      const mockUser = { id: 'sso-user-001', name: 'SSO User', email: 'sso.user@enterprise.com', tenant: this.currentTenant };
+      callback({ success: true, token: mockToken, user: mockUser });
+    }, 800);
+  },
+
+  // User Directory Sync Simulation
+  syncUserDirectory: function(callback) {
+    this.userDirectory.lastSync = new Date().toISOString();
+    setTimeout(() => {
+      callback({ success: true, syncedUsers: this.userDirectory.users.length, timestamp: this.userDirectory.lastSync });
+    }, 1200);
+  },
+
+  // LDAP Connection Test
+  testLDAPConnection: function(config, callback) {
+    setTimeout(() => {
+      const success = config.server && config.baseDN;
+      callback({ success, message: success ? 'LDAP连接成功' : 'LDAP连接失败：配置不完整' });
+    }, 600);
+  }
+};
+
+// Toggle Enterprise Panel
+function toggleEnterprisePanel() {
+  const panel = document.getElementById('enterprise-panel');
+  if (!panel) return;
+
+  const isOpen = panel.classList.toggle('active');
+
+  if (isOpen) {
+    switchEnterpriseTab('sso');
+  }
+}
+
+// Close Enterprise Panel
+function closeEnterprisePanel() {
+  const panel = document.getElementById('enterprise-panel');
+  if (panel) {
+    panel.classList.remove('active');
+  }
+}
+
+// Switch Enterprise Tab
+function switchEnterpriseTab(tab) {
+  document.querySelectorAll('.enterprise-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+
+  const content = document.getElementById('enterprise-content');
+  if (!content) return;
+
+  switch (tab) {
+    case 'sso':
+      content.innerHTML = renderSSOConfig();
+      break;
+    case 'tenants':
+      content.innerHTML = renderTenantManagement();
+      break;
+    case 'directory':
+      content.innerHTML = renderUserDirectory();
+      break;
+    case 'quotas':
+      content.innerHTML = renderQuotaManagement();
+      break;
+    case 'usage':
+      content.innerHTML = renderUsageStatistics();
+      break;
+    case 'security':
+      content.innerHTML = renderSecurityPolicies();
+      break;
+    case 'billing':
+      content.innerHTML = renderBillingInfo();
+      break;
+  }
+}
+
+// Render SSO Configuration
+function renderSSOConfig() {
+  const sso = EnterpriseService.ssoConfig;
+  return `
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">🔐 SSO身份提供商配置</div>
+      <div class="sso-config-grid">
+        <label>启用SSO</label>
+        <div class="sso-toggle">
+          <input type="checkbox" id="sso-enabled" ${sso.enabled ? 'checked' : ''} onchange="updateSSOConfig('enabled', this.checked)">
+          <span>启用单点登录</span>
+        </div>
+      </div>
+      <div class="sso-config-grid">
+        <label>提供商</label>
+        <select id="sso-provider" onchange="updateSSOConfig('provider', this.value)">
+          <option value="saml" ${sso.provider === 'saml' ? 'selected' : ''}>SAML 2.0</option>
+          <option value="oauth" ${sso.provider === 'oauth' ? 'selected' : ''}>OAuth 2.0</option>
+          <option value="oidc" ${sso.provider === 'oidc' ? 'selected' : ''}>OIDC</option>
+        </select>
+      </div>
+      <div class="sso-config-grid">
+        <label>元数据URL</label>
+        <input type="text" id="sso-metadata" value="${sso.metadataUrl}" placeholder="https://idp.example.com/metadata" onchange="updateSSOConfig('metadataUrl', this.value)">
+      </div>
+      <div class="sso-config-grid">
+        <label>Client ID</label>
+        <input type="text" id="sso-client-id" value="${sso.clientId}" placeholder="Application Client ID" onchange="updateSSOConfig('clientId', this.value)">
+      </div>
+      <div class="sso-config-grid">
+        <label>Client Secret</label>
+        <input type="password" id="sso-client-secret" value="${sso.clientSecret}" placeholder="••••••••" onchange="updateSSOConfig('clientSecret', this.value)">
+      </div>
+      <div class="sso-config-grid">
+        <label>Issuer</label>
+        <input type="text" id="sso-issuer" value="${sso.issuer}" placeholder="https://idp.example.com" onchange="updateSSOConfig('issuer', this.value)">
+      </div>
+      <div class="sso-config-grid">
+        <label>回调URL</label>
+        <input type="text" id="sso-redirect" value="${sso.redirectUri}" placeholder="https://app.example.com/auth/callback" onchange="updateSSOConfig('redirectUri', this.value)">
+      </div>
+      <div class="sso-config-grid">
+        <label>租户隔离</label>
+        <div class="sso-toggle">
+          <input type="checkbox" id="sso-tenant-isolation" ${sso.tenantIsolation ? 'checked' : ''} onchange="updateSSOConfig('tenantIsolation', this.checked)">
+          <span>启用租户数据隔离</span>
+        </div>
+      </div>
+      <div class="sso-config-grid">
+        <label>用户同步</label>
+        <div class="sso-toggle">
+          <input type="checkbox" id="sso-user-sync" ${sso.userSyncEnabled ? 'checked' : ''} onchange="updateSSOConfig('userSyncEnabled', this.checked)">
+          <span>同步企业目录用户</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:16px;">
+        <button class="toolbar-btn primary" onclick="testSSOConnection()">🔗 测试连接</button>
+        <button class="toolbar-btn" onclick="saveSSOConfig()">💾 保存配置</button>
+        <button class="toolbar-btn" onclick="triggerUserSync()">🔄 同步用户</button>
+      </div>
+      ${sso.lastSync ? `<div class="sync-status" style="margin-top:12px;"><span class="sync-status-dot"></span>上次同步: ${new Date(sso.lastSync).toLocaleString()}</div>` : ''}
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">📋 SSO提供商信息</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;padding:12px;background:var(--bg-dark);border-radius:8px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="sso-provider-icon saml">SAML</span>
+            <strong>SAML 2.0</strong>
+          </div>
+          <div style="font-size:12px;color:var(--text-dim);">安全性最高，支持所有主流企业IdP</div>
+        </div>
+        <div style="flex:1;min-width:200px;padding:12px;background:var(--bg-dark);border-radius:8px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="sso-provider-icon oauth">OAuth</span>
+            <strong>OAuth 2.0</strong>
+          </div>
+          <div style="font-size:12px;color:var(--text-dim);">广泛支持，适合第三方应用集成</div>
+        </div>
+        <div style="flex:1;min-width:200px;padding:12px;background:var(--bg-dark);border-radius:8px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="sso-provider-icon oidc">OIDC</span>
+            <strong>OIDC</strong>
+          </div>
+          <div style="font-size:12px;color:var(--text-dim);">现代标准，提供身份验证和授权</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Update SSO Config
+function updateSSOConfig(key, value) {
+  EnterpriseService.ssoConfig[key] = value;
+}
+
+// Test SSO Connection
+function testSSOConnection() {
+  const provider = document.getElementById('sso-provider').value;
+  EnterpriseService.simulateSSO(provider, (result) => {
+    if (result.success) {
+      alert('✅ SSO连接测试成功！\n\nToken: ' + result.token.substring(0, 20) + '...\n用户: ' + result.user.name);
+    } else {
+      alert('❌ SSO连接测试失败');
+    }
+  });
+}
+
+// Save SSO Config
+function saveSSOConfig() {
+  EnterpriseService.ssoConfig.metadataUrl = document.getElementById('sso-metadata').value;
+  EnterpriseService.ssoConfig.clientId = document.getElementById('sso-client-id').value;
+  EnterpriseService.ssoConfig.clientSecret = document.getElementById('sso-client-secret').value;
+  EnterpriseService.ssoConfig.issuer = document.getElementById('sso-issuer').value;
+  EnterpriseService.ssoConfig.redirectUri = document.getElementById('sso-redirect').value;
+  alert('✅ SSO配置已保存');
+}
+
+// Trigger User Sync
+function triggerUserSync() {
+  EnterpriseService.syncUserDirectory((result) => {
+    if (result.success) {
+      alert(`✅ 用户同步完成\n\n同步用户数: ${result.syncedUsers}\n同步时间: ${new Date(result.timestamp).toLocaleString()}`);
+      switchEnterpriseTab('sso');
+    }
+  });
+}
+
+// Render Tenant Management
+function renderTenantManagement() {
+  const tenants = EnterpriseService.tenants;
+  return `
+    <div class="enterprise-stats-grid">
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${tenants.length}</div>
+        <div class="enterprise-stat-label">总租户数</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value success">${tenants.filter(t => t.status === 'active').length}</div>
+        <div class="enterprise-stat-label">活跃租户</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value warning">${tenants.filter(t => t.status === 'trial').length}</div>
+        <div class="enterprise-stat-label">试用租户</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${tenants.reduce((sum, t) => sum + t.users, 0)}</div>
+        <div class="enterprise-stat-label">总用户数</div>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">🏢 租户列表 <button class="toolbar-btn" style="margin-left:auto;padding:4px 12px;" onclick="showAddTenantModal()">+ 添加租户</button></div>
+      <div class="tenant-list">
+        ${tenants.map(tenant => `
+          <div class="tenant-item">
+            <div class="tenant-info">
+              <div class="tenant-name">
+                ${tenant.name}
+                <span class="tenant-status ${tenant.status}">${tenant.status === 'active' ? '活跃' : tenant.status === 'trial' ? '试用' : '暂停'}</span>
+              </div>
+              <div class="tenant-id">ID: ${tenant.id} | 计划: ${tenant.plan} | 用户: ${tenant.users}/${tenant.quota.users}</div>
+            </div>
+            <div class="tenant-actions">
+              <button class="tenant-action-btn" onclick="viewTenant('${tenant.id}')">查看</button>
+              <button class="tenant-action-btn" onclick="editTenant('${tenant.id}')">编辑</button>
+              <button class="tenant-action-btn" onclick="manageTenantQuota('${tenant.id}')">配额</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// View Tenant Details
+function viewTenant(tenantId) {
+  const tenant = EnterpriseService.tenants.find(t => t.id === tenantId);
+  if (!tenant) return;
+  alert(`租户详情: ${tenant.name}\nID: ${tenant.id}\n状态: ${tenant.status}\n用户: ${tenant.users}\n工作流: ${tenant.workflows}`);
+}
+
+// Edit Tenant
+function editTenant(tenantId) {
+  const tenant = EnterpriseService.tenants.find(t => t.id === tenantId);
+  if (!tenant) return;
+  const newName = prompt('输入新租户名称:', tenant.name);
+  if (newName) {
+    tenant.name = newName;
+    switchEnterpriseTab('tenants');
+  }
+}
+
+// Manage Tenant Quota
+function manageTenantQuota(tenantId) {
+  const tenant = EnterpriseService.tenants.find(t => t.id === tenantId);
+  if (!tenant) return;
+  alert(`配额管理: ${tenant.name}\n工作流: ${tenant.usage.workflows}/${tenant.quota.workflows}\n用户: ${tenant.usage.users}/${tenant.quota.users}\n存储: ${tenant.usage.storage}GB/${tenant.quota.storage}GB`);
+}
+
+// Show Add Tenant Modal
+function showAddTenantModal() {
+  const name = prompt('输入新租户名称:');
+  if (name) {
+    const newTenant = {
+      id: 'tenant-' + Date.now(),
+      name: name,
+      status: 'trial',
+      plan: 'professional',
+      users: 0,
+      workflows: 0,
+      quota: { workflows: 50, users: 50, storage: 100 },
+      usage: { workflows: 0, users: 0, storage: 0 }
+    };
+    EnterpriseService.tenants.push(newTenant);
+    switchEnterpriseTab('tenants');
+  }
+}
+
+// Render User Directory
+function renderUserDirectory() {
+  const dir = EnterpriseService.userDirectory;
+  return `
+    <div class="enterprise-stats-grid">
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${dir.users.length}</div>
+        <div class="enterprise-stat-label">目录用户</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${dir.groups.length}</div>
+        <div class="enterprise-stat-label">用户组</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value success">${dir.users.filter(u => u.status === 'active').length}</div>
+        <div class="enterprise-stat-label">活跃用户</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${dir.ldapEnabled ? '已连接' : '未连接'}</div>
+        <div class="enterprise-stat-label">LDAP状态</div>
+      </div>
+    </div>
+    <div class="ldap-config-section" style="margin-bottom:16px;">
+      <div class="ldap-config-card">
+        <h4>🔌 LDAP/Active Directory 配置</h4>
+        <div class="ldap-form-row">
+          <label>服务器</label>
+          <input type="text" id="ldap-server" value="${dir.ldapServer}" placeholder="ldap://ldap.example.com">
+        </div>
+        <div class="ldap-form-row">
+          <label>端口</label>
+          <input type="text" id="ldap-port" value="${dir.ldapPort}" placeholder="389">
+        </div>
+        <div class="ldap-form-row">
+          <label>Base DN</label>
+          <input type="text" id="ldap-basedn" value="${dir.ldapBaseDN}" placeholder="dc=example,dc=com">
+        </div>
+        <div class="ldap-form-row">
+          <label>绑定 DN</label>
+          <input type="text" id="ldap-binddn" value="${dir.ldapBindDN}" placeholder="cn=admin,dc=example,dc=com">
+        </div>
+        <div class="ldap-form-row">
+          <label>使用SSL</label>
+          <input type="checkbox" id="ldap-ssl" ${dir.ldapUseSSL ? 'checked' : ''}>
+        </div>
+        <button class="ldap-test-btn" onclick="testLDAPConnection()">🔗 测试连接</button>
+      </div>
+      <div class="ldap-config-card">
+        <h4>🔄 同步设置</h4>
+        <div class="ldap-form-row">
+          <label>同步间隔</label>
+          <input type="text" id="ldap-interval" value="${dir.syncInterval}" placeholder="60"> 分钟
+        </div>
+        <div class="sync-status" style="margin-top:12px;">
+          <span class="sync-status-dot ${dir.lastSync ? '' : 'error'}"></span>
+          ${dir.lastSync ? '上次同步: ' + new Date(dir.lastSync).toLocaleString() : '从未同步'}
+        </div>
+        <button class="ldap-test-btn" style="margin-top:12px;" onclick="syncDirectoryNow()">🔄 立即同步</button>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">👥 用户目录</div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>用户</th>
+            <th>部门</th>
+            <th>组</th>
+            <th>状态</th>
+            <th>最后登录</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${dir.users.map(user => `
+            <tr>
+              <td>
+                <div class="user-name-cell">
+                  <span class="user-avatar">${user.displayName.charAt(0)}</span>
+                  <div>
+                    <div style="font-weight:500;">${user.displayName}</div>
+                    <div style="font-size:11px;color:var(--text-dim);">${user.email}</div>
+                  </div>
+                </div>
+              </td>
+              <td>${user.department}</td>
+              <td>
+                ${user.groups.map(g => `<span class="permission-badge">${g}</span>`).join(' ')}
+              </td>
+              <td><span class="tenant-status ${user.status === 'active' ? 'active' : 'suspended'}">${user.status === 'active' ? '活跃' : '停用'}</span></td>
+              <td style="font-size:12px;color:var(--text-dim);">${new Date(user.lastLogin).toLocaleDateString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">🔐 组权限映射</div>
+      <div class="group-permission-list">
+        ${dir.groups.map(group => {
+          const mapping = EnterpriseService.groupPermissions.find(p => p.group === group.name);
+          return `
+            <div class="group-permission-item">
+              <div class="group-name">${group.name} <span style="font-size:11px;color:var(--text-dim);">(${group.memberCount} 成员)</span></div>
+              <div class="group-permissions">
+                ${group.permissions.map(p => `<span class="permission-badge ${p === 'admin' ? 'admin' : p === 'write' ? 'write' : ''}">${p}</span>`).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// Test LDAP Connection
+function testLDAPConnection() {
+  const config = {
+    server: document.getElementById('ldap-server').value,
+    baseDN: document.getElementById('ldap-basedn').value
+  };
+  EnterpriseService.testLDAPConnection(config, (result) => {
+    alert(result.success ? '✅ ' + result.message : '❌ ' + result.message);
+  });
+}
+
+// Sync Directory Now
+function syncDirectoryNow() {
+  EnterpriseService.syncUserDirectory((result) => {
+    if (result.success) {
+      alert(`✅ 目录同步完成\n\n同步用户数: ${result.syncedUsers}`);
+      switchEnterpriseTab('directory');
+    }
+  });
+}
+
+// Render Quota Management
+function renderQuotaManagement() {
+  const tenant = EnterpriseService.tenants.find(t => t.id === EnterpriseService.currentTenant);
+  if (!tenant) return '<div class="enterprise-empty">未选择租户</div>';
+
+  const quotaItems = [
+    { name: '工作流', used: tenant.usage.workflows, total: tenant.quota.workflows, unit: '个' },
+    { name: '用户数', used: tenant.usage.users, total: tenant.quota.users, unit: '人' },
+    { name: '存储空间', used: tenant.usage.storage, total: tenant.quota.storage, unit: 'GB' }
+  ];
+
+  return `
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">📊 ${tenant.name} - 配额使用情况</div>
+      <div class="quota-grid">
+        ${quotaItems.map(item => {
+          const percent = Math.round((item.used / item.total) * 100);
+          const statusClass = percent > 90 ? 'danger' : percent > 70 ? 'warning' : '';
+          return `
+            <div class="quota-card">
+              <div class="quota-card-header">
+                <span class="quota-card-title">${item.name}</span>
+                <span class="quota-card-value">${item.used}/${item.total} ${item.unit}</span>
+              </div>
+              <div class="quota-progress">
+                <div class="quota-progress-bar ${statusClass}" style="width: ${percent}%"></div>
+              </div>
+              <div class="quota-detail">${percent}% 已使用，剩余 ${item.total - item.used} ${item.unit}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">⚙️ 调整配额</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="toolbar-btn" onclick="adjustQuota('workflows')">📝 调整工作流配额</button>
+        <button class="toolbar-btn" onclick="adjustQuota('users')">👥 调整用户配额</button>
+        <button class="toolbar-btn" onclick="adjustQuota('storage')">💾 调整存储配额</button>
+        <button class="toolbar-btn" onclick="resetQuotaToDefault()">🔄 重置为默认</button>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">📋 所有租户配额概览</div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>租户</th>
+            <th>工作流</th>
+            <th>用户</th>
+            <th>存储</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${EnterpriseService.tenants.map(t => `
+            <tr>
+              <td>${t.name}</td>
+              <td>${t.usage.workflows}/${t.quota.workflows}</td>
+              <td>${t.usage.users}/${t.quota.users}</td>
+              <td>${t.usage.storage}/${t.quota.storage} GB</td>
+              <td><button class="tenant-action-btn" onclick="manageTenantQuota('${t.id}')">管理</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// Adjust Quota
+function adjustQuota(type) {
+  const tenant = EnterpriseService.tenants.find(t => t.id === EnterpriseService.currentTenant);
+  if (!tenant) return;
+  const current = tenant.quota[type];
+  const newQuota = prompt(`输入新的${type === 'workflows' ? '工作流' : type === 'users' ? '用户' : '存储'}配额 (当前: ${current}):`);
+  if (newQuota && !isNaN(newQuota)) {
+    tenant.quota[type] = parseInt(newQuota);
+    switchEnterpriseTab('quotas');
+  }
+}
+
+// Reset Quota to Default
+function resetQuotaToDefault() {
+  const tenant = EnterpriseService.tenants.find(t => t.id === EnterpriseService.currentTenant);
+  if (!tenant) return;
+  const defaults = { workflows: 50, users: 50, storage: 100 };
+  if (confirm('确定重置为默认配额?')) {
+    tenant.quota = { ...defaults };
+    switchEnterpriseTab('quotas');
+  }
+}
+
+// Render Usage Statistics
+function renderUsageStatistics() {
+  const daily = EnterpriseService.usageStats.daily;
+  const maxWorkflows = Math.max(...daily.map(d => d.workflows));
+  const maxUsers = Math.max(...daily.map(d => d.users));
+  const maxApiCalls = Math.max(...daily.map(d => d.apiCalls));
+
+  return `
+    <div class="enterprise-stats-grid">
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${daily[daily.length-1].workflows}</div>
+        <div class="enterprise-stat-label">今日工作流</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${daily[daily.length-1].users}</div>
+        <div class="enterprise-stat-label">活跃用户</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${(daily[daily.length-1].apiCalls / 1000).toFixed(1)}k</div>
+        <div class="enterprise-stat-label">API调用</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value success">${((daily[daily.length-1].workflows / daily[0].workflows - 1) * 100).toFixed(1)}%</div>
+        <div class="enterprise-stat-label">周增长率</div>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">📈 每日使用趋势 (过去7天)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div>
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">工作流执行数</div>
+          <div class="usage-chart">
+            ${daily.map(d => `
+              <div class="usage-bar" style="height:${(d.workflows / maxWorkflows) * 100}%" title="${d.date}: ${d.workflows}">
+                <span class="usage-bar-label">${d.date}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">活跃用户数</div>
+          <div class="usage-chart">
+            ${daily.map(d => `
+              <div class="usage-bar" style="height:${(d.users / maxUsers) * 100}%;background:var(--success);" title="${d.date}: ${d.users}">
+                <span class="usage-bar-label">${d.date}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">API调用 (千次)</div>
+          <div class="usage-chart">
+            ${daily.map(d => `
+              <div class="usage-bar" style="height:${(d.apiCalls / maxApiCalls) * 100}%;background:var(--warning);" title="${d.date}: ${d.apiCalls}">
+                <span class="usage-bar-label">${d.date}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">📊 月度统计</div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>月份</th>
+            <th>工作流执行</th>
+            <th>活跃用户</th>
+            <th>API调用</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${EnterpriseService.usageStats.monthly.map(m => `
+            <tr>
+              <td>${m.month} 2026</td>
+              <td>${m.workflows.toLocaleString()}</td>
+              <td>${m.users}</td>
+              <td>${(m.apiCalls / 1000).toFixed(0)}k</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// Render Security Policies
+function renderSecurityPolicies() {
+  const policy = EnterpriseService.securityPolicies;
+  return `
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">🔒 密码策略</div>
+      <div class="security-policy-grid">
+        <div class="security-policy-item">
+          <div>
+            <div class="security-policy-name">最小密码长度</div>
+            <div class="security-policy-desc">要求至少 ${policy.passwordMinLength} 个字符</div>
+          </div>
+          <input type="number" value="${policy.passwordMinLength}" style="width:60px;padding:4px 8px;background:var(--bg-dark);border:1px solid var(--border);border-radius:4px;color:var(--text);" onchange="updateSecurityPolicy('passwordMinLength', parseInt(this.value))">
+        </div>
+        <div class="security-policy-item">
+          <div>
+            <div class="security-policy-name">特殊字符要求</div>
+            <div class="security-policy-desc">密码必须包含特殊字符</div>
+          </div>
+          <input type="checkbox" ${policy.passwordRequireSpecial ? 'checked' : ''} onchange="updateSecurityPolicy('passwordRequireSpecial', this.checked)">
+        </div>
+        <div class="security-policy-item">
+          <div>
+            <div class="security-policy-name">数字要求</div>
+            <div class="security-policy-desc">密码必须包含数字</div>
+          </div>
+          <input type="checkbox" ${policy.passwordRequireNumber ? 'checked' : ''} onchange="updateSecurityPolicy('passwordRequireNumber', this.checked)">
+        </div>
+        <div class="security-policy-item">
+          <div>
+            <div class="security-policy-name">密码过期</div>
+            <div class="security-policy-desc">${policy.passwordExpiryDays}天后过期</div>
+          </div>
+          <input type="number" value="${policy.passwordExpiryDays}" style="width:60px;padding:4px 8px;background:var(--bg-dark);border:1px solid var(--border);border-radius:4px;color:var(--text);" onchange="updateSecurityPolicy('passwordExpiryDays', parseInt(this.value))">
+        </div>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">🔐 认证策略</div>
+      <div class="security-policy-grid">
+        <div class="security-policy-item">
+          <div>
+            <div class="security-policy-name">要求多因素认证</div>
+            <div class="security-policy-desc">所有用户必须启用MFA</div>
+          </div>
+          <input type="checkbox" ${policy.mfaRequired ? 'checked' : ''} onchange="updateSecurityPolicy('mfaRequired', this.checked)">
+        </div>
+        <div class="security-policy-item">
+          <div>
+            <div class="security-policy-name">会话超时</div>
+            <div class="security-policy-desc">${policy.sessionTimeoutMinutes}分钟无活动后登出</div>
+          </div>
+          <input type="number" value="${policy.sessionTimeoutMinutes}" style="width:60px;padding:4px 8px;background:var(--bg-dark);border:1px solid var(--border);border-radius:4px;color:var(--text);" onchange="updateSecurityPolicy('sessionTimeoutMinutes', parseInt(this.value))">
+        </div>
+        <div class="security-policy-item">
+          <div>
+            <div class="security-policy-name">IP白名单</div>
+            <div class="security-policy-desc">${policy.ipWhitelistEnabled ? '已启用' : '未启用'}</div>
+          </div>
+          <input type="checkbox" ${policy.ipWhitelistEnabled ? 'checked' : ''} onchange="updateSecurityPolicy('ipWhitelistEnabled', this.checked)">
+        </div>
+        <div class="security-policy-item">
+          <div>
+            <div class="security-policy-name">数据加密</div>
+            <div class="security-policy-desc">所有数据强制加密存储</div>
+          </div>
+          <input type="checkbox" ${policy.dataEncryptionEnabled ? 'checked' : ''} onchange="updateSecurityPolicy('dataEncryptionEnabled', this.checked)">
+        </div>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">📋 合规设置</div>
+      <div class="security-policy-item" style="margin-bottom:12px;">
+        <div>
+          <div class="security-policy-name">审计日志保留期</div>
+          <div class="security-policy-desc">日志保留 ${policy.auditRetentionDays} 天后自动删除</div>
+        </div>
+        <input type="number" value="${policy.auditRetentionDays}" style="width:80px;padding:4px 8px;background:var(--bg-dark);border:1px solid var(--border);border-radius:4px;color:var(--text);" onchange="updateSecurityPolicy('auditRetentionDays', parseInt(this.value))">
+      </div>
+      <div style="margin-top:12px;">
+        <button class="toolbar-btn" onclick="exportSecurityPolicies()">📥 导出策略</button>
+        <button class="toolbar-btn" onclick="resetSecurityPolicies()">🔄 重置为默认</button>
+      </div>
+    </div>
+  `;
+}
+
+// Update Security Policy
+function updateSecurityPolicy(key, value) {
+  EnterpriseService.securityPolicies[key] = value;
+}
+
+// Export Security Policies
+function exportSecurityPolicies() {
+  const policies = JSON.stringify(EnterpriseService.securityPolicies, null, 2);
+  const blob = new Blob([policies], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `security-policies-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Reset Security Policies
+function resetSecurityPolicies() {
+  if (confirm('确定重置所有安全策略为默认值?')) {
+    EnterpriseService.securityPolicies = {
+      passwordMinLength: 12,
+      passwordRequireSpecial: true,
+      passwordRequireNumber: true,
+      passwordExpiryDays: 90,
+      mfaRequired: true,
+      sessionTimeoutMinutes: 30,
+      ipWhitelistEnabled: false,
+      ipWhitelist: [],
+      auditRetentionDays: 365,
+      dataEncryptionEnabled: true,
+      twoFactorMethods: ['authenticator', 'sms', 'email']
+    };
+    switchEnterpriseTab('security');
+  }
+}
+
+// Render Billing Info
+function renderBillingInfo() {
+  const billing = EnterpriseService.billing;
+  return `
+    <div class="enterprise-stats-grid">
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">¥${billing.monthlyRate.toLocaleString()}</div>
+        <div class="enterprise-stat-label">月费</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${billing.currentPlan}</div>
+        <div class="enterprise-stat-label">当前计划</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value">${billing.currentPeriod.start} ~ ${billing.currentPeriod.end}</div>
+        <div class="enterprise-stat-label">当前周期</div>
+      </div>
+      <div class="enterprise-stat">
+        <div class="enterprise-stat-value success">${billing.invoices.filter(i => i.status === 'paid').length}</div>
+        <div class="enterprise-stat-label">已付款发票</div>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">💳 计费信息</div>
+      <div class="billing-info">
+        <div class="billing-card">
+          <div class="billing-card-title">基础月费</div>
+          <div class="billing-card-value">¥${billing.monthlyRate.toLocaleString()}</div>
+          <div class="billing-card-note">企业版套餐</div>
+        </div>
+        <div class="billing-card">
+          <div class="billing-card-title">当前周期费用</div>
+          <div class="billing-card-value">¥${billing.monthlyRate.toLocaleString()}</div>
+          <div class="billing-card-note">截止到 ${billing.currentPeriod.end}</div>
+        </div>
+      </div>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">📊 用量计费项</div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>计费项</th>
+            <th>单价</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>工作流执行</td>
+            <td>¥${billing.usageBasedFees.workflowExecutions}/次</td>
+          </tr>
+          <tr>
+            <td>存储空间</td>
+            <td>¥${billing.usageBasedFees.storagePerGB}/GB</td>
+          </tr>
+          <tr>
+            <td>API调用</td>
+            <td>¥${billing.usageBasedFees.apiCallsPer1000}/千次</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="enterprise-section">
+      <div class="enterprise-section-title">📄 发票历史</div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>发票号</th>
+            <th>日期</th>
+            <th>金额</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${billing.invoices.map(inv => `
+            <tr>
+              <td>${inv.id}</td>
+              <td>${inv.date}</td>
+              <td>¥${inv.amount.toLocaleString()}</td>
+              <td><span class="tenant-status ${inv.status === 'paid' ? 'active' : 'suspended'}">${inv.status === 'paid' ? '已付款' : '未付款'}</span></td>
+              <td><button class="tenant-action-btn" onclick="downloadInvoice('${inv.id}')">下载</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// Download Invoice
+function downloadInvoice(invoiceId) {
+  const invoice = EnterpriseService.billing.invoices.find(i => i.id === invoiceId);
+  if (!invoice) return;
+  alert(`下载发票 ${invoiceId}\n金额: ¥${invoice.amount}\n日期: ${invoice.date}`);
+}
+
+// Initialize Enterprise Service on DOM Ready
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('[Enterprise] Enterprise SSO + Multi-Tenancy v24 initialized');
+});
+
+// ============ End v24 Enterprise SSO + Multi-Tenancy ============
 
 // ============ v21 AI Assistant Chat ============
 
