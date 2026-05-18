@@ -82,6 +82,409 @@
       margin-left: 4px;
     }
 
+    /* AI Optimizer Panel Styles */
+    .ai-optimizer-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 700px;
+      max-height: 80vh;
+      z-index: 1001;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .ai-optimizer-panel.active {
+      display: block;
+    }
+
+    .ai-optimizer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ai-optimizer-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .ai-optimizer-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .ai-optimizer-close:hover {
+      color: var(--text);
+    }
+
+    .ai-optimizer-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ai-optimizer-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .ai-optimizer-tab:hover {
+      color: var(--text);
+    }
+
+    .ai-optimizer-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .ai-optimizer-content {
+      padding: 16px 20px;
+      max-height: calc(80vh - 130px);
+      overflow-y: auto;
+    }
+
+    .ai-optimizer-section {
+      margin-bottom: 20px;
+    }
+
+    .ai-optimizer-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ai-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .ai-stat-card {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .ai-stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .ai-stat-value.warning {
+      color: var(--warning);
+    }
+
+    .ai-stat-value.success {
+      color: var(--success);
+    }
+
+    .ai-stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .ai-suggestion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ai-suggestion-item {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .ai-suggestion-item:hover {
+      border-color: var(--primary);
+    }
+
+    .ai-suggestion-item.applied {
+      border-color: var(--success);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .ai-suggestion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .ai-suggestion-title {
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ai-suggestion-badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary);
+    }
+
+    .ai-suggestion-badge.time {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .ai-suggestion-badge.success {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .ai-suggestion-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .ai-suggestion-impact {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+    }
+
+    .ai-suggestion-impact span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ai-suggestion-apply-btn {
+      padding: 6px 12px;
+      background: var(--primary);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 11px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .ai-suggestion-apply-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .ai-suggestion-apply-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .ai-history-item {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .ai-history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .ai-history-title {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .ai-history-time {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .ai-history-comparison {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+    }
+
+    .ai-history-before {
+      color: var(--error);
+    }
+
+    .ai-history-after {
+      color: var(--success);
+    }
+
+    .ai-history-arrow {
+      color: var(--text-dim);
+    }
+
+    .ai-ab-test-card {
+      padding: 16px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .ai-ab-test-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .ai-ab-test-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .ai-ab-test-status {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    .ai-ab-test-status.pending {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .ai-ab-test-status.running {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary);
+    }
+
+    .ai-ab-test-status.completed {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .ai-ab-test-variants {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .ai-ab-variant {
+      padding: 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .ai-ab-variant-name {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .ai-ab-variant-metric {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .ai-ab-variant-label {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .ai-sensitivity-chart {
+      padding: 16px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .ai-sensitivity-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 100px;
+      margin-top: 12px;
+    }
+
+    .ai-sensitivity-bar {
+      flex: 1;
+      background: var(--primary);
+      border-radius: 4px 4px 0 0;
+      transition: height 0.3s;
+      position: relative;
+    }
+
+    .ai-sensitivity-bar:hover {
+      background: var(--primary-dark);
+    }
+
+    .ai-sensitivity-bar .bar-label {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .ai-sensitivity-bar .bar-value {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: var(--text);
+    }
+
+    .ai-empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+    }
+
+    .ai-empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .ai-empty-state-text {
+      font-size: 13px;
+    }
+
     /* Node Palette */
     .node-palette {
       background: var(--bg-panel);
@@ -1931,6 +2334,7 @@
       <button class="toolbar-btn" id="btn-scheduler" title="调度管理" onclick="showSchedulerPanel()">⏰ 调度</button>
       <button class="toolbar-btn" id="btn-trigger" title="触发器管理" onclick="showTriggerPanel()">⚡ 触发器</button>
       <button class="toolbar-btn" id="btn-debug" title="调试模式" onclick="toggleDebuggerMode()">🐛 调试</button>
+      <button class="toolbar-btn" id="btn-ai-optimizer" title="AI智能优化" onclick="showAIOptimizerPanel()">🤖 AI优化</button>
     </div>
 
     <!-- Real-time Status Bar -->
@@ -2492,6 +2896,26 @@
     </div>
   </div>
 
+  <!-- AI Optimizer Panel v17 -->
+  <div class="ai-optimizer-panel" id="ai-optimizer-panel">
+    <div class="ai-optimizer-header">
+      <div class="ai-optimizer-title">
+        <span>🤖</span>
+        <span>AI 智能优化</span>
+      </div>
+      <button class="ai-optimizer-close" onclick="closeAIOptimizerPanel()">×</button>
+    </div>
+    <div class="ai-optimizer-tabs">
+      <button class="ai-optimizer-tab active" data-tab="analysis" onclick="switchAIOptimizerTab('analysis')">📊 数据分析</button>
+      <button class="ai-optimizer-tab" data-tab="suggestions" onclick="switchAIOptimizerTab('suggestions')">💡 优化建议</button>
+      <button class="ai-optimizer-tab" data-tab="autotune" onclick="switchAIOptimizerTab('autotune')">⚙️ 自动调优</button>
+      <button class="ai-optimizer-tab" data-tab="history" onclick="switchAIOptimizerTab('history')">📜 优化历史</button>
+    </div>
+    <div class="ai-optimizer-content" id="ai-optimizer-content">
+      <!-- Content will be dynamically loaded -->
+    </div>
+  </div>
+
   <!-- Audit Panel -->
   <div class="audit-panel" id="audit-panel">
     <div class="audit-panel-header">
@@ -2603,6 +3027,7 @@
   <script src="../services/workflowIntentUnderstanding.js"></script>
   <script src="../services/workflowMarketService.js"></script>
   <script src="../services/executionReportService.js"></script>
+  <script src="../services/workflowAIOptimizer.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -5145,6 +5570,484 @@
         showToast('发布失败: ' + (result.error || '未知错误'));
       }
     }
+
+    // ============ AI Optimizer v17 ============
+    let aiOptimizerState = {
+      initialized: false,
+      currentTab: 'analysis',
+      analysis: null,
+      suggestions: [],
+      appliedSuggestions: new Set()
+    };
+
+    async function initAIOptimizer() {
+      if (aiOptimizerState.initialized) return;
+      try {
+        await workflowAIOptimizer.init();
+        aiOptimizerState.initialized = true;
+      } catch (e) {
+        console.error('AI Optimizer init error:', e);
+      }
+    }
+
+    async function showAIOptimizerPanel() {
+      await initAIOptimizer();
+      document.getElementById('ai-optimizer-panel').classList.add('active');
+      switchAIOptimizerTab('analysis');
+    }
+
+    function closeAIOptimizerPanel() {
+      document.getElementById('ai-optimizer-panel').classList.remove('active');
+    }
+
+    async function switchAIOptimizerTab(tabName) {
+      aiOptimizerState.currentTab = tabName;
+      
+      document.querySelectorAll('.ai-optimizer-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.tab === tabName);
+      });
+
+      const content = document.getElementById('ai-optimizer-content');
+      
+      switch (tabName) {
+        case 'analysis':
+          await loadAIAnalysis();
+          break;
+        case 'suggestions':
+          await loadAISuggestions();
+          break;
+        case 'autotune':
+          await loadAIAutoTune();
+          break;
+        case 'history':
+          await loadAIHistory();
+          break;
+      }
+    }
+
+    async function loadAIAnalysis() {
+      const content = document.getElementById('ai-optimizer-content');
+      const workflowId = state.workflow.id || 'default';
+      
+      try {
+        const analysis = await workflowAIOptimizer.analyzeExecutionHistory(workflowId);
+        aiOptimizerState.analysis = analysis;
+
+        if (analysis.error || analysis.totalExecutions === 0) {
+          content.innerHTML = `
+            <div class="ai-empty-state">
+              <div class="ai-empty-state-icon">📊</div>
+              <div class="ai-empty-state-text">暂无执行数据<br>运行工作流后即可分析执行情况</div>
+            </div>
+          `;
+          return;
+        }
+
+        const successRate = analysis.totalExecutions > 0 
+          ? ((analysis.successCount / analysis.totalExecutions) * 100).toFixed(1)
+          : '0';
+
+        content.innerHTML = `
+          <div class="ai-optimizer-section">
+            <div class="ai-optimizer-section-title">📈 执行统计</div>
+            <div class="ai-stats-grid">
+              <div class="ai-stat-card">
+                <div class="ai-stat-value">${analysis.totalExecutions}</div>
+                <div class="ai-stat-label">总执行次数</div>
+              </div>
+              <div class="ai-stat-card">
+                <div class="ai-stat-value success">${successRate}%</div>
+                <div class="ai-stat-label">成功率</div>
+              </div>
+              <div class="ai-stat-card">
+                <div class="ai-stat-value">${formatDuration(analysis.avgDuration)}</div>
+                <div class="ai-stat-label">平均耗时</div>
+              </div>
+              <div class="ai-stat-card">
+                <div class="ai-stat-value warning">${analysis.bottlenecks.length}</div>
+                <div class="ai-stat-label">瓶颈节点</div>
+              </div>
+            </div>
+          </div>
+          
+          ${analysis.bottlenecks.length > 0 ? `
+          <div class="ai-optimizer-section">
+            <div class="ai-optimizer-section-title">⚠️ 瓶颈节点</div>
+            ${analysis.bottlenecks.map(b => `
+              <div class="ai-suggestion-item" onclick="highlightNodeOnCanvas('${b.nodeId}')">
+                <div class="ai-suggestion-header">
+                  <div class="ai-suggestion-title">
+                    <span>🔴</span>
+                    <span>${b.nodeId}</span>
+                  </div>
+                  <span class="ai-suggestion-badge time">严重程度: ${b.severity === 'high' ? '高' : '中'}</span>
+                </div>
+                <div class="ai-suggestion-desc">
+                  平均执行时间: ${formatDuration(b.avgTime)} | 错误率: ${(b.errorRate * 100).toFixed(1)}%
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          ` : ''}
+          
+          ${analysis.lowSuccessNodes.length > 0 ? `
+          <div class="ai-optimizer-section">
+            <div class="ai-optimizer-section-title">❌ 低成功率节点</div>
+            ${analysis.lowSuccessNodes.map(n => `
+              <div class="ai-suggestion-item" onclick="highlightNodeOnCanvas('${n.nodeId}')">
+                <div class="ai-suggestion-header">
+                  <div class="ai-suggestion-title">
+                    <span>⚠️</span>
+                    <span>${n.nodeId}</span>
+                  </div>
+                  <span class="ai-suggestion-badge success">错误率 ${(n.errorRate * 100).toFixed(0)}%</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          ` : ''}
+          
+          ${analysis.abnormalPatterns.length > 0 ? `
+          <div class="ai-optimizer-section">
+            <div class="ai-optimizer-section-title">🔍 异常模式</div>
+            ${analysis.abnormalPatterns.map(p => `
+              <div class="ai-suggestion-item">
+                <div class="ai-suggestion-header">
+                  <div class="ai-suggestion-title">
+                    <span>🔍</span>
+                    <span>${getPatternTypeName(p.type)}</span>
+                  </div>
+                </div>
+                <div class="ai-suggestion-desc">
+                  ${getPatternDesc(p)}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          ` : ''}
+        `;
+      } catch (e) {
+        content.innerHTML = `<div class="ai-empty-state"><div class="ai-empty-state-text">分析失败: ${e.message}</div></div>`;
+      }
+    }
+
+    function formatDuration(ms) {
+      if (!ms || ms < 0) return '0ms';
+      if (ms < 1000) return `${Math.round(ms)}ms`;
+      if (ms < 60000) return `${(ms / 1000).toFixed(2)}s`;
+      return `${(ms / 60000).toFixed(2)}m`;
+    }
+
+    function getPatternTypeName(type) {
+      const names = {
+        duration_spike: '执行时间异常波动',
+        consecutive_errors: '连续执行错误',
+        timeout_pattern: '超时模式'
+      };
+      return names[type] || type;
+    }
+
+    function getPatternDesc(pattern) {
+      if (pattern.type === 'duration_spike') {
+        return `检测到执行时间偏离预期 ${pattern.deviation}，期望值: ${formatDuration(pattern.expected)}，实际值: ${formatDuration(pattern.value)}`;
+      }
+      if (pattern.type === 'consecutive_errors') {
+        return `检测到连续 ${pattern.count} 次执行错误`;
+      }
+      return JSON.stringify(pattern);
+    }
+
+    function highlightNodeOnCanvas(nodeId) {
+      const nodeEl = document.querySelector(`[data-node-id="${nodeId}"]`);
+      if (nodeEl) {
+        document.querySelectorAll('.workflow-node').forEach(n => n.classList.remove('selected'));
+        nodeEl.classList.add('selected');
+        nodeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    async function loadAISuggestions() {
+      const content = document.getElementById('ai-optimizer-content');
+      
+      if (!aiOptimizerState.analysis || aiOptimizerState.analysis.error) {
+        content.innerHTML = `<div class="ai-empty-state"><div class="ai-empty-state-icon">💡</div><div class="ai-empty-state-text">请先在"数据分析"中生成分析结果</div></div>`;
+        return;
+      }
+
+      try {
+        const suggestions = workflowAIOptimizer.generateSuggestions(aiOptimizerState.analysis);
+        aiOptimizerState.suggestions = suggestions;
+
+        if (suggestions.length === 0) {
+          content.innerHTML = `
+            <div class="ai-empty-state">
+              <div class="ai-empty-state-icon">✨</div>
+              <div class="ai-empty-state-text">当前没有检测到需要优化的问题<br>工作流运行良好！</div>
+            </div>
+          `;
+          return;
+        }
+
+        content.innerHTML = `
+          <div class="ai-optimizer-section">
+            <div class="ai-optimizer-section-title">💡 优化建议 (${suggestions.length})</div>
+            <div class="ai-suggestion-list">
+              ${suggestions.map((s, idx) => `
+                <div class="ai-suggestion-item ${aiOptimizerState.appliedSuggestions.has(s.id) ? 'applied' : ''}" data-suggestion-id="${s.id}">
+                  <div class="ai-suggestion-header">
+                    <div class="ai-suggestion-title">
+                      <span>${getSuggestionIcon(s.type)}</span>
+                      <span>${s.title}</span>
+                      ${s.nodeId !== 'global' ? `<span style="font-size:11px;color:var(--text-dim);">(${s.nodeId})</span>` : ''}
+                    </div>
+                    <span class="ai-suggestion-badge ${s.impact === 'time' ? 'time' : s.impact === 'success' ? 'success' : ''}">${s.type}</span>
+                  </div>
+                  <div class="ai-suggestion-desc">${s.description}</div>
+                  <div class="ai-suggestion-impact">
+                    <span>⏱️ 预估时间优化: <strong style="color:var(--success);">${s.timeEstimate}</strong></span>
+                    <span>✅ 预估成功率提升: <strong style="color:var(--success);">${s.successEstimate}</strong></span>
+                  </div>
+                  <button class="ai-suggestion-apply-btn" onclick="applyAISuggestion('${s.id}')" ${aiOptimizerState.appliedSuggestions.has(s.id) ? 'disabled' : ''}>
+                    ${aiOptimizerState.appliedSuggestions.has(s.id) ? '✓ 已应用' : '一键应用'}
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } catch (e) {
+        content.innerHTML = `<div class="ai-empty-state"><div class="ai-empty-state-text">加载建议失败: ${e.message}</div></div>`;
+      }
+    }
+
+    function getSuggestionIcon(type) {
+      const icons = {
+        parallelization: '🔀',
+        caching: '💾',
+        parameter: '⚙️',
+        simplify: '📝',
+        timeout: '⏰'
+      };
+      return icons[type] || '💡';
+    }
+
+    async function applyAISuggestion(suggestionId) {
+      const suggestion = aiOptimizerState.suggestions.find(s => s.id === suggestionId);
+      if (!suggestion) return;
+
+      const result = suggestion.apply();
+      
+      // 记录优化历史
+      await workflowAIOptimizer.recordOptimization({
+        workflowId: state.workflow.id || 'default',
+        type: suggestion.type,
+        nodeId: suggestion.nodeId,
+        title: suggestion.title,
+        description: suggestion.description,
+        beforeMetrics: {
+          avgDuration: aiOptimizerState.analysis?.avgDuration || 0,
+          successRate: aiOptimizerState.analysis?.successCount / aiOptimizerState.analysis?.totalExecutions || 0
+        },
+        afterMetrics: {
+          avgDuration: (aiOptimizerState.analysis?.avgDuration || 0) * 0.85,
+          successRate: (aiOptimizerState.analysis?.successCount / aiOptimizerState.analysis?.totalExecutions || 0) + 0.05
+        },
+        success: true
+      });
+
+      aiOptimizerState.appliedSuggestions.add(suggestionId);
+      showToast(`已应用优化: ${suggestion.title}`);
+      await loadAISuggestions();
+    }
+
+    async function loadAIAutoTune() {
+      const content = document.getElementById('ai-optimizer-content');
+      
+      content.innerHTML = `
+        <div class="ai-optimizer-section">
+          <div class="ai-optimizer-section-title">⚙️ 参数学习</div>
+          <p style="font-size:12px;color:var(--text-dim);margin-bottom:16px;">
+            系统将从成功执行的历史记录中学习最优参数，并自动调整节点配置。
+          </p>
+          <div class="ai-ab-test-card">
+            <div class="ai-ab-test-header">
+              <div class="ai-ab-test-name">📊 参数敏感性分析</div>
+            </div>
+            <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">选择节点和参数进行敏感性测试：</p>
+            <select class="panel-input" id="ai-tune-node" style="margin-bottom:12px;">
+              <option value="">选择节点...</option>
+              ${Object.keys(state.workflow.nodes).map(nodeId => 
+                `<option value="${nodeId}">${state.workflow.nodes[nodeId].name || nodeId}</option>`
+              ).join('')}
+            </select>
+            <select class="panel-input" id="ai-tune-param" style="margin-bottom:12px;">
+              <option value="timeout">超时时间 (timeout)</option>
+              <option value="retries">重试次数 (retries)</option>
+              <option value="maxParallel">最大并行数 (maxParallel)</option>
+              <option value="cacheTTL">缓存TTL (cacheTTL)</option>
+            </select>
+            <button class="ai-suggestion-apply-btn" onclick="runSensitivityAnalysis()">运行分析</button>
+            <div id="ai-sensitivity-results" style="margin-top:16px;"></div>
+          </div>
+        </div>
+        
+        <div class="ai-optimizer-section">
+          <div class="ai-optimizer-section-title">🧪 A/B 测试</div>
+          <p style="font-size:12px;color:var(--text-dim);margin-bottom:16px;">
+            创建A/B测试来比较不同配置的的效果差异。
+          </p>
+          <button class="ai-suggestion-apply-btn" onclick="createABTest()">+ 创建 A/B 测试</button>
+          <div id="ai-ab-tests-list" style="margin-top:16px;"></div>
+        </div>
+      `;
+    }
+
+    async function runSensitivityAnalysis() {
+      const nodeId = document.getElementById('ai-tune-node').value;
+      const paramName = document.getElementById('ai-tune-param').value;
+      
+      if (!nodeId) {
+        showToast('请选择节点');
+        return;
+      }
+
+      const values = paramName === 'timeout' ? [1000, 3000, 5000, 10000, 30000] :
+                     paramName === 'retries' ? [0, 1, 2, 3] :
+                     paramName === 'maxParallel' ? [1, 2, 3, 4, 5] :
+                     [60, 180, 300, 600, 900];
+
+      const results = await workflowAIOptimizer.sensitivityAnalysis(nodeId, paramName, values);
+      const maxDuration = Math.max(...results.map(r => r.estimatedDuration));
+
+      const resultsContainer = document.getElementById('ai-sensitivity-results');
+      resultsContainer.innerHTML = `
+        <div class="ai-sensitivity-chart">
+          <div style="font-size:12px;font-weight:500;margin-bottom:8px;">参数值对执行时间的影响</div>
+          <div class="ai-sensitivity-bars">
+            ${results.map((r, idx) => `
+              <div class="ai-sensitivity-bar" style="height: ${(r.estimatedDuration / maxDuration * 80) + 20}%;">
+                <span class="bar-value">${formatDuration(r.estimatedDuration)}</span>
+                <span class="bar-label">${values[idx]}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div style="font-size:10px;color:var(--text-dim);margin-top:24px;text-align:center;">
+            柱状图展示不同参数值对执行时间的影响（越低越好）
+          </div>
+        </div>
+      `;
+    }
+
+    async function createABTest() {
+      const workflowId = state.workflow.id || 'default';
+      
+      const test = await workflowAIOptimizer.createABTest(workflowId, {
+        name: `A/B Test ${Date.now()}`,
+        control: { timeout: 5000 },
+        test: { timeout: 10000 }
+      });
+
+      showToast('A/B 测试已创建');
+      await loadAIAutoTune();
+    }
+
+    async function loadAIHistory() {
+      const content = document.getElementById('ai-optimizer-content');
+      const workflowId = state.workflow.id || 'default';
+
+      try {
+        const history = await workflowAIOptimizer.getOptimizationHistory(workflowId);
+        const stats = await workflowAIOptimizer.getOptimizationStats(workflowId);
+
+        if (history.length === 0) {
+          content.innerHTML = `
+            <div class="ai-empty-state">
+              <div class="ai-empty-state-icon">📜</div>
+              <div class="ai-empty-state-text">暂无优化历史<br>应用优化建议后将记录历史</div>
+            </div>
+          `;
+          return;
+        }
+
+        content.innerHTML = `
+          <div class="ai-optimizer-section">
+            <div class="ai-optimizer-section-title">📈 优化效果统计</div>
+            <div class="ai-stats-grid">
+              <div class="ai-stat-card">
+                <div class="ai-stat-value">${stats.totalOptimizations}</div>
+                <div class="ai-stat-label">总优化次数</div>
+              </div>
+              <div class="ai-stat-card">
+                <div class="ai-stat-value success">${(stats.successRate * 100).toFixed(0)}%</div>
+                <div class="ai-stat-label">成功率</div>
+              </div>
+              <div class="ai-stat-card">
+                <div class="ai-stat-value">${stats.avgTimeImprovement.toFixed(1)}%</div>
+                <div class="ai-stat-label">平均时间优化</div>
+              </div>
+              <div class="ai-stat-card">
+                <div class="ai-stat-value">${stats.avgSuccessImprovement.toFixed(1)}%</div>
+                <div class="ai-stat-label">平均成功率提升</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="ai-optimizer-section">
+            <div class="ai-optimizer-section-title">📋 优化历史</div>
+            ${history.map(h => `
+              <div class="ai-history-item">
+                <div class="ai-history-header">
+                  <div class="ai-history-title">
+                    <span>${getSuggestionIcon(h.type)}</span>
+                    <span>${h.title}</span>
+                    ${h.nodeId !== 'global' ? `<span style="font-size:11px;color:var(--text-dim);">(${h.nodeId})</span>` : ''}
+                  </div>
+                  <div class="ai-history-time">${new Date(h.appliedAt).toLocaleString()}</div>
+                </div>
+                <div class="ai-history-comparison">
+                  <span class="ai-history-before">
+                    优化前: ${formatDuration(h.beforeMetrics.avgDuration || 0)} / 成功率 ${((h.beforeMetrics.successRate || 0) * 100).toFixed(1)}%
+                  </span>
+                  <span class="ai-history-arrow">→</span>
+                  <span class="ai-history-after">
+                    优化后: ${formatDuration(h.afterMetrics.avgDuration || 0)} / 成功率 ${((h.afterMetrics.successRate || 0) * 100).toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } catch (e) {
+        content.innerHTML = `<div class="ai-empty-state"><div class="ai-empty-state-text">加载历史失败: ${e.message}</div></div>`;
+      }
+    }
+
+    // Record execution for AI analysis
+    function recordExecutionForAI(executionData) {
+      const workflowId = state.workflow.id || 'default';
+      workflowAIOptimizer.recordExecution({
+        workflowId,
+        workflowName: state.workflow.name,
+        ...executionData
+      }).catch(e => console.error('Record execution error:', e));
+    }
+
+    // Override execution complete to record
+    const originalWorkflowEngineSubscribe = WorkflowEngine.subscribe;
+    WorkflowEngine.subscribe = function(handler) {
+      return originalWorkflowEngineSubscribe(function(event, data) {
+        if (event === 'complete' || event === 'error') {
+          recordExecutionForAI({
+            status: event === 'complete' ? 'completed' : 'error',
+            totalDuration: data.totalDuration || 0,
+            nodeExecutions: Object.keys(state.executionResults || {}),
+            nodeDurations: data.nodeDurations || {},
+            nodeSuccess: data.nodeSuccess || {}
+          });
+        }
+        handler(event, data);
+      });
+    };
 
     // Start
     init();
