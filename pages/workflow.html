@@ -386,6 +386,106 @@
     .workflow-node.error { border-color: var(--error); }
     .workflow-node.disabled { opacity: 0.5; }
 
+    /* Report Modal Styles */
+    .report-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .report-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .report-tab:hover { color: var(--text); }
+    .report-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .report-tab-content { }
+    .report-history-toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .report-history-toolbar .panel-input { flex: 1; }
+    .report-history-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .report-history-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .report-history-item:hover { border-color: var(--primary); }
+    .report-history-item.selected { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+    .report-history-icon { font-size: 24px; }
+    .report-history-info { flex: 1; }
+    .report-history-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .report-history-meta { font-size: 11px; color: var(--text-dim); }
+    .report-history-status { padding: 4px 8px; border-radius: 4px; font-size: 11px; }
+    .report-history-status.completed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .report-history-status.error { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+    .report-template-selector { display: flex; flex-direction: column; gap: 8px; }
+    .report-template-option {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .report-template-option:hover { border-color: var(--primary); }
+    .report-template-option.selected { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+    .report-template-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .report-template-desc { font-size: 12px; color: var(--text-dim); }
+    .report-export-options { display: flex; gap: 16px; }
+    .report-export-option { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; }
+    .report-compare-selectors { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .report-compare-column { flex: 1; }
+    .report-compare-arrow { font-size: 24px; color: var(--text-dim); }
+    .report-compare-info { margin-top: 8px; padding: 8px; background: var(--bg-node); border-radius: 4px; font-size: 12px; color: var(--text-dim); }
+    .report-compare-summary { padding: 16px; background: var(--bg-node); border-radius: 8px; margin-bottom: 16px; }
+    .report-templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .report-preset-template {
+      padding: 16px;
+      background: var(--bg-node);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .report-preset-template:hover { border-color: var(--primary); }
+    .report-preset-icon { font-size: 32px; margin-bottom: 8px; }
+    .report-preset-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .report-preset-desc { font-size: 11px; color: var(--text-dim); }
+    .report-favorites-section { margin-top: 16px; }
+    .report-favorites-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .report-favorite-item {
+      padding: 8px 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .report-favorite-item:hover { border-color: var(--primary); }
+    .report-preview { margin-top: 16px; padding: 16px; background: var(--bg-dark); border-radius: 8px; max-height: 500px; overflow-y: auto; }
+    .report-viewer-toolbar { display: flex; gap: 8px; align-items: center; }
+
     @keyframes pulse {
       0%, 100% { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3); }
       50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.1); }
@@ -1825,6 +1925,7 @@
       <button class="toolbar-btn" id="btn-branch" title="分支管理" onclick="showBranchPanel()">🌿 分支</button>
       <button class="toolbar-btn" id="btn-share" title="分享工作流" onclick="showShareModal()">🔗 分享</button>
       <button class="toolbar-btn" id="btn-marketplace" title="发布到市场" onclick="showPublishModal()">🌐 市场</button>
+      <button class="toolbar-btn" id="btn-report" title="执行报告" onclick="showReportModal()">📈 报告</button>
       <button class="toolbar-btn" id="btn-collab" title="协作状态" onclick="showAuditPanel()">👥 协作</button>
       <button class="toolbar-btn" id="btn-chat" title="对话编辑" onclick="toggleChatPanel()">💬 对话</button>
       <button class="toolbar-btn" id="btn-scheduler" title="调度管理" onclick="showSchedulerPanel()">⏰ 调度</button>
@@ -2253,6 +2354,144 @@
     </div>
   </div>
 
+  <!-- Execution Report Modal -->
+  <div class="modal-overlay" id="report-modal">
+    <div class="modal" style="width:900px;max-height:90vh;">
+      <div class="modal-header">
+        <span>📈 执行报告</span>
+        <button class="modal-close" onclick="closeModal('report-modal')">×</button>
+      </div>
+      <div class="modal-body" style="overflow-y:auto;max-height:calc(90vh - 60px);">
+        <!-- Report Tabs -->
+        <div class="report-tabs">
+          <button class="report-tab active" data-tab="history" onclick="switchReportTab('history')">📋 执行历史</button>
+          <button class="report-tab" data-tab="generate" onclick="switchReportTab('generate')">⚡ 生成报告</button>
+          <button class="report-tab" data-tab="compare" onclick="switchReportTab('compare')">🔄 执行对比</button>
+          <button class="report-tab" data-tab="templates" onclick="switchReportTab('templates')">📑 模板管理</button>
+        </div>
+
+        <!-- History Tab -->
+        <div class="report-tab-content" id="report-tab-history">
+          <div class="report-history-toolbar">
+            <input type="text" class="panel-input" id="report-history-search" placeholder="搜索执行记录..." oninput="filterReportHistory()">
+            <select class="panel-input" id="report-history-filter" onchange="filterReportHistory()">
+              <option value="all">全部状态</option>
+              <option value="completed">仅成功</option>
+              <option value="error">仅失败</option>
+            </select>
+          </div>
+          <div class="report-history-list" id="report-history-list"></div>
+        </div>
+
+        <!-- Generate Tab -->
+        <div class="report-tab-content" id="report-tab-generate" style="display:none;">
+          <div class="report-generate-form">
+            <div class="panel-section">
+              <label class="panel-label">选择执行记录</label>
+              <select class="panel-input" id="report-execution-select"></select>
+            </div>
+            <div class="panel-section">
+              <label class="panel-label">报告模板</label>
+              <div class="report-template-selector">
+                <div class="report-template-option selected" data-template="simple" onclick="selectReportTemplate('simple')">
+                  <div class="report-template-name">简洁报告</div>
+                  <div class="report-template-desc">基本信息：状态、总耗时、节点数量</div>
+                </div>
+                <div class="report-template-option" data-template="detailed" onclick="selectReportTemplate('detailed')">
+                  <div class="report-template-name">详细报告</div>
+                  <div class="report-template-desc">完整信息：变量变化、数据吞吐量、性能分析</div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-section">
+              <label class="panel-label">导出格式</label>
+              <div class="report-export-options">
+                <label class="report-export-option"><input type="checkbox" value="html" checked> HTML</label>
+                <label class="report-export-option"><input type="checkbox" value="json"> JSON</label>
+                <label class="report-export-option"><input type="checkbox" value="pdf"> PDF</label>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+              <button class="btn-small" onclick="previewReport()">👁 预览</button>
+              <button class="btn-small primary" onclick="generateReport()">⚡ 生成报告</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compare Tab -->
+        <div class="report-tab-content" id="report-tab-compare" style="display:none;">
+          <div class="report-compare-form">
+            <div class="report-compare-selectors">
+              <div class="report-compare-column">
+                <label class="panel-label">执行记录 1</label>
+                <select class="panel-input" id="report-compare-select1"></select>
+                <div class="report-compare-info" id="report-compare-info1"></div>
+              </div>
+              <div class="report-compare-arrow">⇄</div>
+              <div class="report-compare-column">
+                <label class="panel-label">执行记录 2</label>
+                <select class="panel-input" id="report-compare-select2"></select>
+                <div class="report-compare-info" id="report-compare-info2"></div>
+              </div>
+            </div>
+            <div class="report-compare-summary" id="report-compare-summary"></div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+              <button class="btn-small primary" onclick="generateComparisonReport()">🔄 生成对比报告</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Templates Tab -->
+        <div class="report-tab-content" id="report-tab-templates" style="display:none;">
+          <div class="report-templates-grid">
+            <div class="report-preset-template" data-template="simple" onclick="selectReportTemplateForSave('simple')">
+              <div class="report-preset-icon">📄</div>
+              <div class="report-preset-name">简洁模板</div>
+              <div class="report-preset-desc">基本信息</div>
+            </div>
+            <div class="report-preset-template" data-template="detailed" onclick="selectReportTemplateForSave('detailed')">
+              <div class="report-preset-icon">📑</div>
+              <div class="report-preset-name">详细模板</div>
+              <div class="report-preset-desc">完整信息</div>
+            </div>
+            <div class="report-preset-template" data-template="comparison" onclick="selectReportTemplateForSave('comparison')">
+              <div class="report-preset-icon">🔄</div>
+              <div class="report-preset-name">对比模板</div>
+              <div class="report-preset-desc">执行对比</div>
+            </div>
+          </div>
+          <div class="panel-section" style="margin-top:16px;">
+            <label class="panel-label">自定义封面</label>
+            <input type="text" class="panel-input" id="report-custom-cover" placeholder="输入自定义封面标题">
+          </div>
+          <div class="report-favorites-section">
+            <div class="panel-label">收藏模板</div>
+            <div class="report-favorites-list" id="report-favorites-list"></div>
+          </div>
+        </div>
+
+        <!-- Report Preview -->
+        <div class="report-preview" id="report-preview" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Viewer Modal -->
+  <div class="modal-overlay" id="report-viewer-modal">
+    <div class="modal" style="width:95vw;height:95vh;max-width:1400px;">
+      <div class="modal-header">
+        <span>📊 报告详情</span>
+        <div class="report-viewer-toolbar">
+          <button class="btn-small" onclick="exportCurrentReport('html')">📥 HTML</button>
+          <button class="btn-small" onclick="exportCurrentReport('json')">📥 JSON</button>
+          <button class="btn-small" onclick="exportCurrentReport('pdf')">🖨 PDF</button>
+          <button class="modal-close" onclick="closeModal('report-viewer-modal')">×</button>
+        </div>
+      </div>
+      <div class="modal-body" id="report-viewer-content" style="overflow-y:auto;height:calc(100vh - 120px);"></div>
+    </div>
+  </div>
+
   <!-- Audit Panel -->
   <div class="audit-panel" id="audit-panel">
     <div class="audit-panel-header">
@@ -2363,6 +2602,7 @@
   <script src="../services/workflowDebuggerUI.js"></script>
   <script src="../services/workflowIntentUnderstanding.js"></script>
   <script src="../services/workflowMarketService.js"></script>
+  <script src="../services/executionReportService.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -4486,6 +4726,376 @@
     function createNewWorkflowFromList() {
       toggleWorkflowListPanel();
       newWorkflow();
+    }
+
+    // ============ Execution Report v16 ============
+    let executionReportService;
+    let reportState = {
+      currentTemplate: 'detailed',
+      selectedExecutionId: null,
+      compareExecutionId1: null,
+      compareExecutionId2: null,
+      currentReport: null,
+      favoriteTemplates: []
+    };
+
+    function initReportService() {
+      if (!executionReportService) {
+        executionReportService = new ExecutionReportService();
+      }
+      return executionReportService;
+    }
+
+    function showReportModal() {
+      initReportService();
+      openModal('report-modal');
+      loadReportHistory();
+      loadReportFavorites();
+      switchReportTab('history');
+    }
+
+    function switchReportTab(tabName) {
+      document.querySelectorAll('.report-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.tab === tabName);
+      });
+      document.querySelectorAll('.report-tab-content').forEach(content => {
+        content.style.display = 'none';
+      });
+      const targetContent = document.getElementById('report-tab-' + tabName);
+      if (targetContent) {
+        targetContent.style.display = 'block';
+      }
+      if (tabName === 'generate') {
+        populateExecutionSelect();
+      } else if (tabName === 'compare') {
+        populateCompareSelects();
+      }
+    }
+
+    async function loadReportHistory() {
+      const container = document.getElementById('report-history-list');
+      if (!container) return;
+      
+      try {
+        const history = await WorkflowHistory.getExecutionHistory(50);
+        if (history.length === 0) {
+          container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim);">暂无执行记录</div>';
+          return;
+        }
+        
+        let html = '';
+        history.forEach(record => {
+          const timeStr = new Date(record.timestamp).toLocaleString('zh-CN');
+          const durationStr = formatReportDuration(record.totalDuration || 0);
+          html += `
+            <div class="report-history-item" data-id="${record.id}" onclick="selectReportHistoryItem(${record.id})">
+              <div class="report-history-icon">${record.status === 'completed' ? '✅' : '❌'}</div>
+              <div class="report-history-info">
+                <div class="report-history-name">${escHtml(record.workflowName || '未命名工作流')}</div>
+                <div class="report-history-meta">${timeStr} · ${durationStr} · ${record.nodeStats?.length || 0} 节点</div>
+              </div>
+              <span class="report-history-status ${record.status}">${record.status === 'completed' ? '成功' : '失败'}</span>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      } catch (e) {
+        container.innerHTML = '<div style="color:var(--error);padding:20px;">加载失败: ' + e.message + '</div>';
+      }
+    }
+
+    function filterReportHistory() {
+      const searchText = document.getElementById('report-history-search')?.value?.toLowerCase() || '';
+      const filterStatus = document.getElementById('report-history-filter')?.value || 'all';
+      const items = document.querySelectorAll('.report-history-item');
+      
+      items.forEach(item => {
+        const name = item.querySelector('.report-history-name')?.textContent?.toLowerCase() || '';
+        const status = item.querySelector('.report-history-status')?.classList.contains('completed') ? 'completed' : 'error';
+        const matchesSearch = name.includes(searchText);
+        const matchesFilter = filterStatus === 'all' || status === filterStatus;
+        item.style.display = matchesSearch && matchesFilter ? 'flex' : 'none';
+      });
+    }
+
+    async function selectReportHistoryItem(id) {
+      reportState.selectedExecutionId = id;
+      document.querySelectorAll('.report-history-item').forEach(item => {
+        item.classList.toggle('selected', parseInt(item.dataset.id) === id);
+      });
+    }
+
+    async function populateExecutionSelect() {
+      const select = document.getElementById('report-execution-select');
+      if (!select) return;
+      
+      try {
+        const history = await WorkflowHistory.getExecutionHistory(50);
+        let html = '<option value="">-- 选择执行记录 --</option>';
+        history.forEach(record => {
+          const timeStr = new Date(record.timestamp).toLocaleString('zh-CN');
+          html += `<option value="${record.id}">${record.workflowName || '未命名'} - ${timeStr} [${record.status}]</option>`;
+        });
+        select.innerHTML = html;
+      } catch (e) {
+        select.innerHTML = '<option value="">加载失败</option>';
+      }
+    }
+
+    async function populateCompareSelects() {
+      const select1 = document.getElementById('report-compare-select1');
+      const select2 = document.getElementById('report-compare-select2');
+      if (!select1 || !select2) return;
+      
+      try {
+        const history = await WorkflowHistory.getExecutionHistory(50);
+        let html = '<option value="">-- 选择执行记录 --</option>';
+        history.forEach(record => {
+          const timeStr = new Date(record.timestamp).toLocaleString('zh-CN');
+          html += `<option value="${record.id}">${record.workflowName || '未命名'} - ${timeStr}</option>`;
+        });
+        select1.innerHTML = html;
+        select2.innerHTML = html;
+        
+        select1.onchange = async () => {
+          reportState.compareExecutionId1 = select1.value;
+          await updateCompareInfo(1);
+        };
+        select2.onchange = async () => {
+          reportState.compareExecutionId2 = select2.value;
+          await updateCompareInfo(2);
+        };
+      } catch (e) {
+        console.error('Failed to load history for compare:', e);
+      }
+    }
+
+    async function updateCompareInfo(num) {
+      const select = document.getElementById('report-compare-select' + num);
+      const info = document.getElementById('report-compare-info' + num);
+      if (!select || !info || !select.value) {
+        info.innerHTML = '';
+        return;
+      }
+      
+      try {
+        const record = await WorkflowHistory.getExecutionById(parseInt(select.value));
+        if (record) {
+          info.innerHTML = `
+            <div>状态: ${record.status === 'completed' ? '✅ 成功' : '❌ 失败'}</div>
+            <div>耗时: ${formatReportDuration(record.totalDuration || 0)}</div>
+            <div>节点: ${record.nodeStats?.length || 0}</div>
+          `;
+        }
+      } catch (e) {
+        info.innerHTML = '<div style="color:var(--error);">加载失败</div>';
+      }
+    }
+
+    function selectReportTemplate(templateId) {
+      reportState.currentTemplate = templateId;
+      document.querySelectorAll('.report-template-option').forEach(opt => {
+        opt.classList.toggle('selected', opt.dataset.template === templateId);
+      });
+    }
+
+    function selectReportTemplateForSave(templateId) {
+      document.querySelectorAll('.report-preset-template').forEach(t => {
+        t.style.borderColor = 'var(--border)';
+      });
+      const selected = document.querySelector(`.report-preset-template[data-template="${templateId}"]`);
+      if (selected) selected.style.borderColor = 'var(--primary)';
+    }
+
+    async function generateReport() {
+      const select = document.getElementById('report-execution-select');
+      const executionId = select?.value;
+      
+      if (!executionId) {
+        showToast('请选择执行记录');
+        return;
+      }
+      
+      try {
+        const record = await WorkflowHistory.getExecutionById(parseInt(executionId));
+        if (!record) {
+          showToast('执行记录不存在');
+          return;
+        }
+        
+        // 获取trace数据
+        if (window.executionTracer && record.id) {
+          const trace = executionTracer.getTrace() || [];
+          record.trace = trace;
+        }
+        
+        const service = initReportService();
+        const report = service.generateReport(record, reportState.currentTemplate);
+        reportState.currentReport = report;
+        
+        // 显示预览
+        showReportPreview(report);
+        
+        // 自动导出
+        const exportFormats = document.querySelectorAll('.report-export-options input[type="checkbox"]:checked');
+        exportFormats.forEach(checkbox => {
+          exportReport(report, checkbox.value);
+        });
+        
+        showToast('报告已生成');
+      } catch (e) {
+        showToast('生成失败: ' + e.message);
+      }
+    }
+
+    function previewReport() {
+      generateReport();
+    }
+
+    function showReportPreview(report) {
+      const preview = document.getElementById('report-preview');
+      if (!preview) return;
+      
+      const service = initReportService();
+      const html = service.exportToHTML(report, { includeStyles: true });
+      preview.innerHTML = html;
+      preview.style.display = 'block';
+    }
+
+    async function generateComparisonReport() {
+      const id1 = document.getElementById('report-compare-select1')?.value;
+      const id2 = document.getElementById('report-compare-select2')?.value;
+      
+      if (!id1 || !id2) {
+        showToast('请选择两个执行记录进行对比');
+        return;
+      }
+      
+      try {
+        const record1 = await WorkflowHistory.getExecutionById(parseInt(id1));
+        const record2 = await WorkflowHistory.getExecutionById(parseInt(id2));
+        
+        if (!record1 || !record2) {
+          showToast('执行记录不存在');
+          return;
+        }
+        
+        const service = initReportService();
+        const report = service.generateComparisonReport(record1, record2);
+        reportState.currentReport = report;
+        
+        // 显示对比摘要
+        const summary = document.getElementById('report-compare-summary');
+        if (summary) {
+          const durDiff = report.sections.comparisonSummary.durationDiff;
+          const durPct = report.sections.comparisonSummary.durationDiffPct;
+          const durDiffStr = durDiff > 0 ? `+${formatReportDuration(durDiff)}` : `-${formatReportDuration(Math.abs(durDiff))}`;
+          summary.innerHTML = `
+            <div style="display:flex;justify-content:space-around;text-align:center;">
+              <div>
+                <div style="font-size:24px;font-weight:bold;color:var(--primary);">${formatReportDuration(record1.totalDuration || 0)}</div>
+                <div style="font-size:11px;color:var(--text-dim);">执行1耗时</div>
+              </div>
+              <div>
+                <div style="font-size:24px;font-weight:bold;">${durDiffStr} (${durPct > 0 ? '+' : ''}${durPct}%)</div>
+                <div style="font-size:11px;color:var(--text-dim);">差异</div>
+              </div>
+              <div>
+                <div style="font-size:24px;font-weight:bold;color:var(--success);">${formatReportDuration(record2.totalDuration || 0)}</div>
+                <div style="font-size:11px;color:var(--text-dim);">执行2耗时</div>
+              </div>
+            </div>
+          `;
+        }
+        
+        // 打开查看器显示完整对比报告
+        openReportViewer(report);
+        
+        showToast('对比报告已生成');
+      } catch (e) {
+        showToast('生成失败: ' + e.message);
+      }
+    }
+
+    function openReportViewer(report) {
+      const service = initReportService();
+      const html = service.exportToHTML(report, { includeStyles: true });
+      document.getElementById('report-viewer-content').innerHTML = html;
+      openModal('report-viewer-modal');
+    }
+
+    function exportCurrentReport(format) {
+      if (!reportState.currentReport) {
+        showToast('没有可导出的报告');
+        return;
+      }
+      exportReport(reportState.currentReport, format);
+    }
+
+    function exportReport(report, format) {
+      const service = initReportService();
+      const filename = `execution-report-${report.id}-${Date.now()}`;
+      
+      switch (format) {
+        case 'html':
+          const html = service.exportToHTML(report);
+          service.downloadFile(html, `${filename}.html`, 'text/html');
+          break;
+        case 'json':
+          const json = service.exportToJSON(report);
+          service.downloadFile(json, `${filename}.json`, 'application/json');
+          break;
+        case 'pdf':
+          service.exportToPDF(report);
+          break;
+      }
+      showToast(`已导出 ${format.toUpperCase()} 格式`);
+    }
+
+    function loadReportFavorites() {
+      const container = document.getElementById('report-favorites-list');
+      if (!container) return;
+      
+      const service = initReportService();
+      const favorites = service.getFavorites();
+      
+      if (favorites.length === 0) {
+        container.innerHTML = '<div style="font-size:12px;color:var(--text-dim);">暂无收藏模板</div>';
+        return;
+      }
+      
+      let html = '';
+      favorites.forEach(fav => {
+        html += `<div class="report-favorite-item" onclick="loadFavoriteTemplate('${fav.templateId}')">⭐ ${escHtml(fav.name)}</div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function loadFavoriteTemplate(templateId) {
+      selectReportTemplate(templateId);
+      switchReportTab('generate');
+    }
+
+    function saveCurrentAsFavorite() {
+      const name = document.getElementById('report-custom-cover')?.value?.trim();
+      if (!name) {
+        showToast('请输入自定义封面标题');
+        return;
+      }
+      
+      const service = initReportService();
+      service.saveAsFavorite(reportState.currentTemplate, name);
+      loadReportFavorites();
+      showToast('已收藏模板');
+    }
+
+    function formatReportDuration(ms) {
+      if (!ms || ms < 0) return '0ms';
+      if (ms < 1000) return `${Math.round(ms)}ms`;
+      if (ms < 60000) return `${(ms / 1000).toFixed(2)}s`;
+      const mins = Math.floor(ms / 60000);
+      const secs = Math.round((ms % 60000) / 1000);
+      return `${mins}m ${secs}s`;
     }
 
     // ============ Marketplace v15 ============
