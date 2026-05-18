@@ -51,6 +51,34 @@ const WorkflowEngine = {
     share: async (node, context) => {
       this.log(`[输出] 分享`);
       return { success: true };
+    },
+
+    // 插件节点执行器
+    plugin: async (node, context) => {
+      const nodeDef = pluginRegistry?.getNodeType(node.subtype);
+      if (!nodeDef) {
+        this.log(`[插件] 未找到节点类型: ${node.subtype}`);
+        return { success: false, error: 'Unknown plugin node type' };
+      }
+
+      this.log(`[插件] 执行: ${nodeDef.name}`);
+
+      // 使用沙箱执行器运行节点代码
+      try {
+        const inputs = node.config.inputs || {};
+        const result = await sandboxRunner.run(nodeDef.code, inputs, node.config);
+        
+        if (result.success) {
+          this.log(`[插件] ${nodeDef.name} 执行成功`);
+          return { success: true, output: result.output };
+        } else {
+          this.log(`[插件] ${nodeDef.name} 执行失败: ${result.error}`);
+          return { success: false, error: result.error };
+        }
+      } catch (error) {
+        this.log(`[插件] ${nodeDef.name} 执行异常: ${error.message}`);
+        return { success: false, error: error.message };
+      }
     }
   },
 

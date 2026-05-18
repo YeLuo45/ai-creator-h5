@@ -145,7 +145,33 @@
     .palette-node[data-type="logic"] .icon { background: #D97706; }
     .palette-node[data-type="output"] .icon { background: #059669; }
     .palette-node[data-type="loop"] .icon { background: #EC4899; }
-    .palette-node[data-type="subflow"] .icon { background: #8B5CF6; }
+.palette-node[data-type="subflow"] .icon { background: #8B5CF6; }
+
+    /* Palette Tabs */
+    .palette-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .palette-tab {
+      flex: 1;
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .palette-tab:hover { color: var(--text); }
+    .palette-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    /* Plugin Node Styling */
+    .palette-node[data-type="plugin"] .icon { background: var(--primary); }
 
     /* Loop node type badge colors */
     .workflow-node[data-subtype="forLoop"] .node-icon { background: #EC4899; }
@@ -915,10 +941,15 @@
 
     <!-- Node Palette -->
     <div class="node-palette">
-      <input type="text" class="palette-search" placeholder="搜索节点..." id="palette-search">
+<input type="text" class="palette-search" placeholder="搜索节点..." id="palette-search">
       
-      <div class="palette-category">
-        <div class="palette-category-title">触发</div>
+      <div class="palette-tabs">
+        <button class="palette-tab active" data-tab="builtin">内置</button>
+        <button class="palette-tab" data-tab="plugin">插件</button>
+      </div>
+      
+      <div class="palette-category" id="palette-builtin">
+      <div class="palette-category-title">触发</div>
         <div class="palette-node" draggable="true" data-type="trigger" data-subtype="manual">
           <div class="icon">⚡</div>
           <span>手动触发</span>
@@ -991,6 +1022,12 @@
           <div class="icon">📤</div>
           <span>分享</span>
         </div>
+      </div>
+
+      <!-- Plugin Nodes Container -->
+      <div id="palette-plugin" style="display: none;">
+        <div class="palette-category-title">插件节点</div>
+        <div id="plugin-nodes-container"></div>
       </div>
     </div>
 
@@ -1231,6 +1268,9 @@
   <script src="../services/workflowCollab.js"></script>
   <script src="../services/workflowAudit.js"></script>
   <script src="../services/workflowCollabUI.js"></script>
+  <script src="../services/pluginRegistry.js"></script>
+  <script src="../services/nodeBuilder.js"></script>
+  <script src="../services/sandboxRunner.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -1279,6 +1319,10 @@
         // 注入协作样式
         injectCollabStyles();
         
+        // 初始化插件系统
+        pluginRegistry.init();
+        nodeBuilder.init();
+        
         await WorkflowStorage.init();
         await WorkflowHistory.init();
         WorkflowStatsUI.initStatsPanel();
@@ -1287,6 +1331,8 @@
         loadFromURL();
         setupEngineEvents();
         setupPanelTabs();
+        setupPaletteTabs();
+        loadPluginNodes();
         updateNodeCount();
         WorkflowLoggerUI.init(document.getElementById('log-content'), document.getElementById('log-count'));
         setupMonitorEvents();
@@ -1329,6 +1375,55 @@
           const tabId = 'tab-' + tab.dataset.tab;
           document.getElementById(tabId).style.display = 'block';
           state.currentTab = tab.dataset.tab;
+        });
+      });
+    }
+
+    // ============ Palette Tabs ============
+    function setupPaletteTabs() {
+      document.querySelectorAll('.palette-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.palette-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const tabName = tab.dataset.tab;
+          if (tabName === 'builtin') {
+            document.getElementById('palette-builtin').style.display = 'block';
+            document.getElementById('palette-plugin').style.display = 'none';
+          } else {
+            document.getElementById('palette-builtin').style.display = 'none';
+            document.getElementById('palette-plugin').style.display = 'block';
+          }
+        });
+      });
+    }
+
+    // ============ Plugin Nodes ============
+    function loadPluginNodes() {
+      const container = document.getElementById('plugin-nodes-container');
+      if (!container) return;
+      
+      const nodes = pluginRegistry.listNodeTypes();
+      if (nodes.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-dim);font-size:12px;text-align:center;padding:20px;">暂无插件节点</div>';
+        return;
+      }
+      
+      let html = '';
+      nodes.forEach(node => {
+        html += `
+          <div class="palette-node" draggable="true" data-type="plugin" data-subtype="${node.id}">
+            <div class="icon">🔧</div>
+            <span>${escHtml(node.name)}</span>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+      
+      // Add drag handlers
+      container.querySelectorAll('.palette-node').forEach(node => {
+        node.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('type', node.dataset.type);
+          e.dataTransfer.setData('subtype', node.dataset.subtype);
         });
       });
     }
@@ -1752,7 +1847,7 @@
       el.style.left = node.x + 'px';
       el.style.top = node.y + 'px';
 
-      const icons = { trigger: '⚡', creator: '🎨', logic: '⚙️', output: '📤', loop: '🔄', subflow: '📦' };
+      const icons = { trigger: '⚡', creator: '🎨', logic: '⚙️', output: '📤', loop: '🔄', subflow: '📦', plugin: '🔧' };
       const icon = icons[node.type] || '📦';
 
       // Special icon for loop subtypes
@@ -1763,10 +1858,17 @@
         else if (node.subtype === 'doWhileLoop') nodeIcon = '🔂';
       }
 
+      // Get node name from plugin registry if it's a plugin node
+      let nodeName = nodeNames[node.subtype] || node.subtype;
+      if (node.type === 'plugin') {
+        const nodeDef = pluginRegistry.getNodeType(node.subtype);
+        if (nodeDef) nodeName = nodeDef.name;
+      }
+
       el.innerHTML = `
         <div class="node-header">
           <div class="node-icon">${nodeIcon}</div>
-          <span class="node-name">${nodeNames[node.subtype] || node.subtype}</span>
+          <span class="node-name">${nodeName}</span>
           <div class="node-status-badge"></div>
         </div>
         <div class="node-progress"><div class="node-progress-bar"></div></div>
@@ -1977,13 +2079,58 @@
             <input type="text" class="panel-input" id="node-config-workflow-id" value="${escHtml(node.config.workflowId || '')}" placeholder="子流程唯一标识">
           </div>
         `;
+      } else if (node.type === 'plugin') {
+        // Plugin node - show dynamic config form based on node definition
+        const nodeDef = pluginRegistry.getNodeType(node.subtype);
+        if (nodeDef) {
+          configFields = '<div class="plugin-config-section">';
+          configFields += `<div class="panel-section"><div class="panel-label">节点 ID</div><div style="color:var(--text);font-family:monospace;font-size:12px;">${node.subtype}</div></div>`;
+          configFields += `<div class="panel-section"><div class="panel-label">描述</div><div style="color:var(--text-dim);font-size:12px;">${escHtml(nodeDef.description || '无')}</div></div>`;
+          
+          // Generate input fields for each input
+          if (nodeDef.inputs && nodeDef.inputs.length > 0) {
+            configFields += '<div class="panel-section"><div class="panel-label">输入参数</div>';
+            nodeDef.inputs.forEach(input => {
+              const value = node.config.inputs?.[input.name] || '';
+              configFields += `
+                <div style="margin-bottom:8px;">
+                  <label style="font-size:11px;color:var(--text-dim);">${escHtml(input.label || input.name)}</label>
+                  <input type="${input.type === 'number' ? 'number' : 'text'}" 
+                         class="panel-input plugin-input" 
+                         data-input-name="${input.name}"
+                         value="${escHtml(value)}" 
+                         placeholder="输入 ${input.label || input.name}">
+                </div>
+              `;
+            });
+            configFields += '</div>';
+          }
+          
+          // Show outputs info
+          if (nodeDef.outputs && nodeDef.outputs.length > 0) {
+            configFields += '<div class="panel-section"><div class="panel-label">输出端口</div>';
+            nodeDef.outputs.forEach(output => {
+              configFields += `<span class="port-tag" style="display:inline-block;padding:2px 8px;background:var(--bg-dark);border-radius:4px;margin-right:4px;margin-bottom:4px;">${escHtml(output.label || output.name)}</span>`;
+            });
+            configFields += '</div>';
+          }
+          
+          configFields += '</div>';
+        }
+      }
+
+      // Get display name for plugin nodes
+      let displayName = nodeNames[node.subtype] || node.subtype;
+      if (node.type === 'plugin') {
+        const nodeDef = pluginRegistry.getNodeType(node.subtype);
+        if (nodeDef) displayName = nodeDef.name;
       }
 
       content.innerHTML = `
-        <div class="panel-title">${nodeNames[node.subtype] || node.subtype}</div>
+        <div class="panel-title">${displayName}</div>
         <div class="panel-section">
           <div class="panel-label">类型</div>
-          <div style="color: var(--text);">${node.type}</div>
+          <div style="color: var(--text);">${node.type}${node.type === 'plugin' ? ' (插件节点)' : ''}</div>
         </div>
         ${configFields}
         <div style="margin-top: 16px;">
@@ -2033,6 +2180,18 @@
           const idEl = document.getElementById('node-config-workflow-id');
           if (nameEl) nameEl.oninput = e => { node.config.workflowName = e.target.value; renderNode(node); saveToURL(); };
           if (idEl) idEl.oninput = e => { node.config.workflowId = e.target.value; renderNode(node); saveToURL(); };
+        } else if (node.type === 'plugin') {
+          // Bind plugin node input changes
+          document.querySelectorAll('.plugin-input').forEach(input => {
+            const inputName = input.dataset.inputName;
+            if (inputName) {
+              input.oninput = e => {
+                if (!node.config.inputs) node.config.inputs = {};
+                node.config.inputs[inputName] = e.target.value;
+                saveToURL();
+              };
+            }
+          });
         }
       }, 0);
     }
