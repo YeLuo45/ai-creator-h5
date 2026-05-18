@@ -4721,6 +4721,113 @@
     .toolbar-btn.replay-btn { border-color: var(--primary); color: var(--primary); }
 
     /* ========== End v22 Permission & Audit & Replay CSS ========== */
+
+    /* ========== v23 Plugin Security CSS ========== */
+
+    /* Security Panel */
+    .security-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 800px;
+      max-height: 85vh;
+      z-index: 1002;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .security-panel.active { display: block; }
+    .security-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .security-title { font-size: 16px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .security-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 20px; }
+    .security-close:hover { color: var(--text); }
+    .security-tabs { display: flex; gap: 4px; padding: 12px 20px; border-bottom: 1px solid var(--border); }
+    .security-tab { padding: 8px 16px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); cursor: pointer; font-size: 12px; transition: all 0.2s; }
+    .security-tab:hover { color: var(--text); }
+    .security-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .security-content { padding: 16px 20px; max-height: calc(85vh - 130px); overflow-y: auto; }
+
+    /* Security Stats */
+    .security-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .security-stat { padding: 16px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 8px; text-align: center; }
+    .security-stat-value { font-size: 24px; font-weight: 600; color: var(--primary); }
+    .security-stat-value.success { color: var(--success); }
+    .security-stat-value.warning { color: var(--warning); }
+    .security-stat-value.danger { color: var(--error); }
+    .security-stat-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    /* Security Event Log */
+    .security-event-log { display: flex; flex-direction: column; gap: 8px; }
+    .security-event-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 8px; }
+    .security-event-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .security-event-icon.low { background: rgba(16,185,129,0.2); color: var(--success); }
+    .security-event-icon.medium { background: rgba(245,158,11,0.2); color: var(--warning); }
+    .security-event-icon.high { background: rgba(239,68,68,0.2); color: var(--error); }
+    .security-event-icon.critical { background: rgba(239,68,68,0.4); color: var(--error); }
+    .security-event-content { flex: 1; min-width: 0; }
+    .security-event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .security-event-category { font-size: 13px; font-weight: 500; }
+    .security-event-time { font-size: 11px; color: var(--text-dim); }
+    .security-event-data { font-size: 12px; color: var(--text-dim); word-break: break-all; }
+
+    /* Risk Assessment */
+    .risk-assessment-list { display: flex; flex-direction: column; gap: 12px; }
+    .risk-assessment-item { padding: 16px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 8px; }
+    .risk-assessment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .risk-assessment-plugin { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+    .risk-badge { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .risk-badge.low { background: rgba(16,185,129,0.2); color: var(--success); }
+    .risk-badge.medium { background: rgba(245,158,11,0.2); color: var(--warning); }
+    .risk-badge.high { background: rgba(245,158,11,0.3); color: var(--warning); }
+    .risk-badge.critical { background: rgba(239,68,68,0.2); color: var(--error); }
+    .risk-factors { display: flex; flex-wrap: wrap; gap: 6px; }
+    .risk-factor { padding: 4px 8px; background: var(--bg-dark); border-radius: 4px; font-size: 11px; color: var(--text-dim); }
+
+    /* Security Suggestions */
+    .security-suggestions { display: flex; flex-direction: column; gap: 12px; }
+    .security-suggestion-item { padding: 16px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 8px; border-left: 3px solid var(--success); }
+    .security-suggestion-item.priority-high { border-left-color: var(--error); }
+    .security-suggestion-item.priority-medium { border-left-color: var(--warning); }
+    .security-suggestion-item.priority-low { border-left-color: var(--success); }
+    .security-suggestion-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .security-suggestion-priority { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+    .security-suggestion-priority.high { background: rgba(239,68,68,0.2); color: var(--error); }
+    .security-suggestion-priority.medium { background: rgba(245,158,11,0.2); color: var(--warning); }
+    .security-suggestion-priority.low { background: rgba(16,185,129,0.2); color: var(--success); }
+    .security-suggestion-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+    .security-suggestion-action { font-size: 12px; color: var(--primary); }
+
+    /* Compliance Report */
+    .compliance-export { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 16px; }
+    .compliance-btn { padding: 8px 16px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 6px; color: var(--text); cursor: pointer; font-size: 12px; }
+    .compliance-btn:hover { border-color: var(--primary); }
+    .compliance-btn.primary { background: var(--primary); border-color: var(--primary); color: white; }
+
+    /* Toolbar buttons for v23 */
+    .toolbar-btn.security-btn { border-color: var(--success); color: var(--success); }
+    .toolbar-btn.security-btn:hover { background: rgba(16, 185, 129, 0.1); }
+
+    /* Security Center Styles (shared with plugin-market) */
+    .security-center { padding: 8px; }
+    .security-section { background: var(--bg-node); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .security-section-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .security-scan-list { display: flex; flex-direction: column; gap: 8px; }
+    .security-scan-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--bg-dark); border-radius: 8px; border-left: 3px solid var(--success); }
+    .security-scan-item.high { border-left-color: var(--warning); }
+    .security-scan-item.critical { border-left-color: var(--error); }
+    .security-scan-item.medium { border-left-color: var(--warning); }
+    .security-scan-plugin { font-size: 13px; font-weight: 500; }
+    .security-scan-risk { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+    .risk-low { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .risk-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .risk-high { background: rgba(245, 158, 11, 0.3); color: var(--warning); }
+    .risk-critical { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+    .security-empty { text-align: center; padding: 20px; color: var(--text-dim); font-size: 13px; }
+
+    /* ========== End v23 Plugin Security CSS ========== */
   </style>
 </head>
 <body>
@@ -4902,6 +5009,7 @@
       <button class="toolbar-btn permission-btn" id="btn-permission" title="权限管理" onclick="togglePermissionPanel()">🔐 权限</button>
       <button class="toolbar-btn audit-btn" id="btn-audit" title="审计日志" onclick="toggleAuditPanel()">📋 审计</button>
       <button class="toolbar-btn replay-btn" id="btn-replay" title="操作回放" onclick="toggleReplayPanel()">⏮ 回放</button>
+      <button class="toolbar-btn security-btn" id="btn-security" title="插件安全" onclick="toggleSecurityPanel()">🔒 安全</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -5128,6 +5236,23 @@
           <button class="toolbar-btn" onclick="stopCurrentRecording()">停止录制</button>
         </div>
         <div class="replay-record-list" id="replay-record-list"></div>
+      </div>
+    </div>
+
+    <!-- Security Panel -->
+    <div class="security-panel" id="security-panel" role="dialog" aria-label="插件安全面板">
+      <div class="security-header">
+        <div class="security-title">🔒 插件安全中心</div>
+        <button class="security-close" onclick="closeSecurityPanel()">×</button>
+      </div>
+      <div class="security-tabs">
+        <button class="security-tab active" data-tab="overview" onclick="switchSecurityTab('overview')">概览</button>
+        <button class="security-tab" data-tab="events" onclick="switchSecurityTab('events')">安全事件</button>
+        <button class="security-tab" data-tab="risk" onclick="switchSecurityTab('risk')">风险评估</button>
+        <button class="security-tab" data-tab="suggestions" onclick="switchSecurityTab('suggestions')">安全建议</button>
+      </div>
+      <div class="security-content" id="security-content">
+        <!-- Content populated by JS -->
       </div>
     </div>
 
@@ -5852,6 +5977,7 @@
   <script src="../services/pluginRegistry.js"></script>
   <script src="../services/nodeBuilder.js"></script>
   <script src="../services/sandboxRunner.js"></script>
+  <script src="../services/pluginSecurityService.js"></script>
   <script src="../services/workflowAIGen.js"></script>
   <script src="../services/nodeRecommender.js"></script>
   <script src="../services/intentRouter.js"></script>
@@ -13031,6 +13157,300 @@ function setupReplayListeners() {
 }
 
 // ============ End v22 Permission & Audit & Replay ============
+
+// ============ v23 Plugin Security ============
+
+// Initialize v23 Plugin Security Services
+let PluginSecurityService = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize plugin security service
+  if (typeof pluginSecurityService !== 'undefined') {
+    PluginSecurityService = pluginSecurityService;
+    PluginSecurityService.init();
+    
+    // Log startup
+    PluginSecurityService._logSecurityEvent('system', { 
+      action: 'security_service_started',
+      version: 'v23'
+    });
+  }
+  
+  // Setup security event listener
+  setupSecurityEventListeners();
+});
+
+// Setup security event listeners
+function setupSecurityEventListeners() {
+  // Listen for sandbox security events
+  document.addEventListener('sandboxSecurityEvent', (e) => {
+    if (PluginSecurityService) {
+      PluginSecurityService._logSecurityEvent('sandbox', e.detail);
+    }
+  });
+}
+
+// Toggle security panel
+function toggleSecurityPanel() {
+  const panel = document.getElementById('security-panel');
+  if (!panel) return;
+  
+  const isOpen = panel.classList.toggle('active');
+  
+  if (isOpen) {
+    switchSecurityTab('overview');
+  }
+}
+
+// Close security panel
+function closeSecurityPanel() {
+  const panel = document.getElementById('security-panel');
+  if (panel) {
+    panel.classList.remove('active');
+  }
+}
+
+// Switch security tab
+function switchSecurityTab(tab) {
+  // Update tab buttons
+  document.querySelectorAll('.security-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+  
+  // Update tab content
+  const content = document.getElementById('security-content');
+  if (!content || !PluginSecurityService) return;
+  
+  switch (tab) {
+    case 'overview':
+      content.innerHTML = renderSecurityOverview();
+      break;
+    case 'events':
+      content.innerHTML = renderSecurityEvents();
+      break;
+    case 'risk':
+      content.innerHTML = renderRiskAssessment();
+      break;
+    case 'suggestions':
+      content.innerHTML = renderSecuritySuggestions();
+      break;
+  }
+}
+
+// Render security overview
+function renderSecurityOverview() {
+  if (!PluginSecurityService) return '<div class="security-empty">安全服务未初始化</div>';
+  
+  const logs = PluginSecurityService.getSecurityLog();
+  const plugins = typeof pluginRegistry !== 'undefined' ? pluginRegistry.listPlugins() : [];
+  
+  const trusted = PluginSecurityService.trustedPlugins?.size || 0;
+  const revoked = PluginSecurityService.revokedPlugins?.size || 0;
+  const totalEvents = logs.length;
+  
+  // Count events by severity
+  const criticalCount = logs.filter(e => e.severity === 'critical').length;
+  const highCount = logs.filter(e => e.severity === 'high').length;
+  const mediumCount = logs.filter(e => e.severity === 'medium').length;
+  
+  return `
+    <div class="security-stats-grid">
+      <div class="security-stat">
+        <div class="security-stat-value">${plugins.length}</div>
+        <div class="security-stat-label">已安装插件</div>
+      </div>
+      <div class="security-stat">
+        <div class="security-stat-value success">${trusted}</div>
+        <div class="security-stat-label">可信插件</div>
+      </div>
+      <div class="security-stat">
+        <div class="security-stat-value danger">${revoked}</div>
+        <div class="security-stat-label">已吊销</div>
+      </div>
+      <div class="security-stat">
+        <div class="security-stat-value ${criticalCount > 0 ? 'danger' : highCount > 0 ? 'warning' : 'success'}">${totalEvents}</div>
+        <div class="security-stat-label">安全事件</div>
+      </div>
+    </div>
+    <div class="compliance-export">
+      <button class="compliance-btn" onclick="exportComplianceReport('json')">📥 导出JSON</button>
+      <button class="compliance-btn" onclick="exportComplianceReport('csv')">📥 导出CSV</button>
+    </div>
+    <div class="security-section">
+      <div class="security-section-title">🔍 快速扫描</div>
+      <div class="security-scan-list">
+        ${renderQuickScan(plugins)}
+      </div>
+    </div>
+  `;
+}
+
+// Render quick scan results
+function renderQuickScan(plugins) {
+  if (!plugins || plugins.length === 0) {
+    return '<div class="security-empty">暂无已安装插件</div>';
+  }
+  
+  let html = '';
+  for (const plugin of plugins) {
+    const risk = PluginSecurityService.assessRisk(plugin);
+    const riskClass = risk.level;
+    
+    html += `
+      <div class="security-scan-item ${riskClass}">
+        <div class="security-scan-plugin">${plugin.icon || '📦'} ${plugin.name}</div>
+        <div class="security-scan-risk risk-${riskClass}">${risk.level.toUpperCase()} (${risk.score}分)</div>
+      </div>
+    `;
+  }
+  
+  return html;
+}
+
+// Render security events
+function renderSecurityEvents() {
+  if (!PluginSecurityService) return '<div class="security-empty">安全服务未初始化</div>';
+  
+  const logs = PluginSecurityService.getSecurityLog();
+  const recentLogs = logs.slice(-50).reverse();
+  
+  if (recentLogs.length === 0) {
+    return '<div class="security-empty">暂无安全事件记录</div>';
+  }
+  
+  let html = '<div class="security-event-log">';
+  for (const log of recentLogs) {
+    const severity = log.severity || 'low';
+    const time = new Date(log.timestamp).toLocaleString('zh-CN');
+    
+    html += `
+      <div class="security-event-item">
+        <div class="security-event-icon ${severity}">${getSecurityIcon(log.category)}</div>
+        <div class="security-event-content">
+          <div class="security-event-header">
+            <div class="security-event-category">${log.category}</div>
+            <div class="security-event-time">${time}</div>
+          </div>
+          <div class="security-event-data">${JSON.stringify(log).substring(0, 200)}</div>
+        </div>
+      </div>
+    `;
+  }
+  html += '</div>';
+  
+  return html;
+}
+
+// Get security icon for category
+function getSecurityIcon(category) {
+  const icons = {
+    sandbox: '🔒',
+    network: '🌐',
+    storage: '💾',
+    signature: '📝',
+    dependency: '📦',
+    timeout: '⏱',
+    memory: '🧠',
+    plugin_revoked: '🚫',
+    plugin_trusted: '✓',
+    system: '⚙️'
+  };
+  return icons[category] || '🔔';
+}
+
+// Render risk assessment
+function renderRiskAssessment() {
+  if (!PluginSecurityService) return '<div class="security-empty">安全服务未初始化</div>';
+  
+  const plugins = typeof pluginRegistry !== 'undefined' ? pluginRegistry.listPlugins() : [];
+  
+  if (plugins.length === 0) {
+    return '<div class="security-empty">暂无已安装插件</div>';
+  }
+  
+  let html = '<div class="risk-assessment-list">';
+  for (const plugin of plugins) {
+    const risk = PluginSecurityService.assessRisk(plugin);
+    
+    html += `
+      <div class="risk-assessment-item">
+        <div class="risk-assessment-header">
+          <div class="risk-assessment-plugin">
+            ${plugin.icon || '📦'} ${plugin.name}
+          </div>
+          <span class="risk-badge ${risk.level}">${risk.level.toUpperCase()} (${risk.score}分)</span>
+        </div>
+        <div class="risk-factors">
+          ${risk.factors.map(f => `<span class="risk-factor">${f.description}</span>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+  html += '</div>';
+  
+  return html;
+}
+
+// Render security suggestions
+function renderSecuritySuggestions() {
+  if (!PluginSecurityService) return '<div class="security-empty">安全服务未初始化</div>';
+  
+  const plugins = typeof pluginRegistry !== 'undefined' ? pluginRegistry.listPlugins() : [];
+  
+  // Collect all suggestions
+  const allSuggestions = [];
+  for (const plugin of plugins) {
+    const suggestions = PluginSecurityService.generateSuggestions(plugin);
+    allSuggestions.push(...suggestions);
+  }
+  
+  // Add general suggestions
+  allSuggestions.push({
+    priority: 'medium',
+    category: 'best_practices',
+    title: '定期安全审查',
+    description: '建议每月进行一次全面的插件安全审查',
+    action: '打开安全面板查看详情'
+  });
+  
+  // Sort by priority
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
+  allSuggestions.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+  
+  let html = '<div class="security-suggestions">';
+  for (const s of allSuggestions) {
+    html += `
+      <div class="security-suggestion-item priority-${s.priority}">
+        <div class="security-suggestion-title">
+          ${s.title}
+          <span class="security-suggestion-priority ${s.priority}">${s.priority.toUpperCase()}</span>
+        </div>
+        <div class="security-suggestion-desc">${s.description}</div>
+        <div class="security-suggestion-action">💡 ${s.action}</div>
+      </div>
+    `;
+  }
+  html += '</div>';
+  
+  return html;
+}
+
+// Export compliance report
+function exportComplianceReport(format) {
+  if (!PluginSecurityService) return;
+  
+  const report = PluginSecurityService.exportComplianceReport(format);
+  
+  const blob = new Blob([report], { type: format === 'json' ? 'application/json' : 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `security-compliance-report-${new Date().toISOString().split('T')[0]}.${format}`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============ End v23 Plugin Security ============
 
 // ============ v21 AI Assistant Chat ============
 

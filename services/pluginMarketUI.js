@@ -362,6 +362,12 @@ function handleCategoryFilter(e) {
     btn.classList.toggle('active', btn.dataset.category === category);
   });
 
+  // 安全分类特殊处理
+  if (category === 'security') {
+    renderSecurityPlugins();
+    return;
+  }
+
   const plugins = pluginRegistry.listPlugins();
   if (!category || category === 'all') {
     renderPluginList(plugins);
@@ -369,6 +375,108 @@ function handleCategoryFilter(e) {
     const filtered = plugins.filter(p => p.category === category);
     renderPluginList(filtered);
   }
+}
+
+/**
+ * 渲染安全插件（安全中心）
+ */
+function renderSecurityPlugins() {
+  const container = document.getElementById('plugin-list-container');
+  if (!container) return;
+
+  // 获取安全相关插件信息
+  const securityInfo = {
+    totalPlugins: pluginRegistry.listPlugins().length,
+    trusted: Array.from(pluginSecurityService.trustedPlugins || []).length,
+    revoked: Array.from(pluginSecurityService.revokedPlugins || []).length,
+    recentEvents: pluginSecurityService.securityLog?.slice(-10) || []
+  };
+
+  container.innerHTML = `
+    <div class="security-center">
+      <div class="security-stats">
+        <div class="security-stat-card">
+          <div class="security-stat-icon">🔒</div>
+          <div class="security-stat-value">${securityInfo.totalPlugins}</div>
+          <div class="security-stat-label">总插件数</div>
+        </div>
+        <div class="security-stat-card trusted">
+          <div class="security-stat-icon">✓</div>
+          <div class="security-stat-value">${securityInfo.trusted}</div>
+          <div class="security-stat-label">可信插件</div>
+        </div>
+        <div class="security-stat-card revoked">
+          <div class="security-stat-icon">✗</div>
+          <div class="security-stat-value">${securityInfo.revoked}</div>
+          <div class="security-stat-label">已吊销</div>
+        </div>
+      </div>
+      <div class="security-section">
+        <div class="security-section-title">🔍 安全扫描</div>
+        <div class="security-scan-list">
+          ${renderSecurityScanResults()}
+        </div>
+      </div>
+      <div class="security-section">
+        <div class="security-section-title">📋 安全事件日志</div>
+        <div class="security-event-list">
+          ${securityInfo.recentEvents.length > 0 ? securityInfo.recentEvents.map(event => `
+            <div class="security-event-item">
+              <div class="security-event-time">${new Date(event.timestamp).toLocaleString('zh-CN')}</div>
+              <div class="security-event-category">${event.category}</div>
+              <div class="security-event-data">${JSON.stringify(event).substring(0, 100)}...</div>
+            </div>
+          `).join('') : '<div class="security-empty">暂无安全事件</div>'}
+        </div>
+      </div>
+      <div class="security-section">
+        <div class="security-section-title">💡 安全建议</div>
+        <div class="security-suggestions">
+          ${generateSecuritySuggestions()}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * 渲染安全扫描结果
+ */
+function renderSecurityScanResults() {
+  const plugins = pluginRegistry.listPlugins();
+  let html = '';
+  
+  for (const plugin of plugins) {
+    const risk = pluginSecurityService.assessRisk ? pluginSecurityService.assessRisk(plugin) : { score: 0, level: 'low' };
+    const riskClass = risk.level === 'critical' ? 'critical' : risk.level === 'high' ? 'high' : risk.level === 'medium' ? 'medium' : 'low';
+    
+    html += `
+      <div class="security-scan-item ${riskClass}">
+        <div class="security-scan-plugin">${plugin.icon || '📦'} ${plugin.name}</div>
+        <div class="security-scan-risk risk-${riskClass}">${risk.level.toUpperCase()} (${risk.score}分)</div>
+      </div>
+    `;
+  }
+  
+  return html || '<div class="security-empty">暂无已安装插件</div>';
+}
+
+/**
+ * 生成安全建议
+ */
+function generateSecuritySuggestions() {
+  const suggestions = [
+    { priority: 'high', title: '启用代码签名', desc: '为所有插件启用代码签名验证以确保完整性' },
+    { priority: 'medium', title: '定期更新依赖', desc: '检查并更新存在已知漏洞的依赖包' },
+    { priority: 'low', title: '监控安全日志', desc: '定期审查安全事件日志以发现异常行为' }
+  ];
+  
+  return suggestions.map(s => `
+    <div class="security-suggestion priority-${s.priority}">
+      <div class="security-suggestion-title">${s.title}</div>
+      <div class="security-suggestion-desc">${s.desc}</div>
+    </div>
+  `).join('');
 }
 
 /**

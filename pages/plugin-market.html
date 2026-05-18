@@ -106,6 +106,20 @@
       color: white;
     }
 
+    .category-btn.security {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .category-btn.security:hover {
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .category-btn.security.active {
+      background: var(--success);
+      color: white;
+    }
+
     /* Plugin Grid */
     .plugin-grid {
       display: grid;
@@ -584,6 +598,178 @@
       opacity: 1;
     }
 
+    /* Security Center Styles */
+    .security-center {
+      padding: 8px;
+    }
+
+    .security-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .security-stat-card {
+      padding: 20px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .security-stat-card.trusted {
+      border-color: var(--success);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .security-stat-card.revoked {
+      border-color: var(--error);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .security-stat-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .security-stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .security-stat-label {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .security-section {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .security-section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .security-scan-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .security-scan-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--bg-dark);
+      border-radius: 8px;
+      border-left: 3px solid var(--success);
+    }
+
+    .security-scan-item.high { border-left-color: var(--warning); }
+    .security-scan-item.critical { border-left-color: var(--error); }
+    .security-scan-item.medium { border-left-color: var(--warning); }
+
+    .security-scan-plugin {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .security-scan-risk {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .risk-low { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .risk-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .risk-high { background: rgba(245, 158, 11, 0.3); color: var(--warning); }
+    .risk-critical { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+
+    .security-event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .security-event-item {
+      padding: 8px 10px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .security-event-time {
+      color: var(--text-dim);
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .security-event-category {
+      color: var(--primary);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .security-event-data {
+      color: var(--text-dim);
+      font-family: monospace;
+      font-size: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .security-empty {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .security-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .security-suggestion {
+      padding: 12px;
+      background: var(--bg-dark);
+      border-radius: 8px;
+      border-left: 3px solid var(--success);
+    }
+
+    .security-suggestion.priority-high { border-left-color: var(--error); }
+    .security-suggestion.priority-medium { border-left-color: var(--warning); }
+    .security-suggestion.priority-low { border-left-color: var(--success); }
+
+    .security-suggestion-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .security-suggestion-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .builder-form {
@@ -621,6 +807,7 @@
       <button class="category-btn" data-category="string">字符串</button>
       <button class="category-btn" data-category="math">数学计算</button>
       <button class="category-btn" data-category="custom">自定义</button>
+      <button class="category-btn security" data-category="security">🔒 安全</button>
     </div>
 
     <!-- Plugin List -->
@@ -746,6 +933,7 @@ return inputs.text.toUpperCase();"></textarea>
   <script src="../services/pluginRegistry.js"></script>
   <script src="../services/nodeBuilder.js"></script>
   <script src="../services/sandboxRunner.js"></script>
+  <script src="../services/pluginSecurityService.js"></script>
   <script src="../services/pluginMarketUI.js"></script>
   <script>
     // Initialize
