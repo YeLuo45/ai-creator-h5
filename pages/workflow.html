@@ -2667,9 +2667,938 @@
 
     /* ===== Trigger/Scheduler Panel Toggle ===== */
     .trigger-scheduler-nav { display: flex; gap: 4px; }
+
+    /* ========== v19 Mobile & Tablet Responsive CSS ========== */
+    /* Breakpoints: 768px (tablet), 480px (phone) */
+
+    /* Mobile Device Detection & Touch Optimization */
+    @media (max-width: 768px) {
+      .workflow-container {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+      }
+
+      /* Hide traditional layout, show mobile layout */
+      .workflow-container > .toolbar { display: none !important; }
+      .workflow-container > .breadcrumb { display: none !important; }
+      .workflow-container > .palette-tabs-container { display: none !important; }
+      .workflow-container > .canvas-container { display: none !important; }
+      .workflow-container > .log-panel { display: none !important; }
+      .workflow-container > .status-bar { display: none !important; }
+    }
+
+    /* Mobile Layout Container */
+    .mobile-layout {
+      display: none !important;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background: var(--bg-dark);
+    }
+
+    @media (max-width: 768px) {
+      .mobile-layout { display: flex !important; }
+    }
+
+    /* Mobile Header */
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      min-height: 48px;
+      gap: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      text-align: center;
+    }
+
+    .mobile-header-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .mobile-header-btn:active {
+      background: var(--bg-node);
+      transform: scale(0.95);
+    }
+
+    /* Mobile Canvas Area */
+    .mobile-canvas-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .mobile-canvas-area .canvas-bg {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .mobile-canvas-area .workflow-canvas {
+      position: absolute;
+      inset: 0;
+      transform-origin: 0 0;
+    }
+
+    .mobile-canvas-area .connections-svg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    /* Mobile Zoom Controls */
+    .mobile-zoom-controls {
+      position: absolute;
+      right: 12px;
+      bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .mobile-zoom-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      color: var(--text);
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .mobile-zoom-btn:active {
+      background: var(--bg-node);
+      transform: scale(0.95);
+    }
+
+    .mobile-zoom-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-align: center;
+      background: var(--bg-panel);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* Mobile Bottom Tab Navigation */
+    .mobile-bottom-nav {
+      display: flex;
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border);
+      padding: 0;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      min-height: 56px;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-bottom-nav { display: flex !important; }
+    }
+
+    .mobile-bottom-nav { display: none !important; }
+
+    .mobile-nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 10px;
+      cursor: pointer;
+      gap: 4px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: color 0.2s;
+    }
+
+    .mobile-nav-item:active {
+      background: var(--bg-node);
+    }
+
+    .mobile-nav-item.active {
+      color: var(--primary);
+    }
+
+    .mobile-nav-item .nav-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    /* Mobile Drawer Panel (Property Panel) */
+    .mobile-drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .mobile-drawer-overlay.active {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-drawer-overlay { display: block; }
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 85%;
+      max-width: 360px;
+      background: var(--bg-panel);
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .mobile-drawer.active {
+      transform: translateX(0);
+    }
+
+    .mobile-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      min-height: 48px;
+    }
+
+    .mobile-drawer-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .mobile-drawer-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-node);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-drawer-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .mobile-drawer-section {
+      margin-bottom: 16px;
+    }
+
+    .mobile-drawer-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .mobile-drawer-input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .mobile-drawer-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Offline Status Indicator */
+    .offline-indicator {
+      display: none;
+      position: fixed;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--warning);
+      color: #000;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      z-index: 9999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .offline-indicator.active {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .offline-indicator .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #000;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Offline Queue Badge */
+    .offline-queue-badge {
+      display: none;
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 18px;
+      height: 18px;
+      background: var(--error);
+      color: white;
+      border-radius: 9px;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    /* Mobile Node Styles */
+    .mobile-workflow-node {
+      position: absolute;
+      min-width: 100px;
+      max-width: 160px;
+      background: var(--bg-node);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: move;
+      user-select: none;
+      touch-action: none;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .mobile-workflow-node:hover,
+    .mobile-workflow-node.selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+    }
+
+    .mobile-workflow-node.running {
+      border-color: var(--warning);
+      animation: pulse 1s infinite;
+    }
+
+    .mobile-workflow-node.completed {
+      border-color: var(--success);
+    }
+
+    .mobile-workflow-node.error {
+      border-color: var(--error);
+    }
+
+    .mobile-node-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-node-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .mobile-node-name {
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .mobile-node-body {
+      padding: 6px 10px;
+      font-size: 11px;
+      color: var(--text-dim);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .mobile-node-ports {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+
+    .mobile-node-port {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 2px solid var(--bg-node);
+    }
+
+    .mobile-node-port.input { background: var(--primary); }
+    .mobile-node-port.output { background: var(--success); }
+
+    /* Mobile Mini Toolbar */
+    .mobile-mini-toolbar {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .mobile-toolbar-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      color: var(--text);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .mobile-toolbar-btn:active {
+      background: var(--bg-node);
+      transform: scale(0.95);
+    }
+
+    /* Mobile Workflow List */
+    .mobile-workflow-list {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .mobile-workflow-list.active {
+      display: flex;
+    }
+
+    .mobile-workflow-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .mobile-workflow-card:active {
+      border-color: var(--primary);
+      transform: scale(0.98);
+    }
+
+    .mobile-workflow-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .mobile-workflow-card-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .mobile-workflow-card-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary);
+    }
+
+    .mobile-workflow-card-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .mobile-workflow-card-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* Mobile Floating Action Button (FAB) */
+    .mobile-fab {
+      position: absolute;
+      right: 16px;
+      bottom: 72px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      z-index: 100;
+    }
+
+    .mobile-fab:active {
+      transform: scale(0.95);
+      background: var(--primary-dark);
+    }
+
+    /* PWA Install Prompt */
+    .pwa-install-prompt {
+      display: none;
+      position: fixed;
+      bottom: 70px;
+      left: 12px;
+      right: 12px;
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      padding: 12px 16px;
+      z-index: 1000;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .pwa-install-prompt.active {
+      display: block;
+    }
+
+    .pwa-install-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pwa-install-icon {
+      font-size: 32px;
+    }
+
+    .pwa-install-text {
+      flex: 1;
+    }
+
+    .pwa-install-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .pwa-install-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .pwa-install-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pwa-install-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+
+    .pwa-install-btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .pwa-install-btn.secondary {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+
+    /* Mobile Palette (Bottom Sheet) */
+    .mobile-palette-sheet {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 60px;
+      background: var(--bg-panel);
+      border-radius: 16px 16px 0 0;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-out;
+      z-index: 998;
+      max-height: 60vh;
+      overflow: hidden;
+    }
+
+    .mobile-palette-sheet.active {
+      transform: translateY(0);
+    }
+
+    .mobile-palette-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 8px auto;
+    }
+
+    .mobile-palette-search {
+      padding: 0 16px 12px;
+    }
+
+    .mobile-palette-search input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .mobile-palette-categories {
+      overflow-y: auto;
+      max-height: calc(60vh - 80px);
+      padding: 0 16px 16px;
+    }
+
+    .mobile-palette-category {
+      margin-bottom: 16px;
+    }
+
+    .mobile-palette-category-title {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .mobile-palette-nodes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .mobile-palette-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 8px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .mobile-palette-node:active {
+      border-color: var(--primary);
+      transform: scale(0.95);
+    }
+
+    .mobile-palette-node .node-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .mobile-palette-node .node-name {
+      font-size: 11px;
+      text-align: center;
+      color: var(--text);
+    }
+
+    /* Touch Gesture Feedback */
+    .touch-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.3);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Low-end Device Downgrade */
+    .low-end .mobile-palette-nodes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .low-end .mobile-zoom-controls {
+      display: none !important;
+    }
+
+    .low-end .connections-svg path {
+      stroke-width: 2px !important;
+    }
+
+    /* Tablet Specific */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .tablet-visible { display: flex !important; }
+      .phone-only { display: none !important; }
+
+      .property-panel {
+        width: 280px !important;
+      }
+    }
+
+    /* Phone Only */
+    @media (max-width: 480px) {
+      .phone-only { display: flex !important; }
+      .tablet-visible { display: none !important; }
+
+      .mobile-header-title {
+        font-size: 13px;
+      }
+
+      .mobile-workflow-card {
+        padding: 12px;
+      }
+    }
+
+    /* Safe Area Insets for Modern iOS */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .mobile-bottom-nav {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .pwa-install-prompt {
+        bottom: calc(70px + env(safe-area-inset-bottom));
+      }
+    }
+
+    /* Prevent pull-to-refresh on mobile */
+    @media (max-width: 768px) {
+      body {
+        overscroll-behavior-y: contain;
+      }
+
+      .mobile-canvas-area {
+        overscroll-behavior: none;
+      }
+    }
+
+    /* ========== End v19 Mobile CSS ========== */
   </style>
 </head>
 <body>
+  <!-- Offline Status Indicator -->
+  <div class="offline-indicator" id="offline-indicator">
+    <span class="pulse"></span>
+    <span id="offline-text">离线模式</span>
+  </div>
+
+  <!-- PWA Install Prompt -->
+  <div class="pwa-install-prompt" id="pwa-install-prompt">
+    <div class="pwa-install-content">
+      <div class="pwa-install-icon">📱</div>
+      <div class="pwa-install-text">
+        <div class="pwa-install-title">安装 AI Creator</div>
+        <div class="pwa-install-desc">添加到主屏幕，更快访问</div>
+      </div>
+      <div class="pwa-install-btns">
+        <button class="pwa-install-btn secondary" onclick="dismissPWAInstall()">稍后</button>
+        <button class="pwa-install-btn primary" onclick="installPWA()">安装</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Layout (hidden on desktop) -->
+  <div class="mobile-layout" id="mobile-layout">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <button class="mobile-header-btn" id="mobile-menu-btn" title="菜单">☰</button>
+      <span class="mobile-header-title" id="mobile-title">AI 工作流</span>
+      <button class="mobile-header-btn" id="mobile-more-btn" title="更多">⋯</button>
+    </div>
+
+    <!-- Mobile Canvas Area -->
+    <div class="mobile-canvas-area" id="mobile-canvas-area">
+      <div class="canvas-bg"></div>
+      <div class="workflow-canvas" id="mobile-workflow-canvas">
+        <svg class="connections-svg" id="mobile-connections-svg">
+          <defs>
+            <marker id="mobile-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#6366F1"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Mobile Mini Toolbar -->
+    <div class="mobile-mini-toolbar">
+      <button class="mobile-toolbar-btn" id="mobile-undo-btn" title="撤销" disabled>↩</button>
+      <button class="mobile-toolbar-btn" id="mobile-redo-btn" title="重做" disabled>↪</button>
+    </div>
+
+    <!-- Mobile Zoom Controls -->
+    <div class="mobile-zoom-controls">
+      <button class="mobile-zoom-btn" id="mobile-zoom-in" title="放大">+</button>
+      <div class="mobile-zoom-label" id="mobile-zoom-label">100%</div>
+      <button class="mobile-zoom-btn" id="mobile-zoom-out" title="缩小">−</button>
+      <button class="mobile-zoom-btn" id="mobile-zoom-fit" title="适应屏幕">⊙</button>
+    </div>
+
+    <!-- Mobile FAB (Floating Action Button) -->
+    <button class="mobile-fab" id="mobile-fab" title="添加节点">+</button>
+
+    <!-- Mobile Workflow List -->
+    <div class="mobile-workflow-list" id="mobile-workflow-list">
+      <div id="mobile-workflow-list-content"></div>
+    </div>
+
+    <!-- Mobile Palette Sheet -->
+    <div class="mobile-palette-sheet" id="mobile-palette-sheet">
+      <div class="mobile-palette-handle"></div>
+      <div class="mobile-palette-search">
+        <input type="text" id="mobile-palette-search" placeholder="搜索节点...">
+      </div>
+      <div class="mobile-palette-categories" id="mobile-palette-categories">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Overlay -->
+    <div class="mobile-drawer-overlay" id="mobile-drawer-overlay"></div>
+
+    <!-- Mobile Drawer Panel -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <div class="mobile-drawer-header">
+        <span class="mobile-drawer-title" id="mobile-drawer-title">属性</span>
+        <button class="mobile-drawer-close" id="mobile-drawer-close">×</button>
+      </div>
+      <div class="mobile-drawer-content" id="mobile-drawer-content">
+        <!-- Properties content for mobile -->
+      </div>
+    </div>
+
+    <!-- Mobile Bottom Tab Navigation -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+      <button class="mobile-nav-item active" data-view="canvas" id="nav-canvas">
+        <span class="nav-icon">🎨</span>
+        <span>画布</span>
+      </button>
+      <button class="mobile-nav-item" data-view="workflows" id="nav-workflows">
+        <span class="nav-icon">📋</span>
+        <span>工作流</span>
+      </button>
+      <button class="mobile-nav-item" data-view="palette" id="nav-palette">
+        <span class="nav-icon">📦</span>
+        <span>节点</span>
+      </button>
+      <button class="mobile-nav-item" data-view="properties" id="nav-properties">
+        <span class="nav-icon">⚙️</span>
+        <span>属性</span>
+      </button>
+      <button class="mobile-nav-item" data-view="execute" id="nav-execute">
+        <span class="nav-icon">▶️</span>
+        <span>执行</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Original Desktop Layout -->
   <div class="workflow-container">
     <!-- Toolbar -->
     <div class="toolbar">
@@ -7187,6 +8116,1098 @@
       const examples = workflowRESTAPI.generateSDKExample();
       document.getElementById('sdk-code').textContent = tab === 'js' ? examples.javascript : examples.curl;
     }
+
+    // ============ v19 Mobile, PWA & Offline Features ============
+
+    // --- Mobile State ---
+    const MobileState = {
+      isMobile: window.innerWidth <= 768,
+      currentView: 'canvas',
+      scale: 1,
+      minScale: 0.25,
+      maxScale: 2,
+      translateX: 0,
+      translateY: 0,
+      isDragging: false,
+      isPinching: false,
+      lastTouchDistance: 0,
+      lastTouchCenter: null,
+      touchStartPos: null,
+      selectedMobileNode: null,
+      drawerOpen: false,
+      fabOpen: false
+    };
+
+    // --- Low-end Device Detection ---
+    function detectLowEndDevice() {
+      const hardwareConcurrency = navigator.hardwareConcurrency || 2;
+      const deviceMemory = navigator.deviceMemory || 2;
+      const isLowEnd = hardwareConcurrency <= 2 || deviceMemory <= 2;
+      
+      if (isLowEnd) {
+        document.body.classList.add('low-end');
+        console.log('[v19] Low-end device detected, enabling performance mode');
+      }
+      return isLowEnd;
+    }
+
+    // --- Mobile Detection & Initialization ---
+    function initMobileMode() {
+      MobileState.isMobile = window.innerWidth <= 768;
+      
+      if (MobileState.isMobile) {
+        document.body.classList.add('mobile-mode');
+        initMobileTouchGestures();
+        initMobileBottomNav();
+        initMobileDrawer();
+        initMobilePalette();
+        initMobileZoomControls();
+        syncMobileCanvas();
+        renderMobileWorkflowList();
+        populateMobilePalette();
+      } else {
+        document.body.classList.remove('mobile-mode');
+      }
+    }
+
+    // --- Mobile Touch Gestures (Pinch Zoom & Pan) ---
+    function initMobileTouchGestures() {
+      const canvas = document.getElementById('mobile-canvas-area');
+      if (!canvas) return;
+
+      // Touch start - detect gesture type
+      canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+      canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+      canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+
+      // Mouse fallback for desktop testing
+      canvas.addEventListener('mousedown', handleMouseDown);
+      canvas.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('mouseup', handleMouseUp);
+      canvas.addEventListener('wheel', handleWheel, { passive: false });
+    }
+
+    function handleTouchStart(e) {
+      const touches = e.touches;
+      
+      if (touches.length === 1) {
+        // Single touch - start pan/drag
+        MobileState.touchStartPos = {
+          x: touches[0].clientX,
+          y: touches[0].clientY
+        };
+        MobileState.isDragging = false;
+      } else if (touches.length === 2) {
+        // Two fingers - pinch zoom
+        e.preventDefault();
+        MobileState.isPinching = true;
+        MobileState.lastTouchDistance = getTouchDistance(touches);
+        MobileState.lastTouchCenter = getTouchCenter(touches);
+      }
+    }
+
+    function handleTouchMove(e) {
+      const touches = e.touches;
+      
+      if (touches.length === 1 && !MobileState.isPinching) {
+        // Single touch pan
+        const dx = touches[0].clientX - MobileState.touchStartPos.x;
+        const dy = touches[0].clientY - MobileState.touchStartPos.y;
+        
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+          MobileState.isDragging = true;
+        }
+        
+        if (MobileState.isDragging) {
+          MobileState.translateX += dx;
+          MobileState.translateY += dy;
+          MobileState.touchStartPos = {
+            x: touches[0].clientX,
+            y: touches[0].clientY
+          };
+          updateMobileCanvasTransform();
+        }
+      } else if (touches.length === 2 && MobileState.isPinching) {
+        // Pinch zoom
+        e.preventDefault();
+        const distance = getTouchDistance(touches);
+        const center = getTouchCenter(touches);
+        
+        const scaleDiff = distance / MobileState.lastTouchDistance;
+        let newScale = MobileState.scale * scaleDiff;
+        newScale = Math.max(MobileState.minScale, Math.min(MobileState.maxScale, newScale));
+        
+        // Zoom towards center
+        const rect = e.target.getBoundingClientRect();
+        const centerX = center.x - rect.left;
+        const centerY = center.y - rect.top;
+        
+        const scaleChange = newScale / MobileState.scale;
+        MobileState.translateX = centerX - (centerX - MobileState.translateX) * scaleChange;
+        MobileState.translateY = centerY - (centerY - MobileState.translateY) * scaleChange;
+        MobileState.scale = newScale;
+        
+        MobileState.lastTouchDistance = distance;
+        MobileState.lastTouchCenter = center;
+        
+        updateMobileCanvasTransform();
+        updateMobileZoomLabel();
+      }
+    }
+
+    function handleTouchEnd(e) {
+      if (e.touches.length < 2) {
+        MobileState.isPinching = false;
+        MobileState.lastTouchDistance = 0;
+      }
+      
+      if (e.touches.length === 0 && MobileState.isDragging) {
+        MobileState.isDragging = false;
+      }
+      
+      // Handle tap on node
+      if (e.touches.length === 0 && !MobileState.isDragging && e.target.classList.contains('mobile-workflow-node')) {
+        selectMobileNode(e.target.dataset.nodeId);
+      }
+    }
+
+    function getTouchDistance(touches) {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function getTouchCenter(touches) {
+      return {
+        x: (touches[0].clientX + touches[1].clientX) / 2,
+        y: (touches[0].clientY + touches[1].clientY) / 2
+      };
+    }
+
+    // Mouse fallback handlers
+    function handleMouseDown(e) {
+      if (e.button !== 0) return;
+      MobileState.touchStartPos = { x: e.clientX, y: e.clientY };
+      MobileState.isDragging = false;
+    }
+
+    function handleMouseMove(e) {
+      if (!MobileState.touchStartPos) return;
+      
+      const dx = e.clientX - MobileState.touchStartPos.x;
+      const dy = e.clientY - MobileState.touchStartPos.y;
+      
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        MobileState.isDragging = true;
+      }
+      
+      if (MobileState.isDragging) {
+        MobileState.translateX += dx;
+        MobileState.translateY += dy;
+        MobileState.touchStartPos = { x: e.clientX, y: e.clientY };
+        updateMobileCanvasTransform();
+      }
+    }
+
+    function handleMouseUp(e) {
+      MobileState.touchStartPos = null;
+      MobileState.isDragging = false;
+    }
+
+    function handleWheel(e) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      let newScale = MobileState.scale * delta;
+      newScale = Math.max(MobileState.minScale, Math.min(MobileState.maxScale, newScale));
+      
+      const rect = e.target.getBoundingClientRect();
+      const centerX = e.clientX - rect.left;
+      const centerY = e.clientY - rect.top;
+      
+      const scaleChange = newScale / MobileState.scale;
+      MobileState.translateX = centerX - (centerX - MobileState.translateX) * scaleChange;
+      MobileState.translateY = centerY - (centerY - MobileState.translateY) * scaleChange;
+      MobileState.scale = newScale;
+      
+      updateMobileCanvasTransform();
+      updateMobileZoomLabel();
+    }
+
+    function updateMobileCanvasTransform() {
+      const canvas = document.getElementById('mobile-workflow-canvas');
+      if (canvas) {
+        canvas.style.transform = `translate(${MobileState.translateX}px, ${MobileState.translateY}px) scale(${MobileState.scale})`;
+      }
+    }
+
+    function updateMobileZoomLabel() {
+      const label = document.getElementById('mobile-zoom-label');
+      if (label) {
+        label.textContent = Math.round(MobileState.scale * 100) + '%';
+      }
+    }
+
+    function syncMobileCanvas() {
+      // Sync desktop canvas transform to mobile
+      if (typeof transform !== 'undefined') {
+        MobileState.scale = transform.scale || 1;
+        MobileState.translateX = transform.x || 0;
+        MobileState.translateY = transform.y || 0;
+        updateMobileCanvasTransform();
+        updateMobileZoomLabel();
+      }
+    }
+
+    // --- Mobile Zoom Controls ---
+    function initMobileZoomControls() {
+      const zoomIn = document.getElementById('mobile-zoom-in');
+      const zoomOut = document.getElementById('mobile-zoom-out');
+      const zoomFit = document.getElementById('mobile-zoom-fit');
+
+      if (zoomIn) {
+        zoomIn.addEventListener('click', () => {
+          MobileState.scale = Math.min(MobileState.maxScale, MobileState.scale * 1.2);
+          updateMobileCanvasTransform();
+          updateMobileZoomLabel();
+        });
+      }
+
+      if (zoomOut) {
+        zoomOut.addEventListener('click', () => {
+          MobileState.scale = Math.max(MobileState.minScale, MobileState.scale / 1.2);
+          updateMobileCanvasTransform();
+          updateMobileZoomLabel();
+        });
+      }
+
+      if (zoomFit) {
+        zoomFit.addEventListener('click', fitMobileCanvas);
+      }
+    }
+
+    function fitMobileCanvas() {
+      MobileState.scale = 1;
+      MobileState.translateX = 0;
+      MobileState.translateY = 0;
+      updateMobileCanvasTransform();
+      updateMobileZoomLabel();
+    }
+
+    // --- Mobile Bottom Tab Navigation ---
+    function initMobileBottomNav() {
+      const navItems = document.querySelectorAll('.mobile-nav-item');
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const view = item.dataset.view;
+          switchMobileView(view);
+        });
+      });
+
+      // FAB click
+      const fab = document.getElementById('mobile-fab');
+      if (fab) {
+        fab.addEventListener('click', toggleMobilePalette);
+      }
+    }
+
+    function switchMobileView(view) {
+      MobileState.currentView = view;
+      
+      // Update nav active state
+      document.querySelectorAll('.mobile-nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.view === view);
+      });
+
+      // Hide all views
+      document.getElementById('mobile-canvas-area').style.display = 'none';
+      document.getElementById('mobile-workflow-list').classList.remove('active');
+      document.getElementById('mobile-palette-sheet').classList.remove('active');
+
+      // Show selected view
+      switch (view) {
+        case 'canvas':
+          document.getElementById('mobile-canvas-area').style.display = 'block';
+          break;
+        case 'workflows':
+          document.getElementById('mobile-workflow-list').classList.add('active');
+          renderMobileWorkflowList();
+          break;
+        case 'palette':
+          document.getElementById('mobile-palette-sheet').classList.add('active');
+          break;
+        case 'properties':
+          openMobileDrawer('properties');
+          break;
+        case 'execute':
+          openMobileDrawer('execute');
+          break;
+      }
+    }
+
+    function toggleMobilePalette() {
+      const sheet = document.getElementById('mobile-palette-sheet');
+      sheet.classList.toggle('active');
+    }
+
+    // --- Mobile Drawer Panel ---
+    function initMobileDrawer() {
+      const overlay = document.getElementById('mobile-drawer-overlay');
+      const closeBtn = document.getElementById('mobile-drawer-close');
+
+      if (overlay) {
+        overlay.addEventListener('click', closeMobileDrawer);
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeMobileDrawer);
+      }
+    }
+
+    function openMobileDrawer(type) {
+      const drawer = document.getElementById('mobile-drawer');
+      const overlay = document.getElementById('mobile-drawer-overlay');
+      const content = document.getElementById('mobile-drawer-content');
+      const title = document.getElementById('mobile-drawer-title');
+
+      if (!drawer || !content) return;
+
+      // Populate drawer content based on type
+      switch (type) {
+        case 'properties':
+          title.textContent = '属性';
+          content.innerHTML = getMobilePropertiesContent();
+          break;
+        case 'execute':
+          title.textContent = '执行';
+          content.innerHTML = getMobileExecuteContent();
+          break;
+        case 'node':
+          title.textContent = '节点属性';
+          content.innerHTML = getMobileNodeContent();
+          break;
+        default:
+          title.textContent = '属性';
+          content.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:20px;">无内容</div>';
+      }
+
+      drawer.classList.add('active');
+      overlay.classList.add('active');
+      MobileState.drawerOpen = true;
+    }
+
+    function closeMobileDrawer() {
+      const drawer = document.getElementById('mobile-drawer');
+      const overlay = document.getElementById('mobile-drawer-overlay');
+
+      if (drawer) drawer.classList.remove('active');
+      if (overlay) overlay.classList.remove('active');
+      MobileState.drawerOpen = false;
+    }
+
+    function getMobilePropertiesContent() {
+      return `
+        <div class="mobile-drawer-section">
+          <div class="mobile-drawer-label">工作流名称</div>
+          <input type="text" class="mobile-drawer-input" id="mobile-workflow-name" value="${state.workflow?.name || ''}" placeholder="未命名工作流">
+        </div>
+        <div class="mobile-drawer-section">
+          <div class="mobile-drawer-label">描述</div>
+          <input type="text" class="mobile-drawer-input" id="mobile-workflow-desc" value="${state.workflow?.description || ''}" placeholder="描述工作流...">
+        </div>
+        <div class="mobile-drawer-section">
+          <button class="toolbar-btn primary" style="width:100%;" onclick="saveMobileWorkflow()">保存</button>
+        </div>
+      `;
+    }
+
+    function getMobileExecuteContent() {
+      return `
+        <div class="mobile-drawer-section">
+          <button class="toolbar-btn primary" style="width:100%;margin-bottom:8px;" onclick="runWorkflow()">
+            ▶️ 运行工作流
+          </button>
+          <button class="toolbar-btn" style="width:100%;" onclick="stopWorkflow()">
+            ⏹ 停止
+          </button>
+        </div>
+        <div class="mobile-drawer-section">
+          <div class="mobile-drawer-label">执行日志</div>
+          <div id="mobile-execute-log" style="background:var(--bg-dark);border-radius:8px;padding:12px;font-size:11px;max-height:200px;overflow-y:auto;">
+            <div style="color:var(--text-dim);">暂无执行日志</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function getMobileNodeContent() {
+      const node = state.nodes.find(n => n.id === MobileState.selectedMobileNode);
+      if (!node) return '<div style="color:var(--text-dim);">未选择节点</div>';
+
+      return `
+        <div class="mobile-drawer-section">
+          <div class="mobile-drawer-label">节点名称</div>
+          <input type="text" class="mobile-drawer-input" id="mobile-node-name" value="${node.name || ''}">
+        </div>
+        <div class="mobile-drawer-section">
+          <div class="mobile-drawer-label">类型</div>
+          <div style="color:var(--text-dim);font-size:12px;">${node.type} / ${node.subtype || 'default'}</div>
+        </div>
+        <div class="mobile-drawer-section">
+          <button class="toolbar-btn danger" style="width:100%;" onclick="deleteMobileNode('${node.id}')">删除节点</button>
+        </div>
+      `;
+    }
+
+    function selectMobileNode(nodeId) {
+      MobileState.selectedMobileNode = nodeId;
+      
+      // Update visual selection
+      document.querySelectorAll('.mobile-workflow-node').forEach(el => {
+        el.classList.toggle('selected', el.dataset.nodeId === nodeId);
+      });
+      
+      openMobileDrawer('node');
+    }
+
+    function deleteMobileNode(nodeId) {
+      if (confirm('确定删除此节点?')) {
+        deleteNode(nodeId);
+        closeMobileDrawer();
+        renderMobileCanvas();
+      }
+    }
+
+    function saveMobileWorkflow() {
+      const name = document.getElementById('mobile-workflow-name')?.value;
+      const desc = document.getElementById('mobile-workflow-desc')?.value;
+      
+      if (name) state.workflow.name = name;
+      if (desc) state.workflow.description = desc;
+      
+      saveWorkflow();
+      closeMobileDrawer();
+      showToast('工作流已保存');
+    }
+
+    // --- Mobile Palette ---
+    function initMobilePalette() {
+      const searchInput = document.getElementById('mobile-palette-search');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          filterMobilePalette(e.target.value);
+        });
+      }
+    }
+
+    function populateMobilePalette() {
+      const container = document.getElementById('mobile-palette-categories');
+      if (!container) return;
+
+      const categories = [
+        { name: '触发器', type: 'trigger', icon: '⚡', color: '#7C3AED' },
+        { name: '创作', type: 'creator', icon: '🎨', color: '#2563EB' },
+        { name: '逻辑', type: 'logic', icon: '🔄', color: '#D97706' },
+        { name: '循环', type: 'loop', icon: '🔁', color: '#EC4899' },
+        { name: '输出', type: 'output', icon: '📤', color: '#059669' },
+        { name: '子流程', type: 'subflow', icon: '📦', color: '#8B5CF6' }
+      ];
+
+      container.innerHTML = categories.map(cat => `
+        <div class="mobile-palette-category" data-type="${cat.type}">
+          <div class="mobile-palette-category-title">${cat.icon} ${cat.name}</div>
+          <div class="mobile-palette-nodes">
+            ${getNodesByType(cat.type).map(node => `
+              <div class="mobile-palette-node" draggable="true" data-type="${cat.type}" data-subtype="${node.subtype}" onclick="addMobileNode('${cat.type}', '${node.subtype}')">
+                <div class="node-icon" style="background:${cat.color}">${node.icon}</div>
+                <div class="node-name">${node.name}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getNodesByType(type) {
+      const nodeTypes = {
+        trigger: [
+          { subtype: 'manual', name: '手动触发', icon: '👆' },
+          { subtype: 'schedule', name: '定时触发', icon: '⏰' },
+          { subtype: 'webhook', name: 'Webhook', icon: '🪝' },
+          { subtype: 'api', name: 'API触发', icon: '🔗' }
+        ],
+        creator: [
+          { subtype: 'character', name: '角色生成', icon: '👤' },
+          { subtype: 'music', name: '配乐生成', icon: '🎵' },
+          { subtype: 'tts', name: '配音生成', icon: '🎙️' },
+          { subtype: 'poster', name: '海报生成', icon: '🖼️' }
+        ],
+        logic: [
+          { subtype: 'condition', name: '条件分支', icon: '❓' },
+          { subtype: 'switch', name: '多条件', icon: '🔀' },
+          { subtype: 'merge', name: '合并', icon: '🔗' }
+        ],
+        loop: [
+          { subtype: 'forLoop', name: 'For循环', icon: '🔁' },
+          { subtype: 'whileLoop', name: 'While循环', icon: '⏳' },
+          { subtype: 'doWhileLoop', name: 'Do-While', icon: '🔂' }
+        ],
+        output: [
+          { subtype: 'save', name: '保存本地', icon: '💾' },
+          { subtype: 'share', name: '分享', icon: '📤' },
+          { subtype: 'http', name: 'HTTP请求', icon: '🌐' }
+        ],
+        subflow: [
+          { subtype: 'subflowCall', name: '子流程调用', icon: '📦' }
+        ]
+      };
+      return nodeTypes[type] || [];
+    }
+
+    function filterMobilePalette(query) {
+      const lower = query.toLowerCase();
+      document.querySelectorAll('.mobile-palette-node').forEach(node => {
+        const name = node.querySelector('.node-name').textContent.toLowerCase();
+        node.style.display = name.includes(lower) ? '' : 'none';
+      });
+    }
+
+    function addMobileNode(type, subtype) {
+      const nodeId = 'node_' + Date.now();
+      const nodeData = createNodeData(type, subtype);
+      
+      // Add node at center of visible canvas
+      const x = (window.innerWidth / 2 - MobileState.translateX) / MobileState.scale;
+      const y = (window.innerHeight / 2 - MobileState.translateY) / MobileState.scale;
+      
+      nodeData.x = x;
+      nodeData.y = y;
+      nodeData.id = nodeId;
+      
+      state.nodes.push(nodeData);
+      renderMobileCanvas();
+      
+      // Close palette
+      document.getElementById('mobile-palette-sheet').classList.remove('active');
+      
+      showToast(`已添加节点: ${nodeData.name}`);
+    }
+
+    function createNodeData(type, subtype) {
+      const defaults = {
+        trigger: { name: '触发器', icon: '⚡' },
+        creator: { name: '创作节点', icon: '🎨' },
+        logic: { name: '逻辑节点', icon: '🔄' },
+        loop: { name: '循环节点', icon: '🔁' },
+        output: { name: '输出节点', icon: '📤' },
+        subflow: { name: '子流程', icon: '📦' }
+      };
+
+      const d = defaults[type] || { name: '节点', icon: '📦' };
+      
+      return {
+        id: '',
+        type: type,
+        subtype: subtype,
+        name: d.name,
+        icon: d.icon,
+        x: 100,
+        y: 100,
+        config: {},
+        inputs: [],
+        outputs: []
+      };
+    }
+
+    function renderMobileCanvas() {
+      const canvas = document.getElementById('mobile-workflow-canvas');
+      if (!canvas) return;
+
+      // Remove existing nodes
+      canvas.querySelectorAll('.mobile-workflow-node').forEach(el => el.remove());
+
+      // Render nodes
+      state.nodes.forEach(node => {
+        const el = document.createElement('div');
+        el.className = 'mobile-workflow-node';
+        el.dataset.nodeId = node.id;
+        el.style.left = node.x + 'px';
+        el.style.top = node.y + 'px';
+        
+        const typeColors = {
+          trigger: '#7C3AED',
+          creator: '#2563EB',
+          logic: '#D97706',
+          loop: '#EC4899',
+          output: '#059669',
+          subflow: '#8B5CF6'
+        };
+        
+        el.innerHTML = `
+          <div class="mobile-node-header">
+            <div class="mobile-node-icon" style="background:${typeColors[node.type] || '#6366F1'}">${node.icon}</div>
+            <div class="mobile-node-name">${node.name}</div>
+          </div>
+          <div class="mobile-node-ports">
+            <div class="mobile-node-port input"></div>
+            <div class="mobile-node-port output"></div>
+          </div>
+        `;
+        
+        // Make draggable
+        makeMobileNodeDraggable(el, node.id);
+        
+        canvas.appendChild(el);
+      });
+
+      // Render connections
+      renderMobileConnections();
+    }
+
+    function makeMobileNodeDraggable(el, nodeId) {
+      let startX, startY, nodeX, nodeY;
+      
+      el.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        e.stopPropagation();
+        
+        const touch = e.touches[0];
+        const node = state.nodes.find(n => n.id === nodeId);
+        if (!node) return;
+        
+        startX = touch.clientX;
+        startY = touch.clientY;
+        nodeX = node.x;
+        nodeY = node.y;
+        
+        el.addEventListener('touchmove', onMove, { passive: false });
+        el.addEventListener('touchend', onEnd);
+      }, { passive: false });
+
+      function onMove(e) {
+        if (e.touches.length !== 1) return;
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const touch = e.touches[0];
+        const dx = (touch.clientX - startX) / MobileState.scale;
+        const dy = (touch.clientY - startY) / MobileState.scale;
+        
+        nodeX += dx;
+        nodeY += dy;
+        
+        // Update node position in state
+        const node = state.nodes.find(n => n.id === nodeId);
+        if (node) {
+          node.x = nodeX;
+          node.y = nodeY;
+        }
+        
+        // Update element position
+        el.style.left = nodeX + 'px';
+        el.style.top = nodeY + 'px';
+        
+        startX = touch.clientX;
+        startY = touch.clientY;
+        
+        renderMobileConnections();
+      }
+
+      function onEnd(e) {
+        el.removeEventListener('touchmove', onMove);
+        el.removeEventListener('touchend', onEnd);
+      }
+    }
+
+    function renderMobileConnections() {
+      const svg = document.getElementById('mobile-connections-svg');
+      if (!svg) return;
+
+      // Remove existing paths
+      svg.querySelectorAll('path').forEach(p => p.remove());
+
+      // Draw connections from state.connections
+      (state.connections || []).forEach(conn => {
+        const fromNode = state.nodes.find(n => n.id === conn.from);
+        const toNode = state.nodes.find(n => n.id === conn.to);
+        
+        if (fromNode && toNode) {
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          
+          const x1 = fromNode.x + 50;
+          const y1 = fromNode.y + 30;
+          const x2 = toNode.x + 50;
+          const y2 = toNode.y + 30;
+          
+          const midX = (x1 + x2) / 2;
+          
+          path.setAttribute('d', `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`);
+          path.setAttribute('stroke', '#6366F1');
+          path.setAttribute('stroke-width', '2');
+          path.setAttribute('fill', 'none');
+          path.setAttribute('marker-end', 'url(#mobile-arrowhead)');
+          
+          svg.appendChild(path);
+        }
+      });
+    }
+
+    // --- Mobile Workflow List ---
+    function renderMobileWorkflowList() {
+      const container = document.getElementById('mobile-workflow-list-content');
+      if (!container) return;
+
+      const workflows = getStoredWorkflows();
+      
+      if (workflows.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:40px 20px;color:var(--text-dim);">
+            <div style="font-size:48px;margin-bottom:12px;">📋</div>
+            <div>暂无工作流</div>
+            <button class="toolbar-btn primary" style="margin-top:16px;" onclick="switchMobileView('canvas'); newWorkflow();">创建第一个工作流</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = workflows.map(w => `
+        <div class="mobile-workflow-card" onclick="loadWorkflow('${w.id}')">
+          <div class="mobile-workflow-card-header">
+            <div class="mobile-workflow-card-title">${w.name || '未命名'}</div>
+            ${w.draft ? '<span class="mobile-workflow-card-badge">草稿</span>' : ''}
+          </div>
+          <div class="mobile-workflow-card-desc">${w.description || '无描述'}</div>
+          <div class="mobile-workflow-card-meta">
+            <span>📅 ${w.updatedAt ? new Date(w.updatedAt).toLocaleDateString() : '未知'}</span>
+            <span>🔗 ${w.nodes?.length || 0} 节点</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getStoredWorkflows() {
+      try {
+        const stored = localStorage.getItem('workflows');
+        return stored ? JSON.parse(stored) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    // --- Offline Support ---
+    const OfflineManager = {
+      isOnline: navigator.onLine,
+      pendingQueue: [],
+      installPrompt: null,
+
+      init() {
+        this.setupNetworkListeners();
+        this.setupServiceWorkerMessages();
+        this.setupPWAInstallPrompt();
+        this.loadOfflineWorkflows();
+        this.updateOfflineIndicator();
+      },
+
+      setupNetworkListeners() {
+        window.addEventListener('online', () => {
+          this.isOnline = true;
+          this.updateOfflineIndicator();
+          this.processQueue();
+          showToast('网络已恢复', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+          this.isOnline = false;
+          this.updateOfflineIndicator();
+          showToast('已切换到离线模式', 'warning');
+        });
+      },
+
+      updateOfflineIndicator() {
+        const indicator = document.getElementById('offline-indicator');
+        if (!indicator) return;
+
+        if (!this.isOnline) {
+          indicator.classList.add('active');
+          indicator.querySelector('#offline-text').textContent = '离线模式';
+        } else if (this.pendingQueue.length > 0) {
+          indicator.classList.add('active');
+          indicator.querySelector('#offline-text').textContent = `待同步 (${this.pendingQueue.length})`;
+        } else {
+          indicator.classList.remove('active');
+        }
+      },
+
+      setupServiceWorkerMessages() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.addEventListener('message', (event) => {
+            const { type, workflowId, executionId, result, error } = event.data;
+
+            switch (type) {
+              case 'PROCESS_OFFLINE_QUEUE':
+                this.processQueue();
+                break;
+              case 'SYNC_OFFLINE_WORKFLOWS':
+                this.syncOfflineWorkflows();
+                break;
+              case 'WORKFLOW_SAVED_OFFLINE':
+                showToast(`工作流 ${workflowId} 已离线保存`, 'success');
+                break;
+              case 'WORKFLOW_EXECUTION_COMPLETE':
+                this.handleOfflineExecutionComplete(workflowId, executionId, result);
+                break;
+              case 'WORKFLOW_EXECUTION_ERROR':
+                this.handleOfflineExecutionError(workflowId, executionId, error);
+                break;
+              case 'OFFLINE_QUEUE_REQUEST':
+                this.queueOfflineRequest(event.data.request);
+                break;
+            }
+          });
+        }
+      },
+
+      setupPWAInstallPrompt() {
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          this.installPrompt = e;
+          
+          const prompt = document.getElementById('pwa-install-prompt');
+          if (prompt) {
+            prompt.classList.add('active');
+          }
+        });
+      },
+
+      async installPWA() {
+        if (!this.installPrompt) return;
+
+        const result = await this.installPrompt.prompt();
+        console.log('[v19] PWA install prompt:', result);
+
+        const prompt = document.getElementById('pwa-install-prompt');
+        if (prompt) prompt.classList.remove('active');
+
+        this.installPrompt = null;
+      },
+
+      dismissPWAInstall() {
+        const prompt = document.getElementById('pwa-install-prompt');
+        if (prompt) {
+          prompt.classList.remove('active');
+          localStorage.setItem('pwa_install_dismissed', Date.now().toString());
+        }
+      },
+
+      queueOfflineRequest(request) {
+        this.pendingQueue.push({
+          ...request,
+          queuedAt: Date.now()
+        });
+        this.saveQueue();
+        this.updateOfflineIndicator();
+      },
+
+      async processQueue() {
+        if (!this.isOnline || this.pendingQueue.length === 0) return;
+
+        const queue = [...this.pendingQueue];
+        this.pendingQueue = [];
+
+        for (const request of queue) {
+          try {
+            const response = await fetch(request.url, {
+              method: request.method,
+              headers: request.headers,
+              body: JSON.stringify(request.data)
+            });
+
+            if (response.ok) {
+              console.log('[v19] Queued request succeeded:', request.url);
+            } else {
+              throw new Error(`HTTP ${response.status}`);
+            }
+          } catch (error) {
+            console.error('[v19] Queued request failed:', request.url, error);
+            this.pendingQueue.push(request);
+          }
+        }
+
+        this.saveQueue();
+        this.updateOfflineIndicator();
+      },
+
+      saveQueue() {
+        try {
+          localStorage.setItem('offline_queue', JSON.stringify(this.pendingQueue));
+        } catch (e) {
+          console.error('[v19] Failed to save queue:', e);
+        }
+      },
+
+      loadQueue() {
+        try {
+          const stored = localStorage.getItem('offline_queue');
+          this.pendingQueue = stored ? JSON.parse(stored) : [];
+        } catch (e) {
+          this.pendingQueue = [];
+        }
+      },
+
+      async loadOfflineWorkflows() {
+        try {
+          const stored = localStorage.getItem('workflows');
+          if (stored) {
+            const workflows = JSON.parse(stored);
+            // Store in IndexedDB for offline access
+            const db = await this.openDB();
+            const tx = db.transaction('workflows', 'readwrite');
+            const store = tx.objectStore('workflows');
+            
+            for (const workflow of workflows) {
+              store.put(workflow);
+            }
+          }
+        } catch (e) {
+          console.error('[v19] Failed to load offline workflows:', e);
+        }
+      },
+
+      openDB() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open('ai-creator-offline-v19', 1);
+          request.onerror = () => reject(request.error);
+          request.onsuccess = () => resolve(request.result);
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('workflows')) {
+              db.createObjectStore('workflows', { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains('executions')) {
+              db.createObjectStore('executions', { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains('syncQueue')) {
+              const store = db.createObjectStore('syncQueue', { keyPath: 'id', autoIncrement: true });
+              store.createIndex('timestamp', 'timestamp');
+            }
+          };
+        });
+      },
+
+      async syncOfflineWorkflows() {
+        if (!this.isOnline) return;
+
+        try {
+          const db = await this.openDB();
+          const tx = db.transaction('workflows', 'readonly');
+          const store = tx.objectStore('workflows');
+          const request = store.getAll();
+
+          request.onsuccess = async () => {
+            const workflows = request.result;
+            
+            for (const workflow of workflows) {
+              // Last-write-wins conflict resolution
+              const localTs = new Date(workflow.updatedAt || 0).getTime();
+              const remoteTs = new Date(workflow.remoteUpdatedAt || 0).getTime();
+              
+              if (localTs >= remoteTs) {
+                // Local is newer, push to server
+                await this.pushWorkflow(workflow);
+              }
+            }
+          };
+        } catch (e) {
+          console.error('[v19] Failed to sync workflows:', e);
+        }
+      },
+
+      async pushWorkflow(workflow) {
+        try {
+          const response = await fetch('/api/workflow', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(workflow)
+          });
+
+          if (response.ok) {
+            workflow.remoteUpdatedAt = Date.now();
+            const db = await this.openDB();
+            const tx = db.transaction('workflows', 'readwrite');
+            tx.objectStore('workflows').put(workflow);
+          }
+        } catch (e) {
+          console.error('[v19] Failed to push workflow:', e);
+        }
+      },
+
+      async executeOffline(workflowId, executionId) {
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'EXECUTE_WORKFLOW_OFFLINE',
+            workflowId,
+            executionId
+          });
+        }
+      },
+
+      handleOfflineExecutionComplete(workflowId, executionId, result) {
+        window.dispatchEvent(new CustomEvent('workflow:executionComplete', {
+          detail: { workflowId, executionId, result }
+        }));
+      },
+
+      handleOfflineExecutionError(workflowId, executionId, error) {
+        window.dispatchEvent(new CustomEvent('workflow:executionError', {
+          detail: { workflowId, executionId, error }
+        }));
+      }
+    };
+
+    // --- Initialize v19 Features ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Detect low-end device
+      detectLowEndDevice();
+      
+      // Initialize mobile mode
+      initMobileMode();
+      
+      // Initialize offline manager
+      OfflineManager.init();
+      
+      // Check if PWA install was previously dismissed
+      const dismissed = localStorage.getItem('pwa_install_dismissed');
+      if (dismissed && Date.now() - parseInt(dismissed) < 7 * 24 * 60 * 60 * 1000) {
+        // Less than 7 days since dismiss, hide prompt
+        const prompt = document.getElementById('pwa-install-prompt');
+        if (prompt) prompt.style.display = 'none';
+      }
+
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('[v19] SW registered:', reg.scope))
+          .catch(err => console.error('[v19] SW registration failed:', err));
+      }
+    });
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      initMobileMode();
+    });
+
+    // Handle orientation change
+    window.addEventListener('orientationchange', () => {
+      setTimeout(initMobileMode, 100);
+    });
+
+    // Prevent context menu on long press (mobile)
+    document.addEventListener('contextmenu', (e) => {
+      if (MobileState.isMobile) {
+        e.preventDefault();
+      }
+    });
+
+    // ============ End v19 Mobile, PWA & Offline Features ============
   </script>
 </body>
 </html>
