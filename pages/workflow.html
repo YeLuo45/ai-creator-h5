@@ -1824,6 +1824,7 @@
       <button class="toolbar-btn" id="btn-version" title="版本历史" onclick="showVersionHistory()">📜 版本</button>
       <button class="toolbar-btn" id="btn-branch" title="分支管理" onclick="showBranchPanel()">🌿 分支</button>
       <button class="toolbar-btn" id="btn-share" title="分享工作流" onclick="showShareModal()">🔗 分享</button>
+      <button class="toolbar-btn" id="btn-marketplace" title="发布到市场" onclick="showPublishModal()">🌐 市场</button>
       <button class="toolbar-btn" id="btn-collab" title="协作状态" onclick="showAuditPanel()">👥 协作</button>
       <button class="toolbar-btn" id="btn-chat" title="对话编辑" onclick="toggleChatPanel()">💬 对话</button>
       <button class="toolbar-btn" id="btn-scheduler" title="调度管理" onclick="showSchedulerPanel()">⏰ 调度</button>
@@ -2203,6 +2204,55 @@
     </div>
   </div>
 
+  <!-- Publish to Marketplace Modal -->
+  <div class="modal-overlay" id="publish-modal">
+    <div class="modal" style="width:500px;">
+      <div class="modal-header">
+        <span>发布到市场</span>
+        <button class="modal-close" onclick="closeModal('publish-modal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="panel-section">
+          <label class="panel-label">工作流名称 *</label>
+          <input type="text" class="panel-input" id="publish-name" placeholder="给工作流起个名字">
+        </div>
+        <div class="panel-section">
+          <label class="panel-label">描述</label>
+          <textarea class="panel-input" id="publish-desc" placeholder="描述工作流的功能和用途" style="min-height:60px;resize:vertical;"></textarea>
+        </div>
+        <div class="panel-section">
+          <label class="panel-label">分类</label>
+          <select class="panel-input" id="publish-category">
+            <option value="image">图像</option>
+            <option value="video">视频</option>
+            <option value="music">音乐</option>
+            <option value="chat">对话</option>
+            <option value="data">数据</option>
+            <option value="text">文本</option>
+            <option value="utility">工具</option>
+          </select>
+        </div>
+        <div class="panel-section">
+          <label class="panel-label">可见性</label>
+          <div class="visibility-options" id="publish-visibility">
+            <div class="visibility-option active" data-visibility="public" onclick="selectPublishVisibility(this)" style="flex:1;padding:10px;text-align:center;cursor:pointer;border:2px solid var(--border);border-radius:8px;">
+              <div style="font-size:20px;">🌐</div>
+              <div style="font-size:12px;">公开</div>
+            </div>
+            <div class="visibility-option" data-visibility="private" onclick="selectPublishVisibility(this)" style="flex:1;padding:10px;text-align:center;cursor:pointer;border:2px solid var(--border);border-radius:8px;">
+              <div style="font-size:20px;">🔒</div>
+              <div style="font-size:12px;">私有</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+          <button class="btn-small" onclick="closeModal('publish-modal')">取消</button>
+          <button class="btn-small primary" onclick="publishToMarket()">发布</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Audit Panel -->
   <div class="audit-panel" id="audit-panel">
     <div class="audit-panel-header">
@@ -2312,6 +2362,7 @@
   <script src="../services/workflowDebugger.js"></script>
   <script src="../services/workflowDebuggerUI.js"></script>
   <script src="../services/workflowIntentUnderstanding.js"></script>
+  <script src="../services/workflowMarketService.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -4435,6 +4486,54 @@
     function createNewWorkflowFromList() {
       toggleWorkflowListPanel();
       newWorkflow();
+    }
+
+    // ============ Marketplace v15 ============
+    function showPublishModal() {
+      if (!currentWorkflow || !currentWorkflow.name) {
+        showToast('请先创建或加载工作流');
+        return;
+      }
+      document.getElementById('publish-name').value = currentWorkflow.name;
+      document.getElementById('publish-desc').value = currentWorkflow.description || '';
+      document.getElementById('publish-category').value = 'utility';
+      openModal('publish-modal');
+    }
+
+    function selectPublishVisibility(el) {
+      document.querySelectorAll('#publish-visibility .visibility-option').forEach(opt => {
+        opt.style.borderColor = 'var(--border)';
+      });
+      el.style.borderColor = 'var(--primary)';
+      el.classList.add('active');
+    }
+
+    function publishToMarket() {
+      const name = document.getElementById('publish-name').value.trim();
+      if (!name) {
+        showToast('请输入工作流名称');
+        return;
+      }
+      const desc = document.getElementById('publish-desc').value.trim();
+      const category = document.getElementById('publish-category').value;
+      const visibility = document.querySelector('#publish-visibility .visibility-option.active')?.dataset.visibility || 'public';
+
+      const result = WorkflowMarketService.publishWorkflow({
+        name: name,
+        description: desc,
+        category: category,
+        tags: currentWorkflow.tags || [],
+        visibility: visibility,
+        coverGradient: 'linear-gradient(135deg, #667eea, #764ba2)',
+        icon: '⚡'
+      }, currentWorkflow);
+
+      if (result.success) {
+        showToast('发布成功！工作流已上架到市场');
+        closeModal('publish-modal');
+      } else {
+        showToast('发布失败: ' + (result.error || '未知错误'));
+      }
     }
 
     // Start
