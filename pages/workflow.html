@@ -102,6 +102,398 @@
       display: block;
     }
 
+    /* Prediction Panel v25 */
+    .prediction-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 800px;
+      max-height: 85vh;
+      z-index: 1002;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .prediction-panel.active {
+      display: block;
+    }
+
+    .prediction-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .prediction-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .prediction-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .prediction-close:hover {
+      color: var(--text);
+    }
+
+    .prediction-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .prediction-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .prediction-tab:hover {
+      color: var(--text);
+    }
+
+    .prediction-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .prediction-content {
+      padding: 16px 20px;
+      max-height: calc(85vh - 130px);
+      overflow-y: auto;
+    }
+
+    .prediction-section {
+      margin-bottom: 20px;
+    }
+
+    .prediction-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prediction-dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .prediction-stat-card {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .prediction-stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .prediction-stat-value.success { color: var(--success); }
+    .prediction-stat-value.warning { color: var(--warning); }
+    .prediction-stat-value.error { color: var(--error); }
+
+    .prediction-stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .prediction-item {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .prediction-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .prediction-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prediction-item-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--bg-dark);
+    }
+
+    .prediction-item-badge.high { background: var(--error); color: white; }
+    .prediction-item-badge.medium { background: var(--warning); color: black; }
+    .prediction-item-badge.low { background: var(--success); color: white; }
+
+    .prediction-item-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .prediction-item-value {
+      font-size: 12px;
+      color: var(--text);
+      background: var(--bg-dark);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .prediction-chart {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .prediction-chart-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .prediction-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .prediction-bar-label {
+      width: 100px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .prediction-bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .prediction-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .prediction-bar-value {
+      width: 60px;
+      text-align: right;
+      font-size: 11px;
+      color: var(--text);
+    }
+
+    .prediction-timeline {
+      position: relative;
+      padding-left: 20px;
+      border-left: 2px solid var(--border);
+      margin-left: 10px;
+    }
+
+    .prediction-timeline-item {
+      position: relative;
+      padding: 8px 0 8px 16px;
+    }
+
+    .prediction-timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 12px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 2px solid var(--bg-panel);
+    }
+
+    .prediction-timeline-item.critical::before {
+      background: var(--error);
+    }
+
+    .prediction-timeline-time {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .prediction-timeline-node {
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .prediction-suggestion-card {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .prediction-suggestion-card:hover {
+      border-color: var(--primary);
+    }
+
+    .prediction-suggestion-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .prediction-suggestion-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .prediction-suggestion-impact {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--success);
+      color: white;
+    }
+
+    .prediction-suggestion-impact.high { background: var(--error); }
+    .prediction-suggestion-impact.medium { background: var(--warning); color: black; }
+
+    .prediction-suggestion-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .prediction-empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+    }
+
+    .prediction-empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .prediction-empty-state-text {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .prediction-simulator {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .prediction-simulator-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .prediction-simulator-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .prediction-simulator-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .prediction-accuracy-meter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .prediction-accuracy-ring {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 4px solid var(--border);
+      border-top-color: var(--success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .prediction-accuracy-info {
+      flex: 1;
+    }
+
+    .prediction-accuracy-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .prediction-accuracy-meta {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
     .ai-optimizer-header {
       display: flex;
       align-items: center;
@@ -5165,6 +5557,7 @@
       <button class="toolbar-btn replay-btn" id="btn-replay" title="操作回放" onclick="toggleReplayPanel()">⏮ 回放</button>
       <button class="toolbar-btn security-btn" id="btn-security" title="插件安全" onclick="toggleSecurityPanel()">🔒 安全</button>
       <button class="toolbar-btn enterprise-btn" id="btn-enterprise" title="企业管理员" onclick="toggleEnterprisePanel()">🏢 企业</button>
+      <button class="toolbar-btn prediction-btn" id="btn-prediction" title="AI预测" onclick="showPredictionPanel()">🔮 预测</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -6013,6 +6406,26 @@
     </div>
   </div>
 
+  <!-- Prediction Panel v25 -->
+  <div class="prediction-panel" id="prediction-panel">
+    <div class="prediction-header">
+      <div class="prediction-title">
+        <span>🔮</span>
+        <span>AI 智能预测</span>
+      </div>
+      <button class="prediction-close" onclick="closePredictionPanel()">×</button>
+    </div>
+    <div class="prediction-tabs">
+      <button class="prediction-tab active" data-tab="dashboard" onclick="switchPredictionTab('dashboard')">📊 仪表盘</button>
+      <button class="prediction-tab" data-tab="simulator" onclick="switchPredictionTab('simulator')">🎮 执行模拟</button>
+      <button class="prediction-tab" data-tab="optimizations" onclick="switchPredictionTab('optimizations')">💡 优化建议</button>
+      <button class="prediction-tab" data-tab="accuracy" onclick="switchPredictionTab('accuracy')">📈 准确率</button>
+    </div>
+    <div class="prediction-content" id="prediction-content">
+      <!-- Content will be dynamically loaded -->
+    </div>
+  </div>
+
   <!-- Audit Panel -->
   <div class="audit-panel" id="audit-panel">
     <div class="audit-panel-header">
@@ -6172,6 +6585,7 @@
   <script src="../services/workflowMarketService.js"></script>
   <script src="../services/executionReportService.js"></script>
   <script src="../services/workflowAIOptimizer.js"></script>
+  <script src="../services/workflowPrediction.js"></script>
   <script src="../services/workflowRESTAPI.js"></script>
   <script>
     // ============ State ============
@@ -15074,6 +15488,399 @@ document.addEventListener('workflowChanged', (e) => {
 });
 
 // ============ End v21 AI Assistant Chat ============
+
+// ============ v25 Prediction Panel ============
+
+// Prediction panel state
+const predictionState = {
+  currentTab: 'dashboard'
+};
+
+// Show prediction panel
+async function showPredictionPanel() {
+  document.getElementById('prediction-panel').classList.add('active');
+  switchPredictionTab('dashboard');
+}
+
+// Close prediction panel
+function closePredictionPanel() {
+  document.getElementById('prediction-panel').classList.remove('active');
+}
+
+// Switch prediction tab
+async function switchPredictionTab(tabName) {
+  predictionState.currentTab = tabName;
+
+  document.querySelectorAll('.prediction-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.tab === tabName);
+  });
+
+  const content = document.getElementById('prediction-content');
+
+  switch (tabName) {
+    case 'dashboard':
+      await loadPredictionDashboard();
+      break;
+    case 'simulator':
+      await loadPredictionSimulator();
+      break;
+    case 'optimizations':
+      await loadPredictionOptimizations();
+      break;
+    case 'accuracy':
+      await loadPredictionAccuracy();
+      break;
+  }
+}
+
+// Load prediction dashboard
+async function loadPredictionDashboard() {
+  const content = document.getElementById('prediction-content');
+  const data = WorkflowPrediction.getDashboardData();
+
+  if (data.totalExecutionsTracked === 0) {
+    content.innerHTML = `
+      <div class="prediction-empty-state">
+        <div class="prediction-empty-state-icon">🔮</div>
+        <div class="prediction-empty-state-text">
+          暂无预测数据<br>
+          运行工作流后即可查看AI预测分析
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const confidencePercent = (data.predictionSummary.avgConfidence * 100).toFixed(1);
+  const successPercent = (data.predictionSummary.avgSuccessRate * 100).toFixed(1);
+
+  content.innerHTML = `
+    <div class="prediction-section">
+      <div class="prediction-section-title">📊 概览</div>
+      <div class="prediction-dashboard-grid">
+        <div class="prediction-stat-card">
+          <div class="prediction-stat-value">${data.totalNodesTracked}</div>
+          <div class="prediction-stat-label">追踪节点数</div>
+        </div>
+        <div class="prediction-stat-card">
+          <div class="prediction-stat-value">${data.totalExecutionsTracked}</div>
+          <div class="prediction-stat-label">总执行次数</div>
+        </div>
+        <div class="prediction-stat-card">
+          <div class="prediction-stat-value ${confidencePercent > 70 ? 'success' : 'warning'}">${confidencePercent}%</div>
+          <div class="prediction-stat-label">预测置信度</div>
+        </div>
+        <div class="prediction-stat-card">
+          <div class="prediction-stat-value ${successPercent > 90 ? 'success' : 'warning'}">${successPercent}%</div>
+          <div class="prediction-stat-label">平均成功率</div>
+        </div>
+      </div>
+    </div>
+
+    ${data.bottlenecks.length > 0 ? `
+    <div class="prediction-section">
+      <div class="prediction-section-title">⚠️ 瓶颈预警</div>
+      ${data.bottlenecks.map(b => `
+        <div class="prediction-item" onclick="highlightNodeOnCanvas('${b.nodeId}')">
+          <div class="prediction-item-header">
+            <div class="prediction-item-title">
+              <span>${getBottleneckIcon(b.type)}</span>
+              <span>${b.nodeName}</span>
+            </div>
+            <span class="prediction-item-badge ${b.severity}">${b.severity === 'high' ? '严重' : '中等'}</span>
+          </div>
+          <div class="prediction-item-desc">${b.suggestion}</div>
+          <div class="prediction-item-value">类型: ${getBottleneckTypeName(b.type)}</div>
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+
+    <div class="prediction-section">
+      <div class="prediction-section-title">⏱️ 执行时间预测</div>
+      ${Object.keys(WorkflowPrediction.stats).slice(0, 5).map(nodeId => {
+        const pred = WorkflowPrediction.predictExecutionTime(nodeId);
+        const stat = WorkflowPrediction.stats[nodeId];
+        return `
+          <div class="prediction-item" onclick="highlightNodeOnCanvas('${nodeId}')">
+            <div class="prediction-item-header">
+              <div class="prediction-item-title">${nodeId}</div>
+              <span class="prediction-item-badge">置信度 ${(pred.confidence * 100).toFixed(0)}%</span>
+            </div>
+            <div class="prediction-bar">
+              <div class="prediction-bar-label">预估时间</div>
+              <div class="prediction-bar-track">
+                <div class="prediction-bar-fill" style="width: ${Math.min(100, pred.estimated / 10)}%; background: var(--primary);"></div>
+              </div>
+              <div class="prediction-bar-value">${formatDuration(pred.estimated)}</div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">
+              范围: ${formatDuration(pred.lower)} - ${formatDuration(pred.upper)} | 基于 ${pred.basedOn} 次历史
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div class="prediction-section">
+      <div class="prediction-section-title">💡 资源预分配建议</div>
+      ${Object.entries(data.resourceRecommendations).slice(0, 5).map(([nodeId, rec]) => `
+        <div class="prediction-item">
+          <div class="prediction-item-header">
+            <div class="prediction-item-title">${nodeId}</div>
+          </div>
+          <div class="prediction-item-value">CPU: ${rec.cpu}%</div>
+          <div class="prediction-item-value">内存: ${rec.memory}MB</div>
+          <div class="prediction-item-value">超时: ${rec.timeout}ms</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Load prediction simulator
+async function loadPredictionSimulator() {
+  const content = document.getElementById('prediction-content');
+  const nodes = state.workflow.nodes;
+  const connections = state.workflow.connections;
+
+  if (Object.keys(nodes).length === 0) {
+    content.innerHTML = `
+      <div class="prediction-empty-state">
+        <div class="prediction-empty-state-icon">🎮</div>
+        <div class="prediction-empty-state-text">
+          暂无工作流数据<br>
+          请先创建或加载工作流
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const simulation = WorkflowPrediction.simulateExecution(nodes, connections);
+
+  content.innerHTML = `
+    <div class="prediction-section">
+      <div class="prediction-section-title">🎮 执行模拟结果</div>
+      <div class="prediction-simulator">
+        <div class="prediction-simulator-header">
+          <div class="prediction-simulator-title">预估执行时间</div>
+          <div class="prediction-stat-value" style="font-size: 24px;">${formatDuration(simulation.totalDuration)}</div>
+        </div>
+        <div style="display: flex; gap: 20px; margin-top: 12px;">
+          <div>
+            <div style="font-size: 11px; color: var(--text-dim);">并行优化节省</div>
+            <div style="color: var(--success);">${formatDuration(simulation.parallelSavings)}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--text-dim);">节点数</div>
+            <div>${Object.keys(simulation.nodes).length}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prediction-section">
+      <div class="prediction-section-title">🔴 关键路径</div>
+      <div class="prediction-timeline">
+        ${simulation.criticalPath.map(nodeId => `
+          <div class="prediction-timeline-item critical">
+            <div class="prediction-timeline-node">${nodeId}</div>
+            <div class="prediction-timeline-time">${formatDuration(simulation.nodes[nodeId]?.estimatedDuration || 0)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="prediction-section">
+      <div class="prediction-section-title">📋 各节点预测</div>
+      ${Object.entries(simulation.nodes).map(([nodeId, pred]) => `
+        <div class="prediction-item" onclick="highlightNodeOnCanvas('${nodeId}')">
+          <div class="prediction-item-header">
+            <div class="prediction-item-title">${nodeId}</div>
+            <span class="prediction-item-badge ${pred.confidence > 0.7 ? 'low' : 'medium'}">置信 ${(pred.confidence * 100).toFixed(0)}%</span>
+          </div>
+          <div class="prediction-item-value">预估: ${formatDuration(pred.estimatedDuration)}</div>
+          <div class="prediction-item-value">成功率: ${(pred.successRate * 100).toFixed(1)}%</div>
+          ${pred.resources ? `
+            <div class="prediction-item-value">CPU: ${pred.resources.cpu.estimated.toFixed(1)}%</div>
+            <div class="prediction-item-value">内存: ${pred.resources.memory.estimated.toFixed(1)}MB</div>
+          ` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Load prediction optimizations
+async function loadPredictionOptimizations() {
+  const content = document.getElementById('prediction-content');
+  const nodes = state.workflow.nodes;
+  const connections = state.workflow.connections;
+
+  // Get various optimization suggestions
+  const pathOpt = WorkflowPrediction.optimizeExecutionPath(nodes, connections, null);
+  const parallelOpt = WorkflowPrediction.suggestParallelOptimization(nodes, connections);
+  const loadBalancing = WorkflowPrediction.suggestLoadBalancing();
+
+  const allSuggestions = [
+    ...pathOpt.recommendations,
+    ...parallelOpt,
+    ...loadBalancing
+  ];
+
+  if (allSuggestions.length === 0) {
+    content.innerHTML = `
+      <div class="prediction-empty-state">
+        <div class="prediction-empty-state-icon">💡</div>
+        <div class="prediction-empty-state-text">
+          暂无优化建议<br>
+          工作流运行状态良好！
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  content.innerHTML = `
+    <div class="prediction-section">
+      <div class="prediction-section-title">💡 优化建议</div>
+      ${allSuggestions.map(s => `
+        <div class="prediction-suggestion-card" onclick="applyPredictionSuggestion('${s.type}')">
+          <div class="prediction-suggestion-header">
+            <div class="prediction-suggestion-title">${getSuggestionIcon(s.type)} ${getSuggestionTitle(s.type)}</div>
+            <span class="prediction-suggestion-impact ${s.impact}">${s.impact === 'high' ? '高' : s.impact === 'medium' ? '中' : '低'} Impact</span>
+          </div>
+          <div class="prediction-suggestion-desc">${s.description}</div>
+          ${s.estimatedSavings ? `<div style="margin-top: 8px; color: var(--success); font-size: 11px;">预估节省: ${s.estimatedSavings}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Load prediction accuracy
+async function loadPredictionAccuracy() {
+  const content = document.getElementById('prediction-content');
+  const accuracy = WorkflowPrediction.getPredictionAccuracy();
+
+  content.innerHTML = `
+    <div class="prediction-section">
+      <div class="prediction-section-title">📈 预测准确率统计</div>
+      <div class="prediction-accuracy-meter">
+        <div class="prediction-accuracy-ring" style="transform: rotate(${accuracy.accuracy * 360}deg);">
+          <span>${(accuracy.accuracy * 100).toFixed(1)}%</span>
+        </div>
+        <div class="prediction-accuracy-info">
+          <div class="prediction-accuracy-title">总体准确率</div>
+          <div class="prediction-accuracy-meta">
+            基于 ${accuracy.totalPredictions} 次预测<br>
+            样本量: ${accuracy.sampleSize}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prediction-section">
+      <div class="prediction-section-title">📊 各节点准确率</div>
+      ${Object.entries(WorkflowPrediction.stats).map(([nodeId, stat]) => {
+        const conf = WorkflowPrediction.calculateConfidence(stat);
+        return `
+          <div class="prediction-item">
+            <div class="prediction-item-header">
+              <div class="prediction-item-title">${nodeId}</div>
+              <span class="prediction-item-badge ${conf > 0.7 ? 'low' : 'medium'}">${(conf * 100).toFixed(0)}%</span>
+            </div>
+            <div class="prediction-bar">
+              <div class="prediction-bar-label">置信度</div>
+              <div class="prediction-bar-track">
+                <div class="prediction-bar-fill" style="width: ${conf * 100}%; background: ${conf > 0.7 ? 'var(--success)' : 'var(--warning)'};"></div>
+              </div>
+            </div>
+            <div class="prediction-item-desc">
+              基于 ${stat.totalExecutions} 次执行 | 成功率 ${(stat.successRate * 100).toFixed(1)}%
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div class="prediction-section">
+      <div class="prediction-section-title">📉 趋势分析</div>
+      ${Object.entries(WorkflowPrediction.stats)
+        .filter(([_, stat]) => stat.trend.direction !== 'stable')
+        .slice(0, 5)
+        .map(([nodeId, stat]) => `
+          <div class="prediction-item">
+            <div class="prediction-item-header">
+              <div class="prediction-item-title">${nodeId}</div>
+              <span class="prediction-item-badge ${stat.trend.direction === 'increasing' ? 'high' : 'low'}">
+                ${stat.trend.direction === 'increasing' ? '📈 上升' : '📉 下降'}
+              </span>
+            </div>
+            <div class="prediction-item-desc">
+              变化率: ${(stat.trend.slope * 100).toFixed(1)}% | 
+              近期均值: ${formatDuration(stat.trend.recentAvg)} | 
+              早期均值: ${formatDuration(stat.trend.olderAvg)}
+            </div>
+          </div>
+        `).join('')}
+    </div>
+  `;
+}
+
+// Helper functions
+function getBottleneckIcon(type) {
+  const icons = {
+    high_duration: '⏱️',
+    high_variance: '📊',
+    low_success_rate: '❌',
+    performance_degradation: '📉',
+    cpu_bottleneck: '🔥',
+    memory_bottleneck: '💾'
+  };
+  return icons[type] || '⚠️';
+}
+
+function getBottleneckTypeName(type) {
+  const names = {
+    high_duration: '执行时间长',
+    high_variance: '高方差',
+    low_success_rate: '低成功率',
+    performance_degradation: '性能下降',
+    cpu_bottleneck: 'CPU瓶颈',
+    memory_bottleneck: '内存瓶颈'
+  };
+  return names[type] || type;
+}
+
+function getSuggestionIcon(type) {
+  const icons = {
+    parallelization: '🔀',
+    loop_optimization: '🔄',
+    load_balance: '⚖️',
+    parallel_merge: '🔗',
+    caching: '💾'
+  };
+  return icons[type] || '💡';
+}
+
+function getSuggestionTitle(type) {
+  const titles = {
+    parallelization: '并行化优化',
+    loop_optimization: '循环优化',
+    load_balance: '负载均衡',
+    parallel_merge: '并行合并',
+    caching: '缓存建议'
+  };
+  return titles[type] || '优化建议';
+}
+
+function applyPredictionSuggestion(type) {
+  showToast(`优化建议: ${type} - 已记录`);
+}
+
+// ============ End v25 Prediction Panel ============
 
     // ============ End v19 Mobile, PWA & Offline Features ============
   </script>
