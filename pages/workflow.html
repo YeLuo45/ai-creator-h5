@@ -911,6 +911,7 @@
       <button class="toolbar-btn" id="btn-branch" title="分支管理" onclick="showBranchPanel()">🌿 分支</button>
       <button class="toolbar-btn" id="btn-share" title="分享工作流" onclick="showShareModal()">🔗 分享</button>
       <button class="toolbar-btn" id="btn-collab" title="协作状态" onclick="showAuditPanel()">👥 协作</button>
+      <button class="toolbar-btn" id="btn-chat" title="对话编辑" onclick="toggleChatPanel()">💬 对话</button>
     </div>
 
     <!-- Real-time Status Bar -->
@@ -1271,6 +1272,11 @@
   <script src="../services/pluginRegistry.js"></script>
   <script src="../services/nodeBuilder.js"></script>
   <script src="../services/sandboxRunner.js"></script>
+  <script src="../services/workflowAIGen.js"></script>
+  <script src="../services/nodeRecommender.js"></script>
+  <script src="../services/intentRouter.js"></script>
+  <script src="../services/chatEditor.js"></script>
+  <script src="../services/chatEditorUI.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -1339,6 +1345,15 @@
         
         // 初始化协作功能
         initCollabPanel();
+        
+        // 初始化对话编辑器
+        initChatEditor();
+        
+        // 初始化节点推荐
+        initNodeRecommender();
+        
+        // 初始化AI助手输入
+        initAIAssistInput();
         
         // 处理分享链接访问
         handleShareLinkAccess();
