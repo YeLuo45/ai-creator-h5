@@ -1284,6 +1284,500 @@
     .replay-controls.visible {
       display: flex;
     }
+
+    /* ===== Workflow List Panel v14 ===== */
+    .workflow-list-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 320px;
+      height: 100vh;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .workflow-list-panel.open {
+      transform: translateX(0);
+    }
+
+    .workflow-list-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .workflow-list-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .workflow-list-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px;
+    }
+
+    .workflow-list-close:hover { color: var(--text); }
+
+    .workflow-list-actions {
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .workflow-list-btn {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .workflow-list-btn:hover { background: var(--bg-node); }
+    .workflow-list-btn.primary { background: var(--primary); border-color: var(--primary); }
+    .workflow-list-btn.primary:hover { background: var(--primary-dark); }
+
+    .workflow-list-search {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .workflow-list-search input {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .workflow-list-search input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .workflow-list-search input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .workflow-list-filters {
+      padding: 8px 16px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-tag {
+      padding: 4px 10px;
+      font-size: 11px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-tag:hover { border-color: var(--primary); color: var(--text); }
+    .filter-tag.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .workflow-list-sort {
+      padding: 8px 16px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+    }
+
+    .sort-label { color: var(--text-dim); }
+
+    .sort-btn {
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+
+    .sort-btn:hover { color: var(--text); }
+    .sort-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    /* Favorites Quick Access */
+    .favorites-quick {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .favorites-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .favorites-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .favorite-item {
+      padding: 6px 10px;
+      background: var(--bg-node);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .favorite-item:hover { background: var(--bg-dark); }
+    .favorite-item .star { color: #F59E0B; }
+
+    /* Workflow List Content */
+    .workflow-list-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 16px;
+    }
+
+    .workflow-list-item {
+      padding: 12px;
+      background: var(--bg-node);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .workflow-list-item:hover { border-color: var(--border); }
+    .workflow-list-item.selected { border-color: var(--primary); }
+    .workflow-list-item.pinned { border-left: 3px solid var(--primary); }
+    .workflow-list-item.selected-for-batch { border-color: var(--warning); background: rgba(245, 158, 11, 0.1); }
+
+    .workflow-item-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .workflow-item-name {
+      font-size: 14px;
+      font-weight: 500;
+      flex: 1;
+      word-break: break-word;
+    }
+
+    .workflow-item-actions {
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .workflow-list-item:hover .workflow-item-actions { opacity: 1; }
+
+    .workflow-item-btn {
+      padding: 4px 6px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .workflow-item-btn:hover { background: var(--bg-dark); color: var(--text); }
+    .workflow-item-btn.starred { color: #F59E0B; }
+    .workflow-item-btn.pinned { color: var(--primary); }
+
+    .workflow-item-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .workflow-item-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .workflow-tag {
+      padding: 2px 8px;
+      font-size: 10px;
+      border-radius: 10px;
+      color: white;
+    }
+
+    .workflow-item-checkbox {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 2px solid var(--border);
+      background: var(--bg-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .workflow-item-checkbox.checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .workflow-item-checkbox.checked::after {
+      content: '✓';
+      color: white;
+      font-size: 10px;
+    }
+
+    /* Batch Actions Bar */
+    .batch-actions-bar {
+      padding: 12px 16px;
+      background: var(--bg-dark);
+      border-top: 1px solid var(--border);
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .batch-actions-bar.visible { display: flex; }
+
+    .batch-selected-count {
+      font-size: 12px;
+      color: var(--text-dim);
+      flex: 1;
+    }
+
+    .batch-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .batch-btn:hover { background: var(--bg-node); }
+    .batch-btn.danger { border-color: var(--error); color: var(--error); }
+    .batch-btn.danger:hover { background: rgba(239, 68, 68, 0.1); }
+
+    /* Tag Manager */
+    .tag-manager {
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tag-manager-title {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tag-add-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .tag-add-btn:hover { color: var(--primary); }
+
+    .tag-list {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag-item {
+      padding: 4px 10px;
+      font-size: 11px;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .tag-item:hover { opacity: 0.8; }
+    .tag-item .tag-remove {
+      font-size: 10px;
+      opacity: 0.6;
+    }
+    .tag-item .tag-remove:hover { opacity: 1; }
+
+    .tag-create-form {
+      display: none;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag-create-form.visible { display: flex; }
+
+    .tag-create-input {
+      flex: 1;
+      padding: 4px 8px;
+      font-size: 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+    }
+
+    .tag-create-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .tag-color-picker {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tag-color-option {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tag-color-option:hover { transform: scale(1.1); }
+    .tag-color-option.selected { border-color: white; }
+
+    .tag-create-save {
+      padding: 4px 10px;
+      font-size: 11px;
+      background: var(--primary);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Empty state */
+    .workflow-list-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+    }
+
+    .workflow-list-empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .workflow-list-empty-text {
+      font-size: 13px;
+    }
+
+    /* Overlay for workflow list panel */
+    .workflow-list-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 850;
+      display: none;
+    }
+
+    .workflow-list-overlay.visible { display: block; }
+
+    /* Tag Filter Dropdown in Batch Mode */
+    .batch-tag-dropdown {
+      position: relative;
+    }
+
+    .batch-tag-dropdown-content {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 120px;
+      margin-bottom: 4px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+    }
+
+    .batch-tag-dropdown-content.visible { display: flex; }
+
+    .batch-tag-option {
+      padding: 6px 10px;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .batch-tag-option:hover { background: var(--bg-node); }
+
+    .batch-tag-option-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
   </style>
 </head>
 <body>
@@ -1301,6 +1795,9 @@
       </button>
       <button class="toolbar-btn" id="btn-load" title="加载工作流">
         📂 加载
+      </button>
+      <button class="toolbar-btn" id="btn-workflow-list" title="工作流列表" onclick="toggleWorkflowListPanel()">
+        📋 列表
       </button>
       <button class="toolbar-btn" id="btn-import" title="导入 JSON">
         📥 导入
@@ -1715,6 +2212,63 @@
     <div id="audit-log-list" class="audit-log-list"></div>
   </div>
 
+  <!-- Workflow List Panel v14 -->
+  <div class="workflow-list-overlay" id="workflow-list-overlay" onclick="toggleWorkflowListPanel()"></div>
+  <div class="workflow-list-panel" id="workflow-list-panel">
+    <div class="workflow-list-header">
+      <span class="workflow-list-title">📋 工作流列表</span>
+      <button class="workflow-list-close" onclick="toggleWorkflowListPanel()">×</button>
+    </div>
+    <div class="workflow-list-actions">
+      <button class="workflow-list-btn primary" onclick="createNewWorkflowFromList()">+ 新建</button>
+      <button class="workflow-list-btn" onclick="toggleBatchMode()">☐ 批量操作</button>
+    </div>
+    <div class="workflow-list-search">
+      <input type="text" id="workflow-list-search-input" placeholder="搜索工作流..." oninput="filterWorkflowList()">
+    </div>
+    <div class="workflow-list-filters" id="workflow-list-filters"></div>
+    <div class="workflow-list-sort">
+      <span class="sort-label">排序:</span>
+      <button class="sort-btn active" data-sort="updatedAt" onclick="setWorkflowSort('updatedAt')">最近更新</button>
+      <button class="sort-btn" data-sort="name" onclick="setWorkflowSort('name')">名称</button>
+      <button class="sort-btn" data-sort="createdAt" onclick="setWorkflowSort('createdAt')">创建时间</button>
+    </div>
+    <div class="favorites-quick" id="favorites-quick">
+      <div class="favorites-title">⭐ 收藏 (Top 5)</div>
+      <div class="favorites-list" id="favorites-list"></div>
+    </div>
+    <div class="tag-manager">
+      <div class="tag-manager-title">
+        <span>🏷️ 标签管理</span>
+        <button class="tag-add-btn" onclick="toggleTagCreateForm()">+</button>
+      </div>
+      <div class="tag-list" id="tag-list"></div>
+      <div class="tag-create-form" id="tag-create-form">
+        <input type="text" class="tag-create-input" id="tag-create-name" placeholder="标签名">
+        <div class="tag-color-picker">
+          <div class="tag-color-option selected" style="background:#6366F1" data-color="#6366F1" onclick="selectTagColor(this)"></div>
+          <div class="tag-color-option" style="background:#10B981" data-color="#10B981" onclick="selectTagColor(this)"></div>
+          <div class="tag-color-option" style="background:#F59E0B" data-color="#F59E0B" onclick="selectTagColor(this)"></div>
+          <div class="tag-color-option" style="background:#EF4444" data-color="#EF4444" onclick="selectTagColor(this)"></div>
+          <div class="tag-color-option" style="background:#EC4899" data-color="#EC4899" onclick="selectTagColor(this)"></div>
+          <div class="tag-color-option" style="background:#8B5CF6" data-color="#8B5CF6" onclick="selectTagColor(this)"></div>
+        </div>
+        <button class="tag-create-save" onclick="createCustomTag()">添加</button>
+      </div>
+    </div>
+    <div class="workflow-list-content" id="workflow-list-content"></div>
+    <div class="batch-actions-bar" id="batch-actions-bar">
+      <span class="batch-selected-count">已选择 <span id="batch-selected-count">0</span> 项</span>
+      <button class="batch-btn" onclick="batchAddTag()">+ 标签</button>
+      <div class="batch-tag-dropdown" id="batch-tag-dropdown" style="position:relative;display:none;">
+        <div class="batch-tag-dropdown-content" id="batch-tag-dropdown-content"></div>
+      </div>
+      <button class="batch-btn" onclick="batchExport()">📤 导出</button>
+      <button class="batch-btn danger" onclick="batchDelete()">🗑️ 删除</button>
+      <button class="batch-btn" onclick="cancelBatchMode()">取消</button>
+    </div>
+  </div>
+
   <!-- Hidden file input for import -->
   <input type="file" id="file-import" accept=".json" style="display:none">
 
@@ -1722,6 +2276,7 @@
   <script src="../services/workflowStorage.js"></script>
   <script src="../services/workflowLogger.js"></script>
   <script src="../services/workflowLoggerUI.js"></script>
+  <script src="../services/workflowListManager.js"></script>
   <script src="../services/workflowLoop.js"></script>
   <script src="../services/workflowSubflow.js"></script>
   <script src="../services/workflowVersionManager.js"></script>
@@ -2906,7 +3461,7 @@
     function newWorkflow() {
       if (state.workflow.nodes.length > 0 && !confirm('确定新建工作流？当前未保存的内容将丢失。')) return;
       pushUndoState();
-      state.workflow = { id: null, name: '未命名工作流', description: '', nodes: [], connections: [] };
+      state.workflow = { id: null, name: '未命名工作流', description: '', nodes: [], connections: [], tags: [], isFavorite: false, isPinned: false };
       document.querySelectorAll('.workflow-node').forEach(n => n.remove());
       renderConnections();
       selectNode(null);
@@ -3606,6 +4161,280 @@
       
       showToast(`已添加: ${desc.short}`);
       WorkflowLogger.info(`语义搜索添加节点: ${desc.short}`);
+    }
+
+    // ============ Workflow List Panel v14 ============
+    let workflowListState = {
+      isOpen: false,
+      isBatchMode: false,
+      selectedWorkflows: [],
+      currentSort: 'updatedAt',
+      currentTagFilter: null,
+      selectedTagColor: '#6366F1'
+    };
+
+    function toggleWorkflowListPanel() {
+      workflowListState.isOpen = !workflowListState.isOpen;
+      const panel = document.getElementById('workflow-list-panel');
+      const overlay = document.getElementById('workflow-list-overlay');
+      if (workflowListState.isOpen) {
+        panel.classList.add('open');
+        overlay.classList.add('visible');
+        refreshWorkflowList();
+      } else {
+        panel.classList.remove('open');
+        overlay.classList.remove('visible');
+      }
+    }
+
+    async function refreshWorkflowList() {
+      await renderTagFilters();
+      await renderTagManager();
+      await renderFavoritesQuick();
+      await renderWorkflowList();
+    }
+
+    async function renderTagFilters() {
+      const container = document.getElementById('workflow-list-filters');
+      const allTags = WorkflowListManager.getAllTags();
+      let html = `<button class="filter-tag ${!workflowListState.currentTagFilter ? 'active' : ''}" onclick="setTagFilter(null)">全部</button>`;
+      allTags.forEach(tag => {
+        html += `<button class="filter-tag ${workflowListState.currentTagFilter === tag.id ? 'active' : ''}" onclick="setTagFilter('${tag.id}')" style="border-color:${tag.color}">${tag.name}</button>`;
+      });
+      container.innerHTML = html;
+    }
+
+    async function renderTagManager() {
+      const container = document.getElementById('tag-list');
+      const allTags = WorkflowListManager.getAllTags();
+      const customTags = WorkflowListManager.getCustomTags();
+      let html = '';
+      allTags.forEach(tag => {
+        const isCustom = tag.id.startsWith('custom_');
+        html += `<span class="tag-item" style="background:${tag.color}">${tag.name}${isCustom ? '<span class="tag-remove" onclick="event.stopPropagation();removeCustomTag(\'' + tag.id + '\')">×</span>' : ''}</span>`;
+      });
+      container.innerHTML = html;
+    }
+
+    async function renderFavoritesQuick() {
+      const container = document.getElementById('favorites-list');
+      const favorites = await WorkflowListManager.getTopFavorites();
+      if (favorites.length === 0) {
+        container.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:4px 0;">暂无收藏</div>';
+        return;
+      }
+      let html = '';
+      favorites.forEach(w => {
+        html += `<div class="favorite-item" onclick="loadWorkflowFromList(${w.id})"><span class="star">⭐</span>${escHtml(w.name)}</div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    async function renderWorkflowList() {
+      const container = document.getElementById('workflow-list-content');
+      const query = document.getElementById('workflow-list-search-input').value;
+      const workflows = await WorkflowListManager.searchWorkflows(query, {
+        tagFilter: workflowListState.currentTagFilter,
+        sortBy: workflowListState.currentSort
+      });
+
+      if (workflows.length === 0) {
+        container.innerHTML = `
+          <div class="workflow-list-empty">
+            <div class="workflow-list-empty-icon">📋</div>
+            <div class="workflow-list-empty-text">暂无工作流<br>点击上方"新建"创建第一个工作流</div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      workflows.forEach(w => {
+        const isSelected = workflowListState.selectedWorkflows.includes(w.id);
+        const tags = (w.tags || []).map(tagId => {
+          const tag = WorkflowListManager.getTagById(tagId);
+          return tag ? `<span class="workflow-tag" style="background:${tag.color}">${tag.name}</span>` : '';
+        }).join('');
+        const timeStr = WorkflowListManager.formatRelativeTime(w.updatedAt);
+        html += `
+          <div class="workflow-list-item ${w.isPinned ? 'pinned' : ''} ${isSelected ? 'selected-for-batch' : ''}" data-id="${w.id}" onclick="handleWorkflowItemClick(event, ${w.id})">
+            <div class="workflow-item-header">
+              <div class="workflow-item-name">${escHtml(w.name)}</div>
+              <div class="workflow-item-actions">
+                <button class="workflow-item-btn ${w.isFavorite ? 'starred' : ''}" onclick="event.stopPropagation();toggleWorkflowFavorite(${w.id})" title="收藏">${w.isFavorite ? '⭐' : '☆'}</button>
+                <button class="workflow-item-btn ${w.isPinned ? 'pinned' : ''}" onclick="event.stopPropagation();toggleWorkflowPin(${w.id})" title="置顶">📌</button>
+                <button class="workflow-item-btn" onclick="event.stopPropagation();duplicateWorkflowFromList(${w.id})" title="复制">📋</button>
+              </div>
+            </div>
+            <div class="workflow-item-meta">
+              <span>⏱ ${timeStr}</span>
+              <span>📊 ${w.nodes?.length || 0} 节点</span>
+            </div>
+            ${tags ? `<div class="workflow-item-tags">${tags}</div>` : ''}
+            ${workflowListState.isBatchMode ? `<div class="workflow-item-checkbox ${isSelected ? 'checked' : ''}" onclick="event.stopPropagation();toggleWorkflowSelection(${w.id})"></div>` : ''}
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function handleWorkflowItemClick(event, workflowId) {
+      if (workflowListState.isBatchMode) {
+        toggleWorkflowSelection(workflowId);
+      } else {
+        loadWorkflowFromList(workflowId);
+      }
+    }
+
+    async function loadWorkflowFromList(id) {
+      const workflow = await WorkflowStorage.load(id);
+      if (workflow) {
+        loadWorkflow(workflow);
+        toggleWorkflowListPanel();
+      }
+    }
+
+    async function toggleWorkflowFavorite(id) {
+      await WorkflowListManager.toggleFavorite(id);
+      await refreshWorkflowList();
+    }
+
+    async function toggleWorkflowPin(id) {
+      await WorkflowListManager.togglePinned(id);
+      await refreshWorkflowList();
+    }
+
+    async function duplicateWorkflowFromList(id) {
+      const newId = await WorkflowListManager.duplicateWorkflow(id);
+      if (newId) {
+        showToast('已复制工作流');
+        await refreshWorkflowList();
+      }
+    }
+
+    function setTagFilter(tagId) {
+      workflowListState.currentTagFilter = tagId;
+      renderTagFilters();
+      renderWorkflowList();
+    }
+
+    function setWorkflowSort(sortBy) {
+      workflowListState.currentSort = sortBy;
+      document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === sortBy);
+      });
+      renderWorkflowList();
+    }
+
+    function filterWorkflowList() {
+      renderWorkflowList();
+    }
+
+    function toggleBatchMode() {
+      workflowListState.isBatchMode = !workflowListState.isBatchMode;
+      workflowListState.selectedWorkflows = [];
+      document.getElementById('batch-actions-bar').classList.toggle('visible', workflowListState.isBatchMode);
+      document.querySelectorAll('.workflow-list-btn').forEach(btn => {
+        if (btn.textContent.includes('批量')) {
+          btn.textContent = workflowListState.isBatchMode ? '☑ 批量操作' : '☐ 批量操作';
+        }
+      });
+      renderWorkflowList();
+    }
+
+    function cancelBatchMode() {
+      workflowListState.isBatchMode = false;
+      workflowListState.selectedWorkflows = [];
+      document.getElementById('batch-actions-bar').classList.remove('visible');
+      document.querySelectorAll('.workflow-list-btn').forEach(btn => {
+        if (btn.textContent.includes('批量')) {
+          btn.textContent = '☐ 批量操作';
+        }
+      });
+      renderWorkflowList();
+    }
+
+    function toggleWorkflowSelection(id) {
+      const idx = workflowListState.selectedWorkflows.indexOf(id);
+      if (idx >= 0) {
+        workflowListState.selectedWorkflows.splice(idx, 1);
+      } else {
+        workflowListState.selectedWorkflows.push(id);
+      }
+      document.getElementById('batch-selected-count').textContent = workflowListState.selectedWorkflows.length;
+      renderWorkflowList();
+    }
+
+    function toggleTagCreateForm() {
+      document.getElementById('tag-create-form').classList.toggle('visible');
+      document.getElementById('tag-create-name').value = '';
+    }
+
+    function selectTagColor(el) {
+      document.querySelectorAll('.tag-color-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      workflowListState.selectedTagColor = el.dataset.color;
+    }
+
+    function createCustomTag() {
+      const name = document.getElementById('tag-create-name').value.trim();
+      if (!name) {
+        showToast('请输入标签名');
+        return;
+      }
+      WorkflowListManager.addCustomTag(name, workflowListState.selectedTagColor);
+      toggleTagCreateForm();
+      refreshWorkflowList();
+      showToast('已创建标签: ' + name);
+    }
+
+    function removeCustomTag(tagId) {
+      if (confirm('确定删除此标签？')) {
+        WorkflowListManager.removeCustomTag(tagId);
+        refreshWorkflowList();
+      }
+    }
+
+    function batchAddTag() {
+      const dropdown = document.getElementById('batch-tag-dropdown');
+      const content = document.getElementById('batch-tag-dropdown-content');
+      const allTags = WorkflowListManager.getAllTags();
+      let html = '';
+      allTags.forEach(tag => {
+        html += `<div class="batch-tag-option" onclick="applyBatchTag('${tag.id}')"><span class="batch-tag-option-dot" style="background:${tag.color}"></span>${tag.name}</div>`;
+      });
+      content.innerHTML = html;
+      dropdown.style.display = 'block';
+      content.classList.toggle('visible');
+    }
+
+    function applyBatchTag(tagId) {
+      WorkflowListManager.batchUpdateTags(workflowListState.selectedWorkflows, [tagId]);
+      document.getElementById('batch-tag-dropdown-content').classList.remove('visible');
+      showToast('已添加标签');
+      refreshWorkflowList();
+    }
+
+    async function batchExport() {
+      const workflows = await Promise.all(
+        workflowListState.selectedWorkflows.map(id => WorkflowStorage.load(id))
+      );
+      WorkflowListManager.exportMultiple(workflows.filter(w => w));
+      showToast('已导出 ' + workflowListState.selectedWorkflows.length + ' 个工作流');
+      cancelBatchMode();
+    }
+
+    async function batchDelete() {
+      if (!confirm(`确定删除选中的 ${workflowListState.selectedWorkflows.length} 个工作流？此操作不可恢复。`)) return;
+      await WorkflowListManager.batchDelete(workflowListState.selectedWorkflows);
+      showToast('已删除 ' + workflowListState.selectedWorkflows.length + ' 个工作流');
+      cancelBatchMode();
+      refreshWorkflowList();
+    }
+
+    function createNewWorkflowFromList() {
+      toggleWorkflowListPanel();
+      newWorkflow();
     }
 
     // Start
