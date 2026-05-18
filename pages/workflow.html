@@ -3479,9 +3479,567 @@
     }
 
     /* ========== End v19 Mobile CSS ========== */
+
+    /* ========== v20 Theme System CSS ========== */
+    :root {
+      /* Default Dark Theme */
+      --theme-primary: #6366F1;
+      --theme-primary-dark: #4F46E5;
+      --theme-bg-dark: #0F0F1A;
+      --theme-bg-panel: #1A1A2E;
+      --theme-bg-node: #252542;
+      --theme-border: #333355;
+      --theme-text: #E0E0FF;
+      --theme-text-dim: #8888AA;
+      --theme-success: #10B981;
+      --theme-warning: #F59E0B;
+      --theme-error: #EF4444;
+      --theme-font: 'Inter', 'Noto Sans SC', sans-serif;
+      --theme-border-radius: 8px;
+    }
+
+    [data-theme="light"] {
+      --theme-primary: #6366F1;
+      --theme-primary-dark: #4F46E5;
+      --theme-bg-dark: #F5F5FA;
+      --theme-bg-panel: #FFFFFF;
+      --theme-bg-node: #F0F0FA;
+      --theme-border: #DDDDFF;
+      --theme-text: #1A1A2E;
+      --theme-text-dim: #6666AA;
+      --theme-success: #10B981;
+      --theme-warning: #F59E0B;
+      --theme-error: #EF4444;
+    }
+
+    [data-theme="high-contrast"] {
+      --theme-primary: #FFFF00;
+      --theme-primary-dark: #CCCC00;
+      --theme-bg-dark: #000000;
+      --theme-bg-panel: #000000;
+      --theme-bg-node: #1A1A1A;
+      --theme-border: #FFFFFF;
+      --theme-text: #FFFFFF;
+      --theme-text-dim: #CCCCCC;
+      --theme-success: #00FF00;
+      --theme-warning: #FFFF00;
+      --theme-error: #FF0000;
+    }
+
+    [data-theme="custom"] {
+      --theme-primary: var(--custom-primary, #6366F1);
+      --theme-primary-dark: var(--custom-primary-dark, #4F46E5);
+      --theme-bg-dark: var(--custom-bg-dark, #0F0F1A);
+      --theme-bg-panel: var(--custom-bg-panel, #1A1A2E);
+      --theme-bg-node: var(--custom-bg-node, #252542);
+      --theme-border: var(--custom-border, #333355);
+      --theme-text: var(--custom-text, #E0E0FF);
+      --theme-text-dim: var(--custom-text-dim, #8888AA);
+      --theme-success: var(--custom-success, #10B981);
+      --theme-warning: var(--custom-warning, #F59E0B);
+      --theme-error: var(--custom-error, #EF4444);
+      --theme-font: var(--custom-font, 'Inter', 'Noto Sans SC', sans-serif);
+      --theme-border-radius: var(--custom-border-radius, 8px);
+    }
+
+    /* Apply theme variables to existing CSS variables */
+    body,
+    .workflow-container,
+    .toolbar,
+    .node-palette,
+    .canvas-container,
+    .property-panel,
+    .status-bar,
+    .modal,
+    .log-panel,
+    .ai-optimizer-panel,
+    .debug-control-bar,
+    .realtime-status-bar,
+    .trigger-panel,
+    .scheduler-panel,
+    .report-modal,
+    .share-modal,
+    .publish-modal,
+    .version-history-panel,
+    .workflow-list-panel,
+    .collab-panel,
+    .chat-panel,
+    .workflow-node,
+    .mobile-layout,
+    .mobile-header,
+    .mobile-bottom-nav,
+    .mobile-drawer,
+    .mobile-workflow-list,
+    .mobile-palette-sheet {
+      background: var(--theme-bg-panel);
+      color: var(--theme-text);
+      font-family: var(--theme-font);
+      border-color: var(--theme-border);
+    }
+
+    .toolbar-btn,
+    .palette-node,
+    .workflow-node,
+    .panel-input,
+    .modal,
+    .btn-small,
+    .debug-btn,
+    .trigger-btn,
+    .schedule-btn,
+    .report-tab,
+    .report-preset-template,
+    .report-history-item,
+    .report-favorite-item,
+    .ai-optimizer-tab,
+    .ai-suggestion-item,
+    .ai-stat-card,
+    .ai-history-item,
+    .ai-ab-test-card,
+    .mobile-workflow-card,
+    .mobile-palette-node,
+    .mobile-toolbar-btn,
+    .pwa-install-prompt {
+      background: var(--theme-bg-node);
+      color: var(--theme-text);
+      border-color: var(--theme-border);
+      border-radius: var(--theme-border-radius);
+    }
+
+    .toolbar-title,
+    .node-name,
+    .panel-title,
+    .modal-header span,
+    .shortcut-item > span,
+    .log-title,
+    .version-name,
+    .result-node,
+    .trigger-item-name,
+    .schedule-item-name,
+    .report-preset-name,
+    .ai-optimizer-title,
+    .ai-suggestion-title,
+    .mobile-workflow-card-title {
+      color: var(--theme-text);
+    }
+
+    .text-dim,
+    .panel-label,
+    .panel-section > div[style*="color: var(--text-dim)"],
+    .log-count,
+    .status-item > span,
+    .realtime-label,
+    .ai-stat-label,
+    .ai-suggestion-desc,
+    .ai-suggestion-impact,
+    .shortcut-keys,
+    .variable-empty,
+    .trigger-item-meta,
+    .schedule-item-meta,
+    .report-template-desc,
+    .report-history-meta,
+    .mobile-workflow-card-desc,
+    .mobile-workflow-card-meta,
+    .pwa-install-desc,
+    .offline-text {
+      color: var(--theme-text-dim) !important;
+    }
+
+    .toolbar-btn.primary,
+    .ai-suggestion-apply-btn,
+    .btn-small.primary,
+    .trigger-action-btn:hover,
+    .schedule-btn:hover,
+    .report-favorite-item:hover,
+    .pwa-install-btn.primary {
+      background: var(--theme-primary);
+      border-color: var(--theme-primary);
+    }
+
+    .toolbar-btn.danger,
+    .trigger-action-btn.danger:hover,
+    .btn-small.danger {
+      border-color: var(--theme-error);
+      color: var(--theme-error);
+    }
+
+    .toolbar-btn:hover,
+    .palette-node:hover,
+    .workflow-node:hover,
+    .report-tab:hover,
+    .report-preset-template:hover,
+    .ai-optimizer-tab:hover,
+    .mobile-palette-node:active,
+    .mobile-workflow-card:active {
+      border-color: var(--theme-primary);
+    }
+
+    .workflow-node.selected,
+    .toolbar-btn:focus,
+    .palette-node:focus,
+    .panel-input:focus,
+    .ai-intent-input:focus {
+      border-color: var(--theme-primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+    }
+
+    .workflow-node.running,
+    .node-status-badge.running,
+    .realtime-badge.running {
+      border-color: var(--theme-warning);
+      color: var(--theme-warning);
+    }
+
+    .workflow-node.completed,
+    .node-status-badge.completed,
+    .result-status.success,
+    .ai-suggestion-badge.success,
+    .ai-history-after {
+      border-color: var(--theme-success);
+      color: var(--theme-success);
+    }
+
+    .workflow-node.error,
+    .node-status-badge.error,
+    .result-status.error,
+    .ai-history-before {
+      border-color: var(--theme-error);
+      color: var(--theme-error);
+    }
+
+    .canvas-bg,
+    .node-progress {
+      background: var(--theme-bg-dark);
+    }
+
+    .progress-fill,
+    .node-progress-bar,
+    .connection-line,
+    .realtime-progress-fill,
+    .ai-sensitivity-bar {
+      background: var(--theme-primary);
+    }
+
+    /* Theme switcher button in toolbar */
+    .theme-switcher {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .theme-btn {
+      padding: 6px 10px;
+      background: transparent;
+      border: 1px solid var(--theme-border);
+      border-radius: var(--theme-border-radius);
+      color: var(--theme-text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .theme-btn:hover,
+    .theme-btn:focus {
+      border-color: var(--theme-primary);
+      color: var(--theme-text);
+    }
+
+    .theme-btn[aria-checked="true"] {
+      background: var(--theme-primary);
+      border-color: var(--theme-primary);
+      color: white;
+    }
+
+    .theme-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      background: var(--theme-bg-panel);
+      border: 1px solid var(--theme-border);
+      border-radius: var(--theme-border-radius);
+      padding: 8px;
+      min-width: 200px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+    }
+
+    .theme-dropdown.visible {
+      display: block;
+    }
+
+    .theme-preset {
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      transition: background 0.15s;
+    }
+
+    .theme-preset:hover,
+    .theme-preset:focus {
+      background: var(--theme-bg-node);
+    }
+
+    .theme-preset.active {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .theme-preset-indicator {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--theme-border);
+    }
+
+    .theme-preset-indicator.dark { background: linear-gradient(135deg, #0F0F1A 50%, #1A1A2E 50%); }
+    .theme-preset-indicator.light { background: linear-gradient(135deg, #FFFFFF 50%, #F5F5FA 50%); }
+    .theme-preset-indicator.high-contrast { background: linear-gradient(135deg, #000000 50%, #FFFF00 50%); }
+    .theme-preset-indicator.custom { background: conic-gradient(#ff6b6b, #ffd93d, #6bcb77, #4d96ff, #9b59b6, #ff6b6b); }
+
+    .theme-custom-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--theme-border);
+    }
+
+    .theme-custom-title {
+      font-size: 11px;
+      color: var(--theme-text-dim);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .theme-custom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .theme-custom-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .theme-custom-item label {
+      font-size: 10px;
+      color: var(--theme-text-dim);
+    }
+
+    .theme-custom-item input[type="color"] {
+      width: 100%;
+      height: 28px;
+      border: 1px solid var(--theme-border);
+      border-radius: 4px;
+      background: var(--theme-bg-node);
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .theme-custom-item input[type="text"] {
+      width: 100%;
+      padding: 4px 8px;
+      border: 1px solid var(--theme-border);
+      border-radius: 4px;
+      background: var(--theme-bg-node);
+      color: var(--theme-text);
+      font-size: 11px;
+    }
+
+    .theme-custom-item input[type="range"] {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .theme-export-import {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .theme-export-import button {
+      flex: 1;
+      padding: 6px 12px;
+      font-size: 11px;
+      background: var(--theme-bg-node);
+      border: 1px solid var(--theme-border);
+      border-radius: 4px;
+      color: var(--theme-text);
+      cursor: pointer;
+    }
+
+    .theme-export-import button:hover {
+      border-color: var(--theme-primary);
+    }
+
+    /* Language switcher */
+    .lang-switcher {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .lang-btn {
+      padding: 6px 10px;
+      background: transparent;
+      border: 1px solid var(--theme-border);
+      border-radius: var(--theme-border-radius);
+      color: var(--theme-text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .lang-btn:hover,
+    .lang-btn:focus {
+      border-color: var(--theme-primary);
+      color: var(--theme-text);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      background: var(--theme-bg-panel);
+      border: 1px solid var(--theme-border);
+      border-radius: var(--theme-border-radius);
+      padding: 8px;
+      min-width: 140px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+    }
+
+    .lang-dropdown.visible {
+      display: block;
+    }
+
+    .lang-option {
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+
+    .lang-option:hover,
+    .lang-option:focus {
+      background: var(--theme-bg-node);
+    }
+
+    .lang-option.active {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--theme-primary);
+    }
+
+    .lang-flag {
+      font-size: 16px;
+    }
+
+    /* High contrast focus indicators */
+    [data-theme="high-contrast"] *:focus,
+    [data-theme="high-contrast"] *:focus-visible {
+      outline: 3px solid #FFFF00 !important;
+      outline-offset: 2px;
+    }
+
+    [data-theme="high-contrast"] .workflow-node:focus,
+    [data-theme="high-contrast"] .toolbar-btn:focus,
+    [data-theme="high-contrast"] .palette-node:focus {
+      outline: 3px solid #FFFF00 !important;
+    }
+
+    /* Skip to main content link for screen readers */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--theme-primary);
+      color: white;
+      padding: 8px 16px;
+      z-index: 9999;
+      transition: top 0.2s;
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Screen reader only content */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Live region for announcements */
+    .live-region {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Print styles for workflow export */
+    @media print {
+      .toolbar,
+      .node-palette,
+      .property-panel,
+      .status-bar,
+      .log-panel {
+        display: none !important;
+      }
+      .canvas-container {
+        width: 100% !important;
+        height: auto !important;
+      }
+    }
+
+    /* ========== End v20 Theme & i18n CSS ========== */
   </style>
 </head>
 <body>
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-canvas" class="skip-link" data-i18n="skipToMain">跳过导航，直接到主内容</a>
+  
+  <!-- Live region for screen reader announcements -->
+  <div id="live-region" class="live-region" aria-live="polite" aria-atomic="true"></div>
+  <div id="live-region-assertive" class="live-region" aria-live="assertive" aria-atomic="true"></div>
   <!-- Offline Status Indicator -->
   <div class="offline-indicator" id="offline-indicator">
     <span class="pulse"></span>
@@ -9163,6 +9721,1644 @@
       }
     };
 
+    // ============ v20 i18n & Theme System ============
+    // Internationalization (i18n) with 5 languages
+    const I18n = {
+      currentLang: 'zh',
+      translations: {
+        zh: {
+          // General
+          appTitle: 'AI 创作工作流',
+          skipToMain: '跳过导航，直接到主内容',
+          // Toolbar
+          new: '新建',
+          save: '保存',
+          load: '加载',
+          list: '列表',
+          import: '导入',
+          export: '导出',
+          undo: '撤销',
+          redo: '重做',
+          run: '运行',
+          pause: '暂停',
+          stop: '停止',
+          zoomIn: '放大',
+          zoomOut: '缩小',
+          resetZoom: '重置',
+          stats: '统计',
+          history: '历史',
+          version: '版本',
+          branch: '分支',
+          share: '分享',
+          market: '市场',
+          report: '报告',
+          collab: '协作',
+          chat: '对话',
+          scheduler: '调度',
+          trigger: '触发器',
+          debug: '调试',
+          aiOptimizer: 'AI优化',
+          // Node palette
+          searchNode: '搜索节点...（支持语义搜索）',
+          aiWorkflowGen: 'AI工作流生成',
+          intentPlaceholder: '如：获取数据→清洗→AI分析→导出报告',
+          builtin: '内置',
+          plugin: '插件',
+          // Categories
+          trigger: '触发',
+          creator: '创作',
+          loop: '循环',
+          subflow: '子流程',
+          logic: '逻辑',
+          output: '输出',
+          // Node types
+          manualTrigger: '手动触发',
+          characterGen: '角色生成',
+          musicGen: '配乐生成',
+          ttsGen: '配音生成',
+          posterGen: '海报生成',
+          forLoop: 'For 循环',
+          whileLoop: 'While 循环',
+          doWhileLoop: 'Do-While 循环',
+          subflowCall: '子流程调用',
+          condition: '条件分支',
+          saveLocal: '保存本地',
+          shareOut: '分享',
+          // Property panel
+          properties: '属性',
+          versions: '版本',
+          results: '结果',
+          shortcuts: '快捷键',
+          workflowName: '工作流名称',
+          desc: '描述',
+          unnamedWorkflow: '未命名工作流',
+          descPlaceholder: '描述你的工作流...',
+          dragNodeHint: '从左侧拖拽节点到画布\n或点击节点查看属性',
+          // Status bar
+          ready: '就绪',
+          running: '运行中',
+          paused: '已暂停',
+          completed: '完成',
+          error: '错误',
+          nodes: '节点',
+          connections: '连接',
+          // Shortcuts
+          shortcutNew: '新建',
+          shortcutSave: '保存',
+          shortcutUndo: '撤销',
+          shortcutDelete: '删除节点',
+          shortcutSelect: '框选',
+          shortcutPan: '平移画布',
+          shortcutZoom: '缩放',
+          shortcutRunPause: '运行/暂停',
+          // Messages
+          confirmNew: '确定新建工作流？当前未保存的内容将丢失。',
+          confirmRestore: '确定要恢复此版本？当前工作流将被替换。',
+          confirmDelete: '确定删除此模板？',
+          saved: '已保存',
+          loaded: '已加载',
+          deleted: '已删除',
+          imported: '已导入',
+          exported: '已导出',
+          undone: '已撤销',
+          redone: '已重做',
+          // Theme
+          theme: '主题',
+          themeDark: '深色',
+          themeLight: '浅色',
+          themeHighContrast: '高对比度',
+          themeCustom: '自定义',
+          themeCustomColors: '自定义颜色',
+          themeExport: '导出',
+          themeImport: '导入',
+          themeBgDark: '背景色',
+          themeBgPanel: '面板色',
+          themeBgNode: '节点色',
+          themeBorder: '边框色',
+          themeText: '文字色',
+          themeTextDim: '次要文字',
+          themePrimary: '主题色',
+          themeFont: '字体',
+          themeBorderRadius: '圆角',
+          // Language
+          language: '语言',
+          // Accessibility
+          nodeSelected: '节点已选中',
+          nodeRunning: '节点执行中',
+          nodeCompleted: '节点已完成',
+          nodeError: '节点出错',
+          workflowRunning: '工作流运行中',
+          workflowStopped: '工作流已停止',
+          // Offline
+          offlineMode: '离线模式',
+          online: '网络已恢复',
+          offlineSwitch: '已切换到离线模式',
+          pendingSync: '待同步',
+          // AI Optimizer
+          aiAnalysis: '数据分析',
+          aiSuggestions: '优化建议',
+          aiAutoTune: '参数学习',
+          aiHistory: '优化历史',
+          totalExecutions: '总执行次数',
+          successRate: '成功率',
+          avgDuration: '平均耗时',
+          bottleneckNodes: '瓶颈节点',
+          lowSuccessNodes: '低成功率节点',
+          abnormalPatterns: '异常模式',
+          applySuggestion: '一键应用',
+          applied: '已应用',
+          noSuggestions: '当前没有检测到需要优化的问题',
+          runWorkflowForAnalysis: '请先在"数据分析"中生成分析结果',
+          noExecutionData: '暂无执行数据',
+          runWorkflowForStats: '运行工作流后即可分析执行情况',
+          noOptimizationHistory: '暂无优化历史',
+          applySuggestionForHistory: '应用优化建议后将记录历史',
+          // Trigger
+          triggers: '触发器',
+          webhook: 'Webhook',
+          triggerHistory: '触发历史',
+          createWebhook: '创建 Webhook',
+          webhookName: '名称',
+          webhookUrl: 'URL',
+          noTriggers: '暂无触发器',
+          createInWebhookConfig: '在Webhook配置中创建',
+          test: '测试',
+          viewHistory: '历史',
+          delete: '删除',
+          enabled: '启用',
+          disabled: '禁用',
+          triggerCount: '触发次数',
+          auth: '认证',
+          lastTriggered: '最后触发',
+          never: '从未',
+          // Scheduler
+          schedules: '调度',
+          createSchedule: '创建调度',
+          scheduleName: '调度名称',
+          cron: 'Cron 表达式',
+          noSchedules: '暂无调度',
+          createInScheduler: '在调度管理中创建',
+          nextRun: '下次运行',
+          lastRun: '上次运行',
+          // Report
+          executionReport: '执行报告',
+          reportTemplate: '报告模板',
+          reportHistory: '历史报告',
+          reportCompare: '对比',
+          reportExport: '导出报告',
+          basicTemplate: '基础报告',
+          detailedTemplate: '详细报告',
+          comparisonTemplate: '对比报告',
+          // Share
+          shareWorkflow: '分享工作流',
+          shareLink: '分享链接',
+          copyLink: '复制链接',
+          linkCopied: '链接已复制',
+          // Version
+          versionHistory: '版本历史',
+          restoreVersion: '恢复版本',
+          noVersions: '暂无版本记录',
+          saveWorkflowForVersions: '保存工作流后将自动创建版本',
+          versionRestored: '已恢复版本',
+          // Workflow List
+          workflowList: '工作流列表',
+          favorites: '收藏',
+          allWorkflows: '所有工作流',
+          createWorkflow: '创建工作流',
+          noWorkflows: '暂无工作流',
+          // Chat
+          chatEdit: '对话编辑',
+          sendMessage: '发送消息',
+          typeMessage: '输入消息...',
+          // Collab
+          collaboration: '协作',
+          onlineUsers: '在线用户',
+          // Log
+          executionLog: '执行日志',
+          // Misc
+          cancel: '取消',
+          confirm: '确认',
+          close: '关闭',
+          edit: '编辑',
+          view: '查看',
+          copy: '复制',
+          success: '成功',
+          warning: '警告',
+          info: '信息',
+        },
+        en: {
+          appTitle: 'AI Creator Workflow',
+          skipToMain: 'Skip to main content',
+          new: 'New',
+          save: 'Save',
+          load: 'Load',
+          list: 'List',
+          import: 'Import',
+          export: 'Export',
+          undo: 'Undo',
+          redo: 'Redo',
+          run: 'Run',
+          pause: 'Pause',
+          stop: 'Stop',
+          zoomIn: 'Zoom In',
+          zoomOut: 'Zoom Out',
+          resetZoom: 'Reset',
+          stats: 'Stats',
+          history: 'History',
+          version: 'Version',
+          branch: 'Branch',
+          share: 'Share',
+          market: 'Market',
+          report: 'Report',
+          collab: 'Collab',
+          chat: 'Chat',
+          scheduler: 'Scheduler',
+          trigger: 'Trigger',
+          debug: 'Debug',
+          aiOptimizer: 'AI Optimize',
+          searchNode: 'Search nodes... (semantic search supported)',
+          aiWorkflowGen: 'AI Workflow Generation',
+          intentPlaceholder: 'e.g.: Get data→Clean→AI Analysis→Export Report',
+          builtin: 'Built-in',
+          plugin: 'Plugin',
+          trigger: 'Trigger',
+          creator: 'Creator',
+          loop: 'Loop',
+          subflow: 'Subflow',
+          logic: 'Logic',
+          output: 'Output',
+          manualTrigger: 'Manual Trigger',
+          characterGen: 'Character Gen',
+          musicGen: 'Music Gen',
+          ttsGen: 'TTS Gen',
+          posterGen: 'Poster Gen',
+          forLoop: 'For Loop',
+          whileLoop: 'While Loop',
+          doWhileLoop: 'Do-While Loop',
+          subflowCall: 'Subflow Call',
+          condition: 'Condition',
+          saveLocal: 'Save Local',
+          shareOut: 'Share',
+          properties: 'Properties',
+          versions: 'Versions',
+          results: 'Results',
+          shortcuts: 'Shortcuts',
+          workflowName: 'Workflow Name',
+          desc: 'Description',
+          unnamedWorkflow: 'Unnamed Workflow',
+          descPlaceholder: 'Describe your workflow...',
+          dragNodeHint: 'Drag nodes from left to canvas\nor click node to view properties',
+          ready: 'Ready',
+          running: 'Running',
+          paused: 'Paused',
+          completed: 'Completed',
+          error: 'Error',
+          nodes: 'Nodes',
+          connections: 'Connections',
+          shortcutNew: 'New',
+          shortcutSave: 'Save',
+          shortcutUndo: 'Undo',
+          shortcutDelete: 'Delete Node',
+          shortcutSelect: 'Box Select',
+          shortcutPan: 'Pan Canvas',
+          shortcutZoom: 'Zoom',
+          shortcutRunPause: 'Run/Pause',
+          confirmNew: 'Create new workflow? Unsaved changes will be lost.',
+          confirmRestore: 'Restore this version? Current workflow will be replaced.',
+          confirmDelete: 'Delete this template?',
+          saved: 'Saved',
+          loaded: 'Loaded',
+          deleted: 'Deleted',
+          imported: 'Imported',
+          exported: 'Exported',
+          undone: 'Undone',
+          redone: 'Redone',
+          theme: 'Theme',
+          themeDark: 'Dark',
+          themeLight: 'Light',
+          themeHighContrast: 'High Contrast',
+          themeCustom: 'Custom',
+          themeCustomColors: 'Custom Colors',
+          themeExport: 'Export',
+          themeImport: 'Import',
+          themeBgDark: 'Background',
+          themeBgPanel: 'Panel',
+          themeBgNode: 'Node',
+          themeBorder: 'Border',
+          themeText: 'Text',
+          themeTextDim: 'Dim Text',
+          themePrimary: 'Primary',
+          themeFont: 'Font',
+          themeBorderRadius: 'Border Radius',
+          language: 'Language',
+          nodeSelected: 'Node selected',
+          nodeRunning: 'Node running',
+          nodeCompleted: 'Node completed',
+          nodeError: 'Node error',
+          workflowRunning: 'Workflow running',
+          workflowStopped: 'Workflow stopped',
+          offlineMode: 'Offline Mode',
+          online: 'Network restored',
+          offlineSwitch: 'Switched to offline mode',
+          pendingSync: 'Pending sync',
+          aiAnalysis: 'Data Analysis',
+          aiSuggestions: 'Suggestions',
+          aiAutoTune: 'Auto Tune',
+          aiHistory: 'History',
+          totalExecutions: 'Total Executions',
+          successRate: 'Success Rate',
+          avgDuration: 'Avg Duration',
+          bottleneckNodes: 'Bottleneck Nodes',
+          lowSuccessNodes: 'Low Success Nodes',
+          abnormalPatterns: 'Abnormal Patterns',
+          applySuggestion: 'Apply',
+          applied: 'Applied',
+          noSuggestions: 'No optimization issues detected',
+          runWorkflowForAnalysis: 'Generate analysis in "Data Analysis" first',
+          noExecutionData: 'No execution data',
+          runWorkflowForStats: 'Run workflow to analyze',
+          noOptimizationHistory: 'No optimization history',
+          applySuggestionForHistory: 'Apply suggestions to record history',
+          triggers: 'Triggers',
+          webhook: 'Webhook',
+          triggerHistory: 'Trigger History',
+          createWebhook: 'Create Webhook',
+          webhookName: 'Name',
+          webhookUrl: 'URL',
+          noTriggers: 'No triggers',
+          createInWebhookConfig: 'Create in Webhook config',
+          test: 'Test',
+          viewHistory: 'History',
+          delete: 'Delete',
+          enabled: 'Enabled',
+          disabled: 'Disabled',
+          triggerCount: 'Trigger Count',
+          auth: 'Auth',
+          lastTriggered: 'Last Triggered',
+          never: 'Never',
+          schedules: 'Schedules',
+          createSchedule: 'Create Schedule',
+          scheduleName: 'Schedule Name',
+          cron: 'Cron Expression',
+          noSchedules: 'No schedules',
+          createInScheduler: 'Create in Scheduler',
+          nextRun: 'Next Run',
+          lastRun: 'Last Run',
+          executionReport: 'Execution Report',
+          reportTemplate: 'Report Template',
+          reportHistory: 'Report History',
+          reportCompare: 'Compare',
+          reportExport: 'Export Report',
+          basicTemplate: 'Basic Report',
+          detailedTemplate: 'Detailed Report',
+          comparisonTemplate: 'Comparison Report',
+          shareWorkflow: 'Share Workflow',
+          shareLink: 'Share Link',
+          copyLink: 'Copy Link',
+          linkCopied: 'Link copied',
+          versionHistory: 'Version History',
+          restoreVersion: 'Restore Version',
+          noVersions: 'No version records',
+          saveWorkflowForVersions: 'Versions created on save',
+          versionRestored: 'Version restored',
+          workflowList: 'Workflow List',
+          favorites: 'Favorites',
+          allWorkflows: 'All Workflows',
+          createWorkflow: 'Create Workflow',
+          noWorkflows: 'No workflows',
+          chatEdit: 'Chat Edit',
+          sendMessage: 'Send',
+          typeMessage: 'Type message...',
+          collaboration: 'Collaboration',
+          onlineUsers: 'Online Users',
+          executionLog: 'Execution Log',
+          cancel: 'Cancel',
+          confirm: 'Confirm',
+          close: 'Close',
+          edit: 'Edit',
+          view: 'View',
+          copy: 'Copy',
+          success: 'Success',
+          warning: 'Warning',
+          info: 'Info',
+        },
+        ja: {
+          appTitle: 'AI 作成ワークフロー',
+          skipToMain: 'ナビゲーションをスキップ',
+          new: '新規',
+          save: '保存',
+          load: '読込',
+          list: '一覧',
+          import: 'インポート',
+          export: 'エクスポート',
+          undo: '元に戻す',
+          redo: 'やり直し',
+          run: '実行',
+          pause: '一時停止',
+          stop: '停止',
+          zoomIn: '拡大',
+          zoomOut: '縮小',
+          resetZoom: 'リセット',
+          stats: '統計',
+          history: '履歴',
+          version: 'バージョン',
+          branch: 'ブランチ',
+          share: '共有',
+          market: '市場',
+          report: 'レポート',
+          collab: 'コラボ',
+          chat: 'チャット',
+          scheduler: 'スケジューラ',
+          trigger: 'トリガー',
+          debug: 'デバッグ',
+          aiOptimizer: 'AI最適化',
+          searchNode: 'ノードを検索...（セマンティック検索対応）',
+          aiWorkflowGen: 'AIワークフロー生成',
+          intentPlaceholder: '例：データ取得→清洗→AI分析→レポート出力',
+          builtin: '組み込み',
+          plugin: 'プラグイン',
+          trigger: 'トリガー',
+          creator: '作成',
+          loop: 'ループ',
+          subflow: 'サブフロー',
+          logic: 'ロジック',
+          output: '出力',
+          manualTrigger: '手動トリガー',
+          characterGen: 'キャラ生成',
+          musicGen: '音楽生成',
+          ttsGen: '音声合成',
+          posterGen: 'ポスター生成',
+          forLoop: 'Forループ',
+          whileLoop: 'Whileループ',
+          doWhileLoop: 'Do-Whileループ',
+          subflowCall: 'サブフロー呼び出し',
+          condition: '条件分岐',
+          saveLocal: 'ローカル保存',
+          shareOut: '共有',
+          properties: 'プロパティ',
+          versions: 'バージョン',
+          results: '結果',
+          shortcuts: 'ショートカット',
+          workflowName: 'ワークフロー名',
+          desc: '説明',
+          unnamedWorkflow: '無題ワークフロー',
+          descPlaceholder: 'ワークフローを説明...',
+          dragNodeHint: '左からノードをドラッグ\nまたはノードをクリック',
+          ready: '準備完了',
+          running: '実行中',
+          paused: '一時停止',
+          completed: '完了',
+          error: 'エラー',
+          nodes: 'ノード',
+          connections: '接続',
+          shortcutNew: '新規',
+          shortcutSave: '保存',
+          shortcutUndo: '元に戻す',
+          shortcutDelete: 'ノード削除',
+          shortcutSelect: '箱選択',
+          shortcutPan: 'キャンバス移動',
+          shortcutZoom: 'ズーム',
+          shortcutRunPause: '実行/一時停止',
+          confirmNew: '新規ワークフローを作成？未保存は失われます。',
+          confirmRestore: 'このバージョンを復元？現在のワークフローが置き換えられます。',
+          confirmDelete: 'このテンプレートを削除？',
+          saved: '保存しました',
+          loaded: '読み込みました',
+          deleted: '削除しました',
+          imported: 'インポートしました',
+          exported: 'エクスポートしました',
+          undone: '元に戻しました',
+          redone: 'やり直しました',
+          theme: 'テーマ',
+          themeDark: 'ダーク',
+          themeLight: 'ライト',
+          themeHighContrast: 'ハイコントラスト',
+          themeCustom: 'カスタム',
+          themeCustomColors: 'カスタムカラー',
+          themeExport: 'エクスポート',
+          themeImport: 'インポート',
+          themeBgDark: '背景色',
+          themeBgPanel: 'パネル色',
+          themeBgNode: 'ノード色',
+          themeBorder: '枠線色',
+          themeText: 'テキスト',
+          themeTextDim: '薄テキスト',
+          themePrimary: 'テーマ色',
+          themeFont: 'フォント',
+          themeBorderRadius: '角丸',
+          language: '言語',
+          nodeSelected: 'ノード選択',
+          nodeRunning: 'ノード実行中',
+          nodeCompleted: 'ノード完了',
+          nodeError: 'ノードエラー',
+          workflowRunning: 'ワークフロー実行中',
+          workflowStopped: 'ワークフロー停止',
+          offlineMode: 'オフラインモード',
+          online: 'ネットワーク回復',
+          offlineSwitch: 'オフラインに切替',
+          pendingSync: '同期待ち',
+          aiAnalysis: 'データ分析',
+          aiSuggestions: '最適化提案',
+          aiAutoTune: 'パラメータ学習',
+          aiHistory: '最適化履歴',
+          totalExecutions: '総実行回数',
+          successRate: '成功率',
+          avgDuration: '平均時間',
+          bottleneckNodes: 'ボトルネックノード',
+          lowSuccessNodes: '低成功率ノード',
+          abnormalPatterns: '異常パターン',
+          applySuggestion: '一括適用',
+          applied: '適用済み',
+          noSuggestions: '最適化の問題は検出されていません',
+          runWorkflowForAnalysis: '先に「データ分析」で分析を生成してください',
+          noExecutionData: '実行データなし',
+          runWorkflowForStats: 'ワークフローを実行して分析',
+          noOptimizationHistory: '最適化履歴なし',
+          applySuggestionForHistory: '提案を適用して履歴を記録',
+          triggers: 'トリガー',
+          webhook: 'Webhook',
+          triggerHistory: 'トリガー履歴',
+          createWebhook: 'Webhook作成',
+          webhookName: '名前',
+          webhookUrl: 'URL',
+          noTriggers: 'トリガーなし',
+          createInWebhookConfig: 'Webhook設定で作成',
+          test: 'テスト',
+          viewHistory: '履歴',
+          delete: '削除',
+          enabled: '有効',
+          disabled: '無効',
+          triggerCount: 'トリガー回数',
+          auth: '認証',
+          lastTriggered: '最終トリガー',
+          never: 'なし',
+          schedules: 'スケジュール',
+          createSchedule: 'スケジュール作成',
+          scheduleName: 'スケジュール名',
+          cron: 'Cron式',
+          noSchedules: 'スケジュールなし',
+          createInScheduler: 'スケジューラーで作成',
+          nextRun: '次回実行',
+          lastRun: '前回実行',
+          executionReport: '実行レポート',
+          reportTemplate: 'レポートテンプレート',
+          reportHistory: 'レポート履歴',
+          reportCompare: '比較',
+          reportExport: 'レポート出力',
+          basicTemplate: '基本レポート',
+          detailedTemplate: '詳細レポート',
+          comparisonTemplate: '比較レポート',
+          shareWorkflow: 'ワークフローを共有',
+          shareLink: '共有リンク',
+          copyLink: 'リンクをコピー',
+          linkCopied: 'リンクをコピーしました',
+          versionHistory: 'バージョン履歴',
+          restoreVersion: 'バージョンを復元',
+          noVersions: 'バージョン記録なし',
+          saveWorkflowForVersions: '保存時に自動作成',
+          versionRestored: 'バージョンを復元しました',
+          workflowList: 'ワークフロー一覧',
+          favorites: 'お気に入り',
+          allWorkflows: 'すべてのワークフロー',
+          createWorkflow: 'ワークフローを作成',
+          noWorkflows: 'ワークフローがありません',
+          chatEdit: 'チャット編集',
+          sendMessage: '送信',
+          typeMessage: 'メッセージを入力...',
+          collaboration: 'コラボレーション',
+          onlineUsers: 'オンラインユーザー',
+          executionLog: '実行ログ',
+          cancel: 'キャンセル',
+          confirm: '確認',
+          close: '閉じる',
+          edit: '編集',
+          view: '表示',
+          copy: 'コピー',
+          success: '成功',
+          warning: '警告',
+          info: '情報',
+        },
+        ko: {
+          appTitle: 'AI 창작 워크플로우',
+          skipToMain: '导航 건너뛰기',
+          new: '새로 만들기',
+          save: '저장',
+          load: '불러오기',
+          list: '목록',
+          import: '가져오기',
+          export: '내보내기',
+          undo: '실행 취소',
+          redo: '다시 실행',
+          run: '실행',
+          pause: '일시 정지',
+          stop: '중지',
+          zoomIn: '확대',
+          zoomOut: '축소',
+          resetZoom: '초기화',
+          stats: '통계',
+          history: '기록',
+          version: '버전',
+          branch: '브랜치',
+          share: '공유',
+          market: '마켓',
+          report: '리포트',
+          collab: '협업',
+          chat: '챗',
+          scheduler: '스케줄러',
+          trigger: '트리거',
+          debug: '디버그',
+          aiOptimizer: 'AI 최적화',
+          searchNode: '노드 검색... (의미론적 검색 지원)',
+          aiWorkflowGen: 'AI 워크플로우 생성',
+          intentPlaceholder: '예: 데이터获取→정리→AI 분석→보고서 내보내기',
+          builtin: '기본',
+          plugin: '플러그인',
+          trigger: '트리거',
+          creator: '크리에이터',
+          loop: '루프',
+          subflow: '서브플로우',
+          logic: '로직',
+          output: '출력',
+          manualTrigger: '수동 트리거',
+          characterGen: '캐릭터 생성',
+          musicGen: '음악 생성',
+          ttsGen: '음성 생성',
+          posterGen: '포스터 생성',
+          forLoop: 'For 루프',
+          whileLoop: 'While 루프',
+          doWhileLoop: 'Do-While 루프',
+          subflowCall: '서브플로우 호출',
+          condition: '조건 분기',
+          saveLocal: '로컬 저장',
+          shareOut: '공유',
+          properties: '속성',
+          versions: '버전',
+          results: '결과',
+          shortcuts: '단축키',
+          workflowName: '워크플로우 이름',
+          desc: '설명',
+          unnamedWorkflow: '제목 없는 워크플로우',
+          descPlaceholder: '워크플로우 설명...',
+          dragNodeHint: '왼쪽에서 노드를 드래그하거나\n노드를 클릭하여 속성 보기',
+          ready: '준비',
+          running: '실행 중',
+          paused: '일시 정지',
+          completed: '완료',
+          error: '오류',
+          nodes: '노드',
+          connections: '연결',
+          shortcutNew: '새로 만들기',
+          shortcutSave: '저장',
+          shortcutUndo: '실행 취소',
+          shortcutDelete: '노드 삭제',
+          shortcutSelect: '상자 선택',
+          shortcutPan: '캔버스 이동',
+          shortcutZoom: '확대/축소',
+          shortcutRunPause: '실행/일시 정지',
+          confirmNew: '새 워크플로우를 만드시겠습니까? 저장되지 않은 내용은 사라집니다.',
+          confirmRestore: '이 버전을 복원하시겠습니까? 현재 워크플로우가 대체됩니다.',
+          confirmDelete: '이 템플릿을 삭제하시겠습니까?',
+          saved: '저장됨',
+          loaded: '불러옴',
+          deleted: '삭제됨',
+          imported: '가져옴',
+          exported: '내보냄',
+          undone: '실행 취소됨',
+          redone: '다시 실행됨',
+          theme: '테마',
+          themeDark: '다크',
+          themeLight: '라이트',
+          themeHighContrast: '고대비',
+          themeCustom: '사용자 정의',
+          themeCustomColors: '사용자 정의 색상',
+          themeExport: '내보내기',
+          themeImport: '가져오기',
+          themeBgDark: '배경색',
+          themeBgPanel: '패널색',
+          themeBgNode: '노드색',
+          themeBorder: '테두리색',
+          themeText: '텍스트',
+          themeTextDim: '옅은 텍스트',
+          themePrimary: '테마색',
+          themeFont: '글꼴',
+          themeBorderRadius: '둥근 모서리',
+          language: '언어',
+          nodeSelected: '노드 선택됨',
+          nodeRunning: '노드 실행 중',
+          nodeCompleted: '노드 완료',
+          nodeError: '노드 오류',
+          workflowRunning: '워크플로우 실행 중',
+          workflowStopped: '워크플로우 중지됨',
+          offlineMode: '오프라인 모드',
+          online: '네트워크 복원',
+          offlineSwitch: '오프라인 모드로 전환됨',
+          pendingSync: '동기화 대기 중',
+          aiAnalysis: '데이터 분석',
+          aiSuggestions: '최적화 제안',
+          aiAutoTune: '파라미터 학습',
+          aiHistory: '최적화 기록',
+          totalExecutions: '총 실행 횟수',
+          successRate: '성공률',
+          avgDuration: '평균 시간',
+          bottleneckNodes: '병목 노드',
+          lowSuccessNodes: '저성공률 노드',
+          abnormalPatterns: '비정상 패턴',
+          applySuggestion: '적용',
+          applied: '적용됨',
+          noSuggestions: '최적화 필요 문제 없음',
+          runWorkflowForAnalysis: '먼저 "데이터 분석"에서 분석 생성하세요',
+          noExecutionData: '실행 데이터 없음',
+          runWorkflowForStats: '워크플로우 실행하여 분석하세요',
+          noOptimizationHistory: '최적화 기록 없음',
+          applySuggestionForHistory: '제안 적용하여 기록 남기기',
+          triggers: '트리거',
+          webhook: 'Webhook',
+          triggerHistory: '트리거 기록',
+          createWebhook: 'Webhook 만들기',
+          webhookName: '이름',
+          webhookUrl: 'URL',
+          noTriggers: '트리거 없음',
+          createInWebhookConfig: 'Webhook 설정에서 만들기',
+          test: '테스트',
+          viewHistory: '기록',
+          delete: '삭제',
+          enabled: '활성',
+          disabled: '비활성',
+          triggerCount: '트리거 횟수',
+          auth: '인증',
+          lastTriggered: '마지막 트리거',
+          never: '없음',
+          schedules: '스케줄',
+          createSchedule: '스케줄 만들기',
+          scheduleName: '스케줄 이름',
+          cron: 'Cron 표현식',
+          noSchedules: '스케줄 없음',
+          createInScheduler: '스케줄러에서 만들기',
+          nextRun: '다음 실행',
+          lastRun: '마지막 실행',
+          executionReport: '실행 리포트',
+          reportTemplate: '리포트 템플릿',
+          reportHistory: '리포트 기록',
+          reportCompare: '비교',
+          reportExport: '리포트 내보내기',
+          basicTemplate: '기본 리포트',
+          detailedTemplate: '상세 리포트',
+          comparisonTemplate: '비교 리포트',
+          shareWorkflow: '워크플로우 공유',
+          shareLink: '공유 링크',
+          copyLink: '링크 복사',
+          linkCopied: '링크가 복사되었습니다',
+          versionHistory: '버전 기록',
+          restoreVersion: '버전 복원',
+          noVersions: '버전 기록 없음',
+          saveWorkflowForVersions: '저장 시 자동 생성',
+          versionRestored: '버전이 복원되었습니다',
+          workflowList: '워크플로우 목록',
+          favorites: '즐겨찾기',
+          allWorkflows: '모든 워크플로우',
+          createWorkflow: '워크플로우 만들기',
+          noWorkflows: '워크플로우 없음',
+          chatEdit: '챗 편집',
+          sendMessage: '보내기',
+          typeMessage: '메시지 입력...',
+          collaboration: '협업',
+          onlineUsers: '온라인 사용자',
+          executionLog: '실행 로그',
+          cancel: '취소',
+          confirm: '확인',
+          close: '닫기',
+          edit: '편집',
+          view: '보기',
+          copy: '복사',
+          success: '성공',
+          warning: '경고',
+          info: '정보',
+        },
+        es: {
+          appTitle: 'Flujo de trabajo AI Creator',
+          skipToMain: 'Saltar navegación',
+          new: 'Nuevo',
+          save: 'Guardar',
+          load: 'Cargar',
+          list: 'Lista',
+          import: 'Importar',
+          export: 'Exportar',
+          undo: 'Deshacer',
+          redo: 'Rehacer',
+          run: 'Ejecutar',
+          pause: 'Pausar',
+          stop: 'Detener',
+          zoomIn: 'Acercar',
+          zoomOut: 'Alejar',
+          resetZoom: 'Restablecer',
+          stats: 'Estadísticas',
+          history: 'Historial',
+          version: 'Versión',
+          branch: 'Rama',
+          share: 'Compartir',
+          market: 'Mercado',
+          report: 'Informe',
+          collab: 'Colab',
+          chat: 'Chat',
+          scheduler: 'Programador',
+          trigger: 'Disparador',
+          debug: 'Depurar',
+          aiOptimizer: 'AI Optimizar',
+          searchNode: 'Buscar nodos... (búsqueda semántica)',
+          aiWorkflowGen: 'Generación AI',
+          intentPlaceholder: 'Ej: Obtener datos→Limpiar→Analizar IA→Exportar informe',
+          builtin: 'Integrado',
+          plugin: 'Plugin',
+          trigger: 'Disparador',
+          creator: 'Creador',
+          loop: 'Bucle',
+          subflow: 'Subflujo',
+          logic: 'Lógica',
+          output: 'Salida',
+          manualTrigger: 'Disparador Manual',
+          characterGen: 'Generar Personaje',
+          musicGen: 'Generar Música',
+          ttsGen: 'Generar Voz',
+          posterGen: 'Generar Póster',
+          forLoop: 'Bucle For',
+          whileLoop: 'Bucle While',
+          doWhileLoop: 'Bucle Do-While',
+          subflowCall: 'Llamada Subflujo',
+          condition: 'Condición',
+          saveLocal: 'Guardar Local',
+          shareOut: 'Compartir',
+          properties: 'Propiedades',
+          versions: 'Versiones',
+          results: 'Resultados',
+          shortcuts: 'Atajos',
+          workflowName: 'Nombre del Flujo',
+          desc: 'Descripción',
+          unnamedWorkflow: 'Flujo Sin Nombre',
+          descPlaceholder: 'Describa su flujo...',
+          dragNodeHint: 'Arrastre nodos desde la izquierda\no haga clic para ver propiedades',
+          ready: 'Listo',
+          running: 'Ejecutando',
+          paused: 'Pausado',
+          completed: 'Completado',
+          error: 'Error',
+          nodes: 'Nodos',
+          connections: 'Conexiones',
+          shortcutNew: 'Nuevo',
+          shortcutSave: 'Guardar',
+          shortcutUndo: 'Deshacer',
+          shortcutDelete: 'Eliminar Nodo',
+          shortcutSelect: 'Selección',
+          shortcutPan: 'Mover Lienzo',
+          shortcutZoom: 'Zoom',
+          shortcutRunPause: 'Ejecutar/Pausar',
+          confirmNew: '¿Crear nuevo flujo? Los cambios no guardados se perderán.',
+          confirmRestore: '¿Restaurar esta versión? El flujo actual será reemplazado.',
+          confirmDelete: '¿Eliminar esta plantilla?',
+          saved: 'Guardado',
+          loaded: 'Cargado',
+          deleted: 'Eliminado',
+          imported: 'Importado',
+          exported: 'Exportado',
+          undone: 'Deshecho',
+          redone: 'Rehecho',
+          theme: 'Tema',
+          themeDark: 'Oscuro',
+          themeLight: 'Claro',
+          themeHighContrast: 'Alto Contraste',
+          themeCustom: 'Personalizado',
+          themeCustomColors: 'Colores Personalizados',
+          themeExport: 'Exportar',
+          themeImport: 'Importar',
+          themeBgDark: 'Fondo',
+          themeBgPanel: 'Panel',
+          themeBgNode: 'Nodo',
+          themeBorder: 'Borde',
+          themeText: 'Texto',
+          themeTextDim: 'Texto Dim',
+          themePrimary: 'Primario',
+          themeFont: 'Fuente',
+          themeBorderRadius: 'Radio Borde',
+          language: 'Idioma',
+          nodeSelected: 'Nodo seleccionado',
+          nodeRunning: 'Nodo ejecutando',
+          nodeCompleted: 'Nodo completado',
+          nodeError: 'Error en nodo',
+          workflowRunning: 'Flujo ejecutando',
+          workflowStopped: 'Flujo detenido',
+          offlineMode: 'Modo Sin Conexión',
+          online: 'Red restaurada',
+          offlineSwitch: 'Cambiado a modo sin conexión',
+          pendingSync: 'Pendiente sincronizar',
+          aiAnalysis: 'Análisis de Datos',
+          aiSuggestions: 'Sugerencias',
+          aiAutoTune: 'Ajuste Auto',
+          aiHistory: 'Historial',
+          totalExecutions: 'Ejecuciones Totales',
+          successRate: 'Tasa Éxito',
+          avgDuration: 'Duración Media',
+          bottleneckNodes: 'Nodos Cuello Botella',
+          lowSuccessNodes: 'Nodos Bajo Éxito',
+          abnormalPatterns: 'Patrones Anómalos',
+          applySuggestion: 'Aplicar',
+          applied: 'Aplicado',
+          noSuggestions: 'No se detectan problemas de optimización',
+          runWorkflowForAnalysis: 'Genere análisis en "Análisis de Datos" primero',
+          noExecutionData: 'Sin datos de ejecución',
+          runWorkflowForStats: 'Ejecute flujo para analizar',
+          noOptimizationHistory: 'Sin historial de optimización',
+          applySuggestionForHistory: 'Aplique sugerencias para registrar historial',
+          triggers: 'Disparadores',
+          webhook: 'Webhook',
+          triggerHistory: 'Historial Disparador',
+          createWebhook: 'Crear Webhook',
+          webhookName: 'Nombre',
+          webhookUrl: 'URL',
+          noTriggers: 'Sin disparadores',
+          createInWebhookConfig: 'Crear en Config Webhook',
+          test: 'Prueba',
+          viewHistory: 'Historial',
+          delete: 'Eliminar',
+          enabled: 'Activado',
+          disabled: 'Desactivado',
+          triggerCount: 'Conteo Disparadores',
+          auth: 'Auth',
+          lastTriggered: 'Último Disparador',
+          never: 'Nunca',
+          schedules: 'Programaciones',
+          createSchedule: 'Crear Programación',
+          scheduleName: 'Nombre',
+          cron: 'Expresión Cron',
+          noSchedules: 'Sin programaciones',
+          createInScheduler: 'Crear en Programador',
+          nextRun: 'Próxima Ejecución',
+          lastRun: 'Última Ejecución',
+          executionReport: 'Informe Ejecución',
+          reportTemplate: 'Plantilla Informe',
+          reportHistory: 'Historial Informe',
+          reportCompare: 'Comparar',
+          reportExport: 'Exportar Informe',
+          basicTemplate: 'Informe Básico',
+          detailedTemplate: 'Informe Detallado',
+          comparisonTemplate: 'Informe Comparación',
+          shareWorkflow: 'Compartir Flujo',
+          shareLink: 'Enlace Compartir',
+          copyLink: 'Copiar Enlace',
+          linkCopied: 'Enlace copiado',
+          versionHistory: 'Historial Versiones',
+          restoreVersion: 'Restaurar Versión',
+          noVersions: 'Sin versiones',
+          saveWorkflowForVersions: 'Versiones creadas al guardar',
+          versionRestored: 'Versión restaurada',
+          workflowList: 'Lista Flujos',
+          favorites: 'Favoritos',
+          allWorkflows: 'Todos los Flujos',
+          createWorkflow: 'Crear Flujo',
+          noWorkflows: 'Sin flujos',
+          chatEdit: 'Editar Chat',
+          sendMessage: 'Enviar',
+          typeMessage: 'Escribir mensaje...',
+          collaboration: 'Colaboración',
+          onlineUsers: 'Usuarios en Línea',
+          executionLog: 'Log Ejecución',
+          cancel: 'Cancelar',
+          confirm: 'Confirmar',
+          close: 'Cerrar',
+          edit: 'Editar',
+          view: 'Ver',
+          copy: 'Copiar',
+          success: 'Éxito',
+          warning: 'Advertencia',
+          info: 'Info',
+        }
+      },
+
+      init() {
+        // Detect browser language
+        const browserLang = navigator.language || navigator.userLanguage || 'zh';
+        const savedLang = localStorage.getItem('workflow_lang');
+        
+        if (savedLang && this.translations[savedLang]) {
+          this.currentLang = savedLang;
+        } else if (browserLang.startsWith('en')) {
+          this.currentLang = 'en';
+        } else if (browserLang.startsWith('ja')) {
+          this.currentLang = 'ja';
+        } else if (browserLang.startsWith('ko')) {
+          this.currentLang = 'ko';
+        } else if (browserLang.startsWith('es')) {
+          this.currentLang = 'es';
+        } else {
+          this.currentLang = 'zh';
+        }
+        
+        this.applyTranslations();
+      },
+
+      setLang(lang) {
+        if (this.translations[lang]) {
+          this.currentLang = lang;
+          localStorage.setItem('workflow_lang', lang);
+          this.applyTranslations();
+          this.updateUI();
+          announce(this.t('language') + ': ' + this.getLangName(lang), 'polite');
+        }
+      },
+
+      t(key) {
+        return this.translations[this.currentLang]?.[key] || this.translations.zh[key] || key;
+      },
+
+      getLangName(lang) {
+        const names = { zh: '中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español' };
+        return names[lang] || lang;
+      },
+
+      applyTranslations() {
+        // Apply data-i18n attributes
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          el.textContent = this.t(key);
+        });
+        
+        // Apply translations to common UI elements
+        document.title = this.t('appTitle');
+      },
+
+      updateUI() {
+        // Update any dynamic UI elements that need translation
+        // This is called when language changes
+      }
+    };
+
+    // Theme System
+    const ThemeSystem = {
+      currentTheme: 'dark',
+      customSettings: {},
+      
+      themes: ['dark', 'light', 'high-contrast', 'custom'],
+
+      init() {
+        // Load saved theme or detect system preference
+        const savedTheme = localStorage.getItem('workflow_theme');
+        const savedCustom = localStorage.getItem('workflow_custom_theme');
+        
+        if (savedTheme && this.themes.includes(savedTheme)) {
+          this.currentTheme = savedTheme;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+          this.currentTheme = 'light';
+        }
+        
+        if (savedCustom) {
+          try {
+            this.customSettings = JSON.parse(savedCustom);
+          } catch (e) {
+            this.customSettings = {};
+          }
+        }
+        
+        this.applyTheme();
+        
+        // Listen for system theme changes
+        if (window.matchMedia) {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (localStorage.getItem('workflow_theme_follow_system') === 'true') {
+              this.setTheme(e.matches ? 'light' : 'dark');
+            }
+          });
+        }
+      },
+
+      setTheme(theme) {
+        if (!this.themes.includes(theme)) return;
+        
+        this.currentTheme = theme;
+        localStorage.setItem('workflow_theme', theme);
+        this.applyTheme();
+        
+        if (theme === 'custom') {
+          this.applyCustomTheme();
+        }
+        
+        announce(this.t('theme') + ': ' + this.t('theme' + theme.charAt(0).toUpperCase() + theme.slice(1)), 'polite');
+      },
+
+      applyTheme() {
+        document.body.setAttribute('data-theme', this.currentTheme);
+      },
+
+      applyCustomTheme() {
+        if (this.currentTheme !== 'custom') return;
+        
+        const css = document.documentElement;
+        const s = this.customSettings;
+        
+        if (s.primary) css.style.setProperty('--custom-primary', s.primary);
+        if (s.primaryDark) css.style.setProperty('--custom-primary-dark', s.primaryDark);
+        if (s.bgDark) css.style.setProperty('--custom-bg-dark', s.bgDark);
+        if (s.bgPanel) css.style.setProperty('--custom-bg-panel', s.bgPanel);
+        if (s.bgNode) css.style.setProperty('--custom-bg-node', s.bgNode);
+        if (s.border) css.style.setProperty('--custom-border', s.border);
+        if (s.text) css.style.setProperty('--custom-text', s.text);
+        if (s.textDim) css.style.setProperty('--custom-text-dim', s.textDim);
+        if (s.success) css.style.setProperty('--custom-success', s.success);
+        if (s.warning) css.style.setProperty('--custom-warning', s.warning);
+        if (s.error) css.style.setProperty('--custom-error', s.error);
+        if (s.font) css.style.setProperty('--custom-font', s.font);
+        if (s.borderRadius) css.style.setProperty('--custom-border-radius', s.borderRadius + 'px');
+      },
+
+      saveCustomTheme(settings) {
+        this.customSettings = { ...this.customSettings, ...settings };
+        localStorage.setItem('workflow_custom_theme', JSON.stringify(this.customSettings));
+        if (this.currentTheme !== 'custom') {
+          this.setTheme('custom');
+        } else {
+          this.applyCustomTheme();
+        }
+      },
+
+      exportTheme() {
+        const data = {
+          theme: this.currentTheme,
+          custom: this.customSettings
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'workflow-theme.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast(I18n.t('theme') + ' ' + I18n.t('exported'));
+      },
+
+      importTheme(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (data.theme) {
+              this.setTheme(data.theme);
+            }
+            if (data.custom) {
+              this.customSettings = data.custom;
+              localStorage.setItem('workflow_custom_theme', JSON.stringify(this.customSettings));
+              this.applyCustomTheme();
+            }
+            showToast(I18n.t('theme') + ' ' + I18n.t('imported'));
+          } catch (err) {
+            showToast('Import failed: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      },
+
+      setFollowSystem(enabled) {
+        localStorage.setItem('workflow_theme_follow_system', enabled ? 'true' : 'false');
+        if (enabled && window.matchMedia) {
+          const isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          this.setTheme(isLight ? 'light' : 'dark');
+        }
+      },
+
+      t(key) {
+        return I18n.t(key);
+      }
+    };
+
+    // Accessibility utilities
+    function announce(message, priority = 'polite') {
+      const liveRegion = priority === 'assertive' 
+        ? document.getElementById('live-region-assertive')
+        : document.getElementById('live-region');
+      
+      if (liveRegion) {
+        liveRegion.textContent = '';
+        setTimeout(() => {
+          liveRegion.textContent = message;
+        }, 50);
+      }
+    }
+
+    // Focus management
+    const FocusManager = {
+      focusStack: [],
+      
+      pushFocus(element) {
+        this.focusStack.push(element);
+      },
+      
+      popFocus() {
+        if (this.focusStack.length > 0) {
+          const el = this.focusStack.pop();
+          if (el && el.focus) el.focus();
+        }
+      },
+      
+      trapFocus(container) {
+        const focusable = container.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        
+        const handleTab = (e) => {
+          if (e.key !== 'Tab') return;
+          
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        };
+        
+        container.addEventListener('keydown', handleTab);
+        return () => container.removeEventListener('keydown', handleTab);
+      }
+    };
+
+    // Setup language and theme switchers in toolbar
+    function setupToolbarSwitchers() {
+      const toolbar = document.querySelector('.toolbar');
+      if (!toolbar) return;
+      
+      // Create language switcher
+      const langSwitcher = document.createElement('div');
+      langSwitcher.className = 'lang-switcher';
+      langSwitcher.innerHTML = `
+        <button class="lang-btn" id="lang-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="${I18n.t('language')}">
+          <span class="lang-flag">${getLangFlag(I18n.currentLang)}</span>
+          <span class="lang-code">${I18n.currentLang.toUpperCase()}</span>
+          <span style="font-size:10px;">▼</span>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown" role="listbox" aria-label="${I18n.t('language')}">
+          ${['zh', 'en', 'ja', 'ko', 'es'].map(lang => `
+            <div class="lang-option ${lang === I18n.currentLang ? 'active' : ''}" 
+                 data-lang="${lang}" 
+                 role="option"
+                 aria-selected="${lang === I18n.currentLang}"
+                 tabindex="0">
+              <span class="lang-flag">${getLangFlag(lang)}</span>
+              <span>${I18n.getLangName(lang)}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      
+      // Create theme switcher
+      const themeSwitcher = document.createElement('div');
+      themeSwitcher.className = 'theme-switcher';
+      themeSwitcher.innerHTML = `
+        <button class="theme-btn" id="theme-btn" aria-haspopup="dialog" aria-expanded="false" aria-label="${I18n.t('theme')}">
+          <span>🎨</span>
+          <span>${I18n.t('theme' + ThemeSystem.currentTheme.charAt(0).toUpperCase() + ThemeSystem.currentTheme.slice(1))}</span>
+        </button>
+        <div class="theme-dropdown" id="theme-dropdown" role="dialog" aria-label="${I18n.t('theme')}">
+          <div class="theme-preset ${ThemeSystem.currentTheme === 'dark' ? 'active' : ''}" data-theme="dark" role="option" tabindex="0">
+            <span class="theme-preset-indicator dark"></span>
+            <span>${I18n.t('themeDark')}</span>
+          </div>
+          <div class="theme-preset ${ThemeSystem.currentTheme === 'light' ? 'active' : ''}" data-theme="light" role="option" tabindex="0">
+            <span class="theme-preset-indicator light"></span>
+            <span>${I18n.t('themeLight')}</span>
+          </div>
+          <div class="theme-preset ${ThemeSystem.currentTheme === 'high-contrast' ? 'active' : ''}" data-theme="high-contrast" role="option" tabindex="0">
+            <span class="theme-preset-indicator high-contrast"></span>
+            <span>${I18n.t('themeHighContrast')}</span>
+          </div>
+          <div class="theme-preset ${ThemeSystem.currentTheme === 'custom' ? 'active' : ''}" data-theme="custom" role="option" tabindex="0">
+            <span class="theme-preset-indicator custom"></span>
+            <span>${I18n.t('themeCustom')}</span>
+          </div>
+          
+          <div class="theme-custom-section" id="theme-custom-section" style="${ThemeSystem.currentTheme === 'custom' ? '' : 'display:none'}">
+            <div class="theme-custom-title">${I18n.t('themeCustomColors')}</div>
+            <div class="theme-custom-grid">
+              <div class="theme-custom-item">
+                <label>${I18n.t('themeBgDark')}</label>
+                <input type="color" id="custom-bg-dark" value="${ThemeSystem.customSettings.bgDark || '#0F0F1A'}">
+              </div>
+              <div class="theme-custom-item">
+                <label>${I18n.t('themeBgPanel')}</label>
+                <input type="color" id="custom-bg-panel" value="${ThemeSystem.customSettings.bgPanel || '#1A1A2E'}">
+              </div>
+              <div class="theme-custom-item">
+                <label>${I18n.t('themeBgNode')}</label>
+                <input type="color" id="custom-bg-node" value="${ThemeSystem.customSettings.bgNode || '#252542'}">
+              </div>
+              <div class="theme-custom-item">
+                <label>${I18n.t('themeBorder')}</label>
+                <input type="color" id="custom-border" value="${ThemeSystem.customSettings.border || '#333355'}">
+              </div>
+              <div class="theme-custom-item">
+                <label>${I18n.t('themeText')}</label>
+                <input type="color" id="custom-text" value="${ThemeSystem.customSettings.text || '#E0E0FF'}">
+              </div>
+              <div class="theme-custom-item">
+                <label>${I18n.t('themeTextDim')}</label>
+                <input type="color" id="custom-text-dim" value="${ThemeSystem.customSettings.textDim || '#8888AA'}">
+              </div>
+              <div class="theme-custom-item">
+                <label>${I18n.t('themePrimary')}</label>
+                <input type="color" id="custom-primary" value="${ThemeSystem.customSettings.primary || '#6366F1'}">
+              </div>
+              <div class="theme-custom-item">
+                <label>${I18n.t('themeBorderRadius')}</label>
+                <input type="range" id="custom-border-radius" min="0" max="20" value="${ThemeSystem.customSettings.borderRadius || 8}">
+              </div>
+            </div>
+            <div class="theme-export-import">
+              <button id="theme-export-btn">${I18n.t('themeExport')}</button>
+              <button id="theme-import-btn">${I18n.t('themeImport')}</button>
+            </div>
+          </div>
+          
+          <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--theme-border);">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+              <input type="checkbox" id="theme-follow-system" ${localStorage.getItem('workflow_theme_follow_system') === 'true' ? 'checked' : ''}>
+              <span>Follow System</span>
+            </label>
+          </div>
+        </div>
+      `;
+      
+      // Insert before the last div in toolbar (flex spacer)
+      const spacer = toolbar.querySelector('div[style*="flex:1"]');
+      if (spacer) {
+        spacer.parentNode.insertBefore(langSwitcher, spacer);
+        spacer.parentNode.insertBefore(themeSwitcher, spacer);
+      }
+      
+      // Setup event listeners
+      setupLangSwitcher();
+      setupThemeSwitcher();
+    }
+
+    function getLangFlag(lang) {
+      const flags = { zh: '🇨🇳', en: '🇺🇸', ja: '🇯🇵', ko: '🇰🇷', es: '🇪🇸' };
+      return flags[lang] || '🌐';
+    }
+
+    function setupLangSwitcher() {
+      const btn = document.getElementById('lang-btn');
+      const dropdown = document.getElementById('lang-dropdown');
+      
+      if (!btn || !dropdown) return;
+      
+      btn.addEventListener('click', () => {
+        const isOpen = dropdown.classList.contains('visible');
+        dropdown.classList.toggle('visible');
+        btn.setAttribute('aria-expanded', !isOpen);
+        if (!isOpen) {
+          btn.focus();
+        }
+      });
+      
+      dropdown.querySelectorAll('.lang-option').forEach(option => {
+        option.addEventListener('click', () => {
+          const lang = option.dataset.lang;
+          I18n.setLang(lang);
+          btn.querySelector('.lang-flag').textContent = getLangFlag(lang);
+          btn.querySelector('.lang-code').textContent = lang.toUpperCase();
+          dropdown.querySelectorAll('.lang-option').forEach(o => {
+            o.classList.remove('active');
+            o.setAttribute('aria-selected', 'false');
+          });
+          option.classList.add('active');
+          option.setAttribute('aria-selected', 'true');
+          dropdown.classList.remove('visible');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+        
+        option.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            option.click();
+          }
+        });
+      });
+      
+      // Close on outside click
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.lang-switcher')) {
+          dropdown.classList.remove('visible');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      
+      // Close on Escape
+      dropdown.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          dropdown.classList.remove('visible');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.focus();
+        }
+      });
+    }
+
+    function setupThemeSwitcher() {
+      const btn = document.getElementById('theme-btn');
+      const dropdown = document.getElementById('theme-dropdown');
+      const customSection = document.getElementById('theme-custom-section');
+      const followSystem = document.getElementById('theme-follow-system');
+      
+      if (!btn || !dropdown) return;
+      
+      btn.addEventListener('click', () => {
+        const isOpen = dropdown.classList.contains('visible');
+        dropdown.classList.toggle('visible');
+        btn.setAttribute('aria-expanded', !isOpen);
+        if (!isOpen) {
+          btn.focus();
+        }
+      });
+      
+      dropdown.querySelectorAll('.theme-preset').forEach(preset => {
+        preset.addEventListener('click', () => {
+          const theme = preset.dataset.theme;
+          ThemeSystem.setTheme(theme);
+          
+          dropdown.querySelectorAll('.theme-preset').forEach(p => p.classList.remove('active'));
+          preset.classList.add('active');
+          
+          btn.querySelector('span:last-child').textContent = I18n.t('theme' + theme.charAt(0).toUpperCase() + theme.slice(1));
+          
+          if (customSection) {
+            customSection.style.display = theme === 'custom' ? '' : 'none';
+          }
+          
+          dropdown.classList.remove('visible');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+        
+        preset.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            preset.click();
+          }
+        });
+      });
+      
+      // Custom theme color inputs
+      if (customSection) {
+        const colorInputs = customSection.querySelectorAll('input[type="color"]');
+        colorInputs.forEach(input => {
+          input.addEventListener('input', () => {
+            const settings = {};
+            colorInputs.forEach(i => {
+              if (i.id.startsWith('custom-')) {
+                const key = i.id.replace('custom-', '').replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+                settings[key] = i.value;
+              }
+            });
+            const radiusInput = document.getElementById('custom-border-radius');
+            if (radiusInput) {
+              settings.borderRadius = parseInt(radiusInput.value);
+            }
+            ThemeSystem.saveCustomTheme(settings);
+          });
+        });
+        
+        const radiusInput = document.getElementById('custom-border-radius');
+        if (radiusInput) {
+          radiusInput.addEventListener('input', () => {
+            const settings = { borderRadius: parseInt(radiusInput.value) };
+            ThemeSystem.saveCustomTheme(settings);
+          });
+        }
+        
+        const exportBtn = document.getElementById('theme-export-btn');
+        const importBtn = document.getElementById('theme-import-btn');
+        
+        if (exportBtn) {
+          exportBtn.addEventListener('click', () => ThemeSystem.exportTheme());
+        }
+        
+        if (importBtn) {
+          importBtn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+              if (e.target.files[0]) {
+                ThemeSystem.importTheme(e.target.files[0]);
+                // Update custom section values
+                Object.entries(ThemeSystem.customSettings).forEach(([key, value]) => {
+                  const input = document.getElementById('custom-' + key.replace(/([A-Z])/g, '-$1').toLowerCase());
+                  if (input) input.value = value;
+                });
+              }
+            };
+            input.click();
+          });
+        }
+      }
+      
+      if (followSystem) {
+        followSystem.addEventListener('change', () => {
+          ThemeSystem.setFollowSystem(followSystem.checked);
+        });
+      }
+      
+      // Close on outside click
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.theme-switcher')) {
+          dropdown.classList.remove('visible');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+      
+      // Close on Escape
+      dropdown.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          dropdown.classList.remove('visible');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.focus();
+        }
+      });
+    }
+
+    // Enhanced keyboard navigation
+    function setupAccessibilityKeyboardNav() {
+      // Arrow key navigation for node palette
+      const palette = document.querySelector('.node-palette');
+      if (palette) {
+        palette.addEventListener('keydown', e => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            const nodes = Array.from(palette.querySelectorAll('.palette-node:not([style*="display: none"])'));
+            const current = document.activeElement;
+            const idx = nodes.indexOf(current);
+            
+            if (idx !== -1) {
+              let nextIdx;
+              if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                nextIdx = (idx + 1) % nodes.length;
+              } else {
+                nextIdx = (idx - 1 + nodes.length) % nodes.length;
+              }
+              
+              e.preventDefault();
+              nodes[nextIdx].focus();
+              announce(nodes[nextIdx].textContent.trim(), 'polite');
+            }
+          }
+        });
+      }
+      
+      // Escape to close dropdowns and deselect
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          // Close dropdowns
+          document.querySelectorAll('.lang-dropdown, .theme-dropdown').forEach(d => {
+            d.classList.remove('visible');
+          });
+          
+          // Reset button states
+          document.querySelectorAll('[aria-expanded="true"]').forEach(btn => {
+            btn.setAttribute('aria-expanded', 'false');
+          });
+          
+          // Deselect nodes
+          if (state.selectedNodeId) {
+            selectNode(null);
+          }
+        }
+      });
+    }
+
+    // Roving tabindex for toolbar buttons
+    function setupToolbarRovingTabindex() {
+      const toolbar = document.querySelector('.toolbar');
+      if (!toolbar) return;
+      
+      const buttons = Array.from(toolbar.querySelectorAll('.toolbar-btn:not([disabled])'));
+      if (buttons.length === 0) return;
+      
+      buttons.forEach((btn, idx) => {
+        btn.setAttribute('tabindex', idx === 0 ? '0' : '-1');
+        
+        btn.addEventListener('keydown', e => {
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            const nextIdx = (idx + 1) % buttons.length;
+            buttons[nextIdx].focus();
+            buttons[nextIdx].setAttribute('tabindex', '0');
+            btn.setAttribute('tabindex', '-1');
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const prevIdx = (idx - 1 + buttons.length) % buttons.length;
+            buttons[prevIdx].focus();
+            buttons[prevIdx].setAttribute('tabindex', '0');
+            btn.setAttribute('tabindex', '-1');
+          }
+        });
+      });
+    }
+
+    // ============ End v20 i18n & Theme System ============
+
     // --- Initialize v19 Features ---
     document.addEventListener('DOMContentLoaded', () => {
       // Detect low-end device
@@ -9173,6 +11369,13 @@
       
       // Initialize offline manager
       OfflineManager.init();
+      
+      // Initialize v20 i18n & Theme System
+      I18n.init();
+      ThemeSystem.init();
+      setupToolbarSwitchers();
+      setupAccessibilityKeyboardNav();
+      setupToolbarRovingTabindex();
       
       // Check if PWA install was previously dismissed
       const dismissed = localStorage.getItem('pwa_install_dismissed');
