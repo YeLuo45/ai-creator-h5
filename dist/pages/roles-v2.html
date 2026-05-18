@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Creator - 角色协作中心 V2</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page {
+      padding: 16px;
+      min-height: 100vh;
+      background: #f5f5f5;
+      padding-bottom: 80px;
+    }
+
+    .page-header {
+      text-align: center;
+      padding: 24px 0 16px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Mode Selector */
+    .mode-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .mode-btn {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #e0e0e0;
+      background: #fff;
+      font-size: 13px;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(135deg, #1A73E8, #4facfe);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .mode-btn:hover:not(.active) {
+      border-color: #1A73E8;
+      color: #1A73E8;
+    }
+
+    /* Role Selection Section */
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .selected-roles-bar {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      min-height: 72px;
+      align-items: center;
+      overflow-x: auto;
+    }
+
+    .selected-role-chip {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, #f0f4ff, #e8f0ff);
+      border: 2px solid #1A73E8;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #1A73E8;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .selected-role-chip:hover {
+      transform: scale(1.05);
+    }
+
+    .remove-role {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(26, 115, 232, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .empty-selection {
+      color: #999;
+      font-size: 14px;
+      text-align: center;
+      width: 100%;
+    }
+
+    /* Role Grid */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .role-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border: 2px solid transparent;
+    }
+
+    .role-card:active {
+      transform: scale(0.98);
+    }
+
+    .role-card.selected {
+      border: 2px solid #1A73E8;
+      background: linear-gradient(135deg, #f0f4ff, #e8f0ff);
+    }
+
+    .role-card.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .role-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 12px;
+    }
+
+    .role-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .role-desc {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .role-specialties {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .specialty-tag {
+      padding: 4px 8px;
+      background: #f0f4ff;
+      color: #1A73E8;
+      border-radius: 10px;
+      font-size: 11px;
+    }
+
+    /* Recommended Combinations */
+    .combos-section {
+      margin-bottom: 20px;
+    }
+
+    .combo-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .combo-card {
+      flex-shrink: 0;
+      width: 200px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .combo-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .combo-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .combo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .combo-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .combo-desc {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .combo-roles {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .combo-role-tag {
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #fff;
+    }
+
+    /* Presets Section */
+    .presets-section {
+      margin-bottom: 20px;
+    }
+
+    .preset-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .preset-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .preset-item:hover {
+      background: #f8f8f8;
+    }
+
+    .preset-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    .preset-info {
+      flex: 1;
+    }
+
+    .preset-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .preset-meta {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .preset-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .preset-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: #f0f4ff;
+      color: #1A73E8;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preset-action-btn.delete {
+      background: #fff0f0;
+      color: #e53935;
+    }
+
+    /* Prompt Input Section */
+    .prompt-section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .prompt-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .prompt-textarea:focus {
+      outline: none;
+      border-color: #1A73E8;
+    }
+
+    /* Action Buttons */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      padding: 12px 16px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 14px;
+      background: linear-gradient(135deg, #1A73E8, #4facfe);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      padding: 14px 20px;
+      background: #fff;
+      color: #1A73E8;
+      border: 1px solid #1A73E8;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Collaboration Status Modal */
+    .collab-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .collab-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .collab-modal-content {
+      background: #fff;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 360px;
+      padding: 24px;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+
+    .collab-modal.active .collab-modal-content {
+      transform: scale(1);
+    }
+
+    .collab-status-icon {
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .collab-status-title {
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .collab-status-desc {
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .collab-progress {
+      margin-bottom: 20px;
+    }
+
+    .collab-role-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .collab-role-item:last-child {
+      border-bottom: none;
+    }
+
+    .collab-role-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .collab-role-info {
+      flex: 1;
+    }
+
+    .collab-role-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .collab-role-status {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .collab-role-status.active {
+      color: #1A73E8;
+    }
+
+    .collab-role-status.done {
+      color: #4caf50;
+    }
+
+    .collab-role-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .badge-pending {
+      background: #e0e0e0;
+      color: #999;
+    }
+
+    .badge-active {
+      background: #1A73E8;
+      color: #fff;
+    }
+
+    .badge-done {
+      background: #4caf50;
+      color: #fff;
+    }
+
+    .btn-cancel-collab {
+      width: 100%;
+      padding: 12px;
+      background: #f5f5f5;
+      color: #666;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Preset Save Modal */
+    .preset-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .preset-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .preset-modal-content {
+      background: #fff;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 340px;
+      padding: 24px;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+
+    .preset-modal.active .preset-modal-content {
+      transform: scale(1);
+    }
+
+    .preset-modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .preset-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .preset-input:focus {
+      outline: none;
+      border-color: #1A73E8;
+    }
+
+    .preset-modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .preset-modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+
+    .preset-modal-btn.cancel {
+      background: #f5f5f5;
+      color: #666;
+    }
+
+    .preset-modal-btn.confirm {
+      background: #1A73E8;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="page-header">
+      <div class="page-title">🎭 AI 角色协作中心</div>
+      <div class="page-subtitle">多角色组合协作，并行创作</div>
+    </div>
+
+    <!-- Mode Selector -->
+    <div class="mode-selector" id="modeSelector">
+      <button class="mode-btn active" data-mode="sequential" onclick="setMode('sequential')">
+        🔄 顺序协作
+      </button>
+      <button class="mode-btn" data-mode="parallel" onclick="setMode('parallel')">
+        ⚡ 并行创作
+      </button>
+      <button class="mode-btn" data-mode="hybrid" onclick="setMode('hybrid')">
+        🔀 混合模式
+      </button>
+    </div>
+
+    <!-- Selected Roles Bar -->
+    <div class="section-title">已选角色 (<span id="selectedCount">0</span>/4)</div>
+    <div class="selected-roles-bar" id="selectedRolesBar">
+      <div class="empty-selection">点击下方角色卡片添加，最多4个角色</div>
+    </div>
+
+    <!-- Role Grid -->
+    <div class="section-title">选择角色</div>
+    <div class="role-grid" id="roleGrid"></div>
+
+    <!-- Recommended Combinations -->
+    <div class="combos-section">
+      <div class="section-title">💡 推荐组合</div>
+      <div class="combo-scroll" id="comboScroll"></div>
+    </div>
+
+    <!-- Presets Section -->
+    <div class="presets-section">
+      <div class="section-title" style="justify-content: space-between;">
+        <span>📁 我的预设</span>
+        <span style="font-size: 12px; color: #1A73E8; cursor: pointer;" onclick="showPresetModal()">+ 新建预设</span>
+      </div>
+      <div class="preset-list" id="presetList"></div>
+    </div>
+
+    <!-- Prompt Input -->
+    <div class="prompt-section">
+      <div class="section-title">✏️ 创作描述</div>
+      <textarea class="prompt-textarea" id="promptInput" placeholder="描述你的创作需求..."></textarea>
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn-secondary" onclick="saveCurrentAsPreset()">💾 保存预设</button>
+    <button class="btn-primary" id="startBtn" onclick="startCollaboration()" disabled>开始协作</button>
+  </div>
+
+  <!-- Collaboration Status Modal -->
+  <div class="collab-modal" id="collabModal">
+    <div class="collab-modal-content">
+      <div class="collab-status-icon" id="collabIcon">🎭</div>
+      <div class="collab-status-title" id="collabTitle">准备开始协作</div>
+      <div class="collab-status-desc" id="collabDesc">正在初始化角色...</div>
+      <div class="collab-progress" id="collabProgress"></div>
+      <button class="btn-cancel-collab" onclick="cancelCollaboration()">取消协作</button>
+    </div>
+  </div>
+
+  <!-- Preset Save Modal -->
+  <div class="preset-modal" id="presetModal">
+    <div class="preset-modal-content">
+      <div class="preset-modal-title">保存为预设</div>
+      <input type="text" class="preset-input" id="presetNameInput" placeholder="输入预设名称">
+      <div class="preset-modal-actions">
+        <button class="preset-modal-btn cancel" onclick="closePresetModal()">取消</button>
+        <button class="preset-modal-btn confirm" onclick="confirmSavePreset()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { CollabRoleService } from '../services/collabRoleService.js';
+
+    let selectedRoles = [];
+    let currentMode = 'sequential';
+    let activeSession = null;
+
+    // Initialize
+    renderRoles();
+    renderCombos();
+    renderPresets();
+
+    function renderRoles() {
+      const roles = CollabRoleService.getRoles();
+      const grid = document.getElementById('roleGrid');
+      
+      grid.innerHTML = roles.map(role => {
+        const isSelected = selectedRoles.includes(role.type);
+        const isDisabled = !isSelected && selectedRoles.length >= 4;
+        
+        return `
+          <div class="role-card ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}"
+               style="--role-color: ${CollabRoleService.ROLE_CATEGORIES[role.type]?.color || '#667eea'}"
+               onclick="${isDisabled ? '' : `toggleRole('${role.type}')`}">
+            <div class="role-avatar" style="background: linear-gradient(135deg, ${CollabRoleService.ROLE_CATEGORIES[role.type]?.color || '#667eea'}, ${CollabRoleService.ROLE_CATEGORIES[role.type]?.color || '#764ba2'})">
+              ${role.icon}
+            </div>
+            <div class="role-name">${role.name}</div>
+            <div class="role-desc">${role.description}</div>
+            <div class="role-specialties">
+              ${role.specialties.slice(0, 2).map(s => `<span class="specialty-tag">${s}</span>`).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSelectedRolesBar() {
+      const bar = document.getElementById('selectedRolesBar');
+      const countEl = document.getElementById('selectedCount');
+      
+      countEl.textContent = selectedRoles.length;
+      
+      if (selectedRoles.length === 0) {
+        bar.innerHTML = '<div class="empty-selection">点击下方角色卡片添加，最多4个角色</div>';
+      } else {
+        bar.innerHTML = selectedRoles.map(roleType => {
+          const role = CollabRoleService.getRoleByType(roleType);
+          return `
+            <div class="selected-role-chip" onclick="toggleRole('${roleType}')">
+              ${role.icon} ${role.name}
+              <span class="remove-role">×</span>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      updateStartButton();
+    }
+
+    function renderCombos() {
+      const combos = CollabRoleService.getRecommendedCombos();
+      const scroll = document.getElementById('comboScroll');
+      
+      scroll.innerHTML = combos.map(combo => `
+        <div class="combo-card" onclick="applyCombo('${combo.id}')">
+          <div class="combo-header">
+            <div class="combo-icon" style="background: ${combo.color}">${combo.icon}</div>
+            <div class="combo-name">${combo.name}</div>
+          </div>
+          <div class="combo-desc">${combo.description}</div>
+          <div class="combo-roles">
+            ${combo.roles.map((r, i) => {
+              const role = CollabRoleService.getRoleByType(r);
+              return `<span class="combo-role-tag" style="background: ${getRoleColor(r)}">${role?.icon || ''}</span>`;
+            }).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderPresets() {
+      const presets = CollabRoleService.getPresets();
+      const list = document.getElementById('presetList');
+      
+      if (presets.length === 0) {
+        list.innerHTML = `
+          <div style="text-align: center; padding: 20px; color: #999; font-size: 14px;">
+            暂无预设，组合角色后可保存为预设
+          </div>
+        `;
+        return;
+      }
+      
+      list.innerHTML = presets.map(preset => `
+        <div class="preset-item" onclick="applyPreset('${preset.id}')">
+          <div class="preset-icon">${getPresetIcon(preset)}</div>
+          <div class="preset-info">
+            <div class="preset-name">${preset.name}</div>
+            <div class="preset-meta">${preset.roles.length}个角色 · ${preset.mode === 'sequential' ? '顺序' : preset.mode === 'parallel' ? '并行' : '混合'}</div>
+          </div>
+          <div class="preset-actions" onclick="event.stopPropagation()">
+            <button class="preset-action-btn delete" onclick="deletePreset('${preset.id}')">🗑</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getRoleColor(roleType) {
+      return CollabRoleService.ROLE_CATEGORIES[roleType]?.color || '#667eea';
+    }
+
+    function getPresetIcon(preset) {
+      const icons = ['🎨', '🎵', '🎬', '📝', '✨', '🎮'];
+      return icons[Math.abs(hashCode(preset.id)) % icons.length];
+    }
+
+    function hashCode(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return hash;
+    }
+
+    function toggleRole(roleType) {
+      const index = selectedRoles.indexOf(roleType);
+      if (index >= 0) {
+        selectedRoles.splice(index, 1);
+      } else if (selectedRoles.length < 4) {
+        selectedRoles.push(roleType);
+      }
+      
+      renderRoles();
+      renderSelectedRolesBar();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+    }
+
+    function applyCombo(comboId) {
+      const combos = CollabRoleService.getRecommendedCombos();
+      const combo = combos.find(c => c.id === comboId);
+      if (combo) {
+        selectedRoles = [...combo.roles];
+        renderRoles();
+        renderSelectedRolesBar();
+        showToast(`已应用: ${combo.name}`);
+      }
+    }
+
+    function applyPreset(presetId) {
+      const preset = CollabRoleService.getPresetById(presetId);
+      if (preset) {
+        selectedRoles = [...preset.roles];
+        setMode(preset.mode || 'sequential');
+        CollabRoleService.usePreset(presetId);
+        renderRoles();
+        renderSelectedRolesBar();
+        showToast(`已加载: ${preset.name}`);
+      }
+    }
+
+    function deletePreset(presetId) {
+      CollabRoleService.deletePreset(presetId);
+      renderPresets();
+      showToast('预设已删除');
+    }
+
+    function updateStartButton() {
+      const btn = document.getElementById('startBtn');
+      btn.disabled = selectedRoles.length === 0;
+    }
+
+    async function startCollaboration() {
+      const validation = CollabRoleService.validateCombination(selectedRoles);
+      if (!validation.valid) {
+        showToast(validation.reason);
+        return;
+      }
+
+      const prompt = document.getElementById('promptInput').value.trim();
+      if (!prompt) {
+        showToast('请输入创作描述');
+        return;
+      }
+
+      // Create session
+      activeSession = CollabRoleService.createSession({
+        name: '协作创作',
+        roles: [...selectedRoles],
+        mode: currentMode,
+        prompt: prompt
+      });
+
+      // Show collaboration modal
+      showCollabModal();
+      
+      // Simulate parallel/sequential execution
+      await executeCollaboration();
+    }
+
+    async function executeCollaboration() {
+      const roles = [...selectedRoles];
+      const progressEl = document.getElementById('collabProgress');
+      
+      // Build progress items
+      progressEl.innerHTML = roles.map((roleType, index) => {
+        const role = CollabRoleService.getRoleByType(roleType);
+        return `
+          <div class="collab-role-item" id="roleItem${index}">
+            <div class="collab-role-icon" style="background: ${getRoleColor(roleType)}">${role.icon}</div>
+            <div class="collab-role-info">
+              <div class="collab-role-name">${role.name}</div>
+              <div class="collab-role-status" id="roleStatus${index}">等待中...</div>
+            </div>
+            <div class="collab-role-badge badge-pending" id="roleBadge${index}">${index + 1}</div>
+          </div>
+        `;
+      }).join('');
+
+      // Execute based on mode
+      if (currentMode === 'parallel') {
+        // Parallel: all at once with simulated progress
+        document.getElementById('collabTitle').textContent = '并行创作中...';
+        document.getElementById('collabDesc').textContent = '所有角色同时工作中';
+        
+        // Update all to active
+        for (let i = 0; i < roles.length; i++) {
+          updateRoleStatus(i, '创作中...', 'active', '◐');
+        }
+
+        // Simulate completion after delay
+        await delay(2000);
+        
+        for (let i = 0; i < roles.length; i++) {
+          updateRoleStatus(i, '已完成 ✓', 'done', '✓');
+          CollabRoleService.updateSessionProgress(roles[i], { success: true });
+        }
+        
+        await delay(500);
+      } else {
+        // Sequential/Hybrid: one by one
+        document.getElementById('collabTitle').textContent = '顺序协作中...';
+        document.getElementById('collabDesc').textContent = '角色依次创作';
+        
+        for (let i = 0; i < roles.length; i++) {
+          const role = CollabRoleService.getRoleByType(roles[i]);
+          
+          // Activate current
+          updateRoleStatus(i, '创作中...', 'active', '◐');
+          document.getElementById('collabDesc').textContent = `${role.name} 正在创作...`;
+          
+          // Simulate work
+          await delay(1500);
+          
+          // Mark complete
+          updateRoleStatus(i, '已完成 ✓', 'done', '✓');
+          CollabRoleService.updateSessionProgress(roles[i], { success: true });
+          
+          await delay(300);
+        }
+      }
+
+      // Complete
+      document.getElementById('collabIcon').textContent = '✅';
+      document.getElementById('collabTitle').textContent = '创作完成!';
+      document.getElementById('collabDesc').textContent = '协作成果已生成';
+      
+      await delay(1000);
+      
+      CollabRoleService.completeSession();
+      hideCollabModal();
+      
+      showToast('协作创作完成!');
+    }
+
+    function updateRoleStatus(index, text, statusClass, badge) {
+      const statusEl = document.getElementById(`roleStatus${index}`);
+      const badgeEl = document.getElementById(`roleBadge${index}`);
+      
+      if (statusEl) {
+        statusEl.textContent = text;
+        statusEl.className = `collab-role-status ${statusClass}`;
+      }
+      
+      if (badgeEl) {
+        badgeEl.textContent = badge;
+        badgeEl.className = `collab-role-badge badge-${statusClass === 'active' ? 'active' : statusClass === 'done' ? 'done' : 'pending'}`;
+      }
+    }
+
+    function showCollabModal() {
+      document.getElementById('collabModal').classList.add('active');
+    }
+
+    function hideCollabModal() {
+      document.getElementById('collabModal').classList.remove('active');
+      activeSession = null;
+    }
+
+    function cancelCollaboration() {
+      CollabRoleService.cancelSession();
+      hideCollabModal();
+      showToast('协作已取消');
+    }
+
+    function showPresetModal() {
+      if (selectedRoles.length === 0) {
+        showToast('请先选择角色');
+        return;
+      }
+      document.getElementById('presetModal').classList.add('active');
+      document.getElementById('presetNameInput').focus();
+    }
+
+    function closePresetModal() {
+      document.getElementById('presetModal').classList.remove('active');
+      document.getElementById('presetNameInput').value = '';
+    }
+
+    function confirmSavePreset() {
+      const name = document.getElementById('presetNameInput').value.trim();
+      if (!name) {
+        showToast('请输入预设名称');
+        return;
+      }
+
+      CollabRoleService.savePreset({
+        name: name,
+        roles: [...selectedRoles],
+        mode: currentMode,
+        config: {}
+      });
+
+      closePresetModal();
+      renderPresets();
+      showToast('预设已保存');
+    }
+
+    function saveCurrentAsPreset() {
+      showPresetModal();
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Listen for messages from other pages
+    window.addEventListener('message', (e) => {
+      if (e.data.type === 'roleSelected') {
+        toggleRole(e.data.roleType);
+      }
+    });
+  </script>
+</body>
+</html>
