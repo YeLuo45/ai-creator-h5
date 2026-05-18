@@ -2281,6 +2281,392 @@
       height: 8px;
       border-radius: 50%;
     }
+
+    /* ===== Trigger Management Panel v18 ===== */
+    .trigger-panel {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 800px;
+      max-height: 80vh;
+      z-index: 1001;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      display: none;
+    }
+
+    .trigger-panel.active { display: block; }
+
+    .trigger-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .trigger-panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .trigger-panel-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .trigger-panel-close:hover { color: var(--text); }
+
+    .trigger-panel-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .trigger-panel-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .trigger-panel-tab:hover { color: var(--text); }
+    .trigger-panel-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    .trigger-panel-content {
+      padding: 16px 20px;
+      max-height: calc(80vh - 130px);
+      overflow-y: auto;
+    }
+
+    .trigger-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .trigger-item {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .trigger-item:hover { border-color: var(--primary); }
+    .trigger-item.selected { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+
+    .trigger-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .trigger-item-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .trigger-item-badge { padding: 2px 8px; border-radius: 4px; font-size: 10px; }
+    .trigger-item-badge.webhook { background: rgba(124, 58, 237, 0.2); color: #7C3AED; }
+    .trigger-item-badge.api { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
+    .trigger-item-badge.schedule { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+
+    .trigger-item-url {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: monospace;
+      background: var(--bg-dark);
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      word-break: break-all;
+    }
+
+    .trigger-item-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .trigger-item-actions {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .trigger-action-btn {
+      padding: 4px 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+
+    .trigger-action-btn:hover { background: var(--bg-dark); color: var(--text); }
+    .trigger-action-btn.danger { border-color: var(--error); color: var(--error); }
+
+    /* Webhook Config Form */
+    .webhook-config-form { display: flex; flex-direction: column; gap: 12px; }
+    .webhook-config-section { padding: 12px; background: var(--bg-dark); border-radius: 8px; }
+    .webhook-config-section-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+    .webhook-config-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .webhook-config-label { font-size: 12px; color: var(--text-dim); min-width: 80px; }
+    .webhook-config-input { flex: 1; padding: 6px 10px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; }
+    .webhook-config-select { padding: 6px 10px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; }
+
+    .auth-options { display: flex; gap: 8px; }
+    .auth-option { padding: 8px 16px; background: var(--bg-node); border: 2px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .auth-option:hover { border-color: var(--primary); }
+    .auth-option.selected { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+    .auth-option-name { font-size: 12px; font-weight: 500; }
+    .auth-option-desc { font-size: 10px; color: var(--text-dim); }
+
+    .api-key-display { font-family: monospace; font-size: 11px; padding: 8px 12px; background: var(--bg-dark); border-radius: 4px; word-break: break-all; }
+
+    .retry-config { display: flex; gap: 16px; }
+    .retry-config-item { display: flex; align-items: center; gap: 8px; }
+    .retry-config-item label { font-size: 12px; color: var(--text-dim); }
+    .retry-config-item input { width: 60px; padding: 4px 8px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; text-align: center; }
+
+    /* Trigger History */
+    .trigger-history { max-height: 300px; overflow-y: auto; }
+    .trigger-history-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      background: var(--bg-node);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .trigger-history-status { width: 8px; height: 8px; border-radius: 50%; }
+    .trigger-history-status.success { background: var(--success); }
+    .trigger-history-status.error { background: var(--error); }
+    .trigger-history-time { color: var(--text-dim); font-size: 11px; }
+    .trigger-history-duration { color: var(--primary); font-family: monospace; }
+
+    /* ===== Scheduler Panel v18 ===== */
+    .scheduler-panel {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 850px;
+      max-height: 80vh;
+      z-index: 1001;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      display: none;
+    }
+
+    .scheduler-panel.active { display: block; }
+
+    .scheduler-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scheduler-panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scheduler-panel-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .scheduler-panel-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .scheduler-panel-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .scheduler-panel-tab:hover { color: var(--text); }
+    .scheduler-panel-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    .scheduler-panel-content {
+      padding: 16px 20px;
+      max-height: calc(80vh - 130px);
+      overflow-y: auto;
+    }
+
+    /* Cron Expression Builder */
+    .cron-builder { background: var(--bg-dark); padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+    .cron-builder-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .cron-fields { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 12px; }
+    .cron-field { text-align: center; }
+    .cron-field-label { font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
+    .cron-field-input { width: 100%; padding: 6px 4px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; text-align: center; }
+    .cron-field-input:focus { border-color: var(--primary); outline: none; }
+    .cron-presets { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cron-preset { padding: 4px 10px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s; }
+    .cron-preset:hover { border-color: var(--primary); }
+    .cron-preset.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .cron-description { font-size: 11px; color: var(--primary); margin-top: 8px; padding: 6px 10px; background: rgba(99, 102, 241, 0.1); border-radius: 4px; }
+
+    /* Task List */
+    .task-list { display: flex; flex-direction: column; gap: 8px; }
+    .task-item {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .task-item:hover { border-color: var(--primary); }
+    .task-item.running { border-left: 3px solid var(--warning); }
+    .task-item.paused { border-left: 3px solid var(--text-dim); }
+    .task-item.completed { border-left: 3px solid var(--success); opacity: 0.7; }
+
+    .task-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .task-item-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .task-item-status { padding: 2px 8px; border-radius: 4px; font-size: 10px; }
+    .task-item-status.idle { background: rgba(136, 138, 170, 0.2); color: var(--text-dim); }
+    .task-item-status.running { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .task-item-status.paused { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
+    .task-item-status.completed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+
+    .task-item-schedule { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; font-family: monospace; }
+    .task-item-meta { display: flex; gap: 16px; font-size: 11px; color: var(--text-dim); }
+    .task-item-actions { display: flex; gap: 4px; margin-top: 8px; }
+
+    /* ===== API Docs Panel v18 ===== */
+    .api-docs-panel {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 900px;
+      max-height: 85vh;
+      z-index: 1001;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      display: none;
+    }
+
+    .api-docs-panel.active { display: block; }
+
+    .api-docs-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .api-docs-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .api-docs-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .api-docs-content {
+      padding: 16px 20px;
+      max-height: calc(85vh - 70px);
+      overflow-y: auto;
+    }
+
+    .api-endpoints-list { display: flex; flex-direction: column; gap: 8px; }
+    .api-endpoint-item {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .api-endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .api-endpoint-header:hover { background: var(--bg-dark); }
+    .api-endpoint-method { padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+    .api-endpoint-method.get { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .api-endpoint-method.post { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
+    .api-endpoint-path { font-family: monospace; font-size: 12px; }
+    .api-endpoint-desc { font-size: 11px; color: var(--text-dim); margin-left: auto; }
+    .api-endpoint-body { padding: 12px; border-top: 1px solid var(--border); font-size: 12px; }
+    .api-endpoint-params { margin-bottom: 8px; }
+    .api-endpoint-param { display: flex; gap: 8px; padding: 4px 0; }
+    .api-endpoint-param-name { font-family: monospace; color: var(--primary); min-width: 80px; }
+    .api-endpoint-param-in { color: var(--text-dim); font-size: 10px; }
+
+    /* Quota Display */
+    .quota-display { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+    .quota-card { padding: 12px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 8px; text-align: center; }
+    .quota-value { font-size: 20px; font-weight: 600; color: var(--primary); }
+    .quota-value.warning { color: var(--warning); }
+    .quota-value.danger { color: var(--error); }
+    .quota-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    /* SDK Code Example */
+    .sdk-example { background: var(--bg-dark); border-radius: 8px; padding: 12px; margin-top: 12px; }
+    .sdk-example-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+    .sdk-example-tab { padding: 4px 10px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 4px; font-size: 11px; cursor: pointer; }
+    .sdk-example-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .sdk-example-code { font-family: monospace; font-size: 11px; white-space: pre-wrap; color: var(--text); }
+
+    /* ===== Trigger/Scheduler Panel Toggle ===== */
+    .trigger-scheduler-nav { display: flex; gap: 4px; }
   </style>
 </head>
 <body>
@@ -2925,6 +3311,52 @@
     <div id="audit-log-list" class="audit-log-list"></div>
   </div>
 
+  <!-- Trigger Management Panel v18 -->
+  <div class="trigger-panel" id="trigger-panel">
+    <div class="trigger-panel-header">
+      <div class="trigger-panel-title">⚡ 触发器管理</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="toolbar-btn" onclick="showAPIDocs()" style="padding:4px 10px;font-size:11px;">📖 API文档</button>
+        <button class="trigger-panel-close" onclick="closeTriggerPanel()">×</button>
+      </div>
+    </div>
+    <div class="trigger-panel-tabs">
+      <button class="trigger-panel-tab active" data-tab="triggers" onclick="switchTriggerTab('triggers')">📋 触发器列表</button>
+      <button class="trigger-panel-tab" data-tab="webhook" onclick="switchTriggerTab('webhook')">🪝 Webhook配置</button>
+      <button class="trigger-panel-tab" data-tab="history" onclick="switchTriggerTab('history')">📜 触发历史</button>
+    </div>
+    <div class="trigger-panel-content" id="trigger-panel-content">
+      <!-- Content loaded dynamically -->
+    </div>
+  </div>
+
+  <!-- Scheduler Panel v18 -->
+  <div class="scheduler-panel" id="scheduler-panel">
+    <div class="scheduler-panel-header">
+      <div class="scheduler-panel-title">⏰ 调度管理</div>
+      <button class="scheduler-panel-close" onclick="closeSchedulerPanel()">×</button>
+    </div>
+    <div class="scheduler-panel-tabs">
+      <button class="scheduler-panel-tab active" data-tab="tasks" onclick="switchSchedulerTab('tasks')">📋 任务列表</button>
+      <button class="scheduler-panel-tab" data-tab="create" onclick="switchSchedulerTab('create')">➕ 创建任务</button>
+      <button class="scheduler-panel-tab" data-tab="cron" onclick="switchSchedulerTab('cron')">⏱ Cron配置</button>
+    </div>
+    <div class="scheduler-panel-content" id="scheduler-panel-content">
+      <!-- Content loaded dynamically -->
+    </div>
+  </div>
+
+  <!-- API Docs Panel v18 -->
+  <div class="api-docs-panel" id="api-docs-panel">
+    <div class="api-docs-header">
+      <div class="api-docs-title">📖 REST API 文档</div>
+      <button class="api-docs-close" onclick="closeAPIDocs()">×</button>
+    </div>
+    <div class="api-docs-content" id="api-docs-content">
+      <!-- Content loaded dynamically -->
+    </div>
+  </div>
+
   <!-- Workflow List Panel v14 -->
   <div class="workflow-list-overlay" id="workflow-list-overlay" onclick="toggleWorkflowListPanel()"></div>
   <div class="workflow-list-panel" id="workflow-list-panel">
@@ -3028,6 +3460,7 @@
   <script src="../services/workflowMarketService.js"></script>
   <script src="../services/executionReportService.js"></script>
   <script src="../services/workflowAIOptimizer.js"></script>
+  <script src="../services/workflowRESTAPI.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -6051,6 +6484,709 @@
 
     // Start
     init();
+
+    // ============ Trigger Management Panel v18 ============
+    let triggerPanelState = { currentTab: 'triggers', selectedTrigger: null };
+
+    function showTriggerPanel() {
+      document.getElementById('trigger-panel').classList.add('active');
+      switchTriggerTab('triggers');
+    }
+
+    function closeTriggerPanel() {
+      document.getElementById('trigger-panel').classList.remove('active');
+    }
+
+    function switchTriggerTab(tab) {
+      triggerPanelState.currentTab = tab;
+      document.querySelectorAll('.trigger-panel-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.trigger-panel-tab[data-tab="${tab}"]`).classList.add('active');
+      
+      const content = document.getElementById('trigger-panel-content');
+      
+      switch(tab) {
+        case 'triggers':
+          renderTriggerList(content);
+          break;
+        case 'webhook':
+          renderWebhookConfig(content);
+          break;
+        case 'history':
+          renderTriggerHistory(content);
+          break;
+      }
+    }
+
+    function renderTriggerList(content) {
+      const triggers = triggerManager.getAllTriggers();
+      
+      if (triggers.length === 0) {
+        content.innerHTML = `
+          <div class="ai-empty-state">
+            <div class="ai-empty-state-icon">⚡</div>
+            <div class="ai-empty-state-text">暂无触发器<br>在Webhook配置中创建</div>
+          </div>
+        `;
+        return;
+      }
+      
+      content.innerHTML = `
+        <div class="trigger-list">
+          ${triggers.map(t => `
+            <div class="trigger-item" onclick="selectTrigger('${t.id}')">
+              <div class="trigger-item-header">
+                <div class="trigger-item-name">
+                  ${t.name}
+                  <span class="trigger-item-badge ${t.type}">${t.type.toUpperCase()}</span>
+                </div>
+                <label class="switch" style="transform:scale(0.8);">
+                  <input type="checkbox" ${t.enabled ? 'checked' : ''} onchange="toggleTriggerEnable('${t.id}', this.checked)">
+                </label>
+              </div>
+              ${t.webhookUrl ? `<div class="trigger-item-url">${t.webhookUrl}</div>` : ''}
+              <div class="trigger-item-meta">
+                <span>触发次数: ${t.triggerCount || 0}</span>
+                <span>认证: ${t.auth?.type || 'none'}</span>
+                <span>最后触发: ${t.lastTriggered ? new Date(t.lastTriggered).toLocaleString() : '从未'}</span>
+              </div>
+              <div class="trigger-item-actions">
+                <button class="trigger-action-btn" onclick="event.stopPropagation(); testTrigger('${t.id}')">🧪 测试</button>
+                <button class="trigger-action-btn" onclick="event.stopPropagation(); viewTriggerHistory('${t.id}')">📜 历史</button>
+                <button class="trigger-action-btn danger" onclick="event.stopPropagation(); deleteTrigger('${t.id}')">🗑️ 删除</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderWebhookConfig(content) {
+      content.innerHTML = `
+        <div class="webhook-config-form">
+          <div class="webhook-config-section">
+            <div class="webhook-config-section-title">🪝 创建 Webhook</div>
+            <div class="webhook-config-row">
+              <span class="webhook-config-label">名称</span>
+              <input type="text" class="webhook-config-input" id="webhook-name" placeholder="我的Webhook">
+            </div>
+            <div class="webhook-config-row">
+              <span class="webhook-config-label">HTTP方法</span>
+              <select class="webhook-config-select" id="webhook-method">
+                <option value="POST">POST</option>
+                <option value="GET">GET</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="webhook-config-section">
+            <div class="webhook-config-section-title">🔐 认证方式</div>
+            <div class="auth-options">
+              <div class="auth-option selected" data-auth="none" onclick="selectAuthType(this)">
+                <div class="auth-option-name">无认证</div>
+                <div class="auth-option-desc">公开访问</div>
+              </div>
+              <div class="auth-option" data-auth="apikey" onclick="selectAuthType(this)">
+                <div class="auth-option-name">API Key</div>
+                <div class="auth-option-desc">简单的密钥认证</div>
+              </div>
+              <div class="auth-option" data-auth="hmac" onclick="selectAuthType(this)">
+                <div class="auth-option-name">HMAC</div>
+                <div class="auth-option-desc">签名验证</div>
+              </div>
+            </div>
+            <div id="auth-config-area" style="margin-top:12px;display:none;"></div>
+          </div>
+          
+          <div class="webhook-config-section">
+            <div class="webhook-config-section-title">🔁 重试配置</div>
+            <div class="retry-config">
+              <div class="retry-config-item">
+                <label>启用重试</label>
+                <input type="checkbox" id="retry-enabled" checked>
+              </div>
+              <div class="retry-config-item">
+                <label>最大次数</label>
+                <input type="number" id="retry-max" value="3" min="1" max="10">
+              </div>
+              <div class="retry-config-item">
+                <label>延迟(ms)</label>
+                <input type="number" id="retry-delay" value="1000" min="100" step="100">
+              </div>
+            </div>
+          </div>
+          
+          <div class="webhook-config-section">
+            <div class="webhook-config-section-title">📋 触发条件 (可选)</div>
+            <div id="conditions-area">
+              <div style="color:var(--text-dim);font-size:12px;">暂未实现条件配置</div>
+            </div>
+          </div>
+          
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button class="btn-small" onclick="switchTriggerTab('triggers')">取消</button>
+            <button class="btn-small primary" onclick="createWebhookTrigger()">创建触发器</button>
+          </div>
+        </div>
+      `;
+    }
+
+    let selectedAuthType = 'none';
+
+    function selectAuthType(el) {
+      document.querySelectorAll('.auth-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedAuthType = el.dataset.auth;
+      
+      const area = document.getElementById('auth-config-area');
+      if (selectedAuthType === 'none') {
+        area.style.display = 'none';
+        area.innerHTML = '';
+      } else if (selectedAuthType === 'apikey') {
+        area.style.display = 'block';
+        area.innerHTML = `
+          <div class="webhook-config-row">
+            <span class="webhook-config-label">API Key</span>
+            <input type="text" class="webhook-config-input" id="apikey-input" placeholder="自动生成或手动输入">
+          </div>
+          <button class="trigger-action-btn" onclick="generateNewAPIKey()">🎲 生成新Key</button>
+        `;
+      } else if (selectedAuthType === 'hmac') {
+        area.style.display = 'block';
+        area.innerHTML = `
+          <div class="webhook-config-row">
+            <span class="webhook-config-label">HMAC Secret</span>
+            <input type="text" class="webhook-config-input" id="hmac-secret-input" placeholder="自动生成或手动输入">
+          </div>
+          <button class="trigger-action-btn" onclick="generateNewHMACSecret()">🎲 生成新Secret</button>
+        `;
+      }
+    }
+
+    function generateNewAPIKey() {
+      document.getElementById('apikey-input').value = 'wh_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+    }
+
+    function generateNewHMACSecret() {
+      document.getElementById('hmac-secret-input').value = 'hmac_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+    }
+
+    function createWebhookTrigger() {
+      const name = document.getElementById('webhook-name').value || '未命名触发器';
+      const method = document.getElementById('webhook-method').value;
+      
+      const triggerData = {
+        name,
+        type: 'webhook',
+        workflowId: state.workflow.id,
+        workflow: state.workflow,
+        httpMethod: method,
+        auth: { type: selectedAuthType },
+        retry: {
+          enabled: document.getElementById('retry-enabled').checked,
+          maxRetries: parseInt(document.getElementById('retry-max').value, 10),
+          retryDelay: parseInt(document.getElementById('retry-delay').value, 10)
+        }
+      };
+      
+      if (selectedAuthType === 'apikey') {
+        triggerData.auth.apiKey = document.getElementById('apikey-input').value || triggerManager.generateAPIKey();
+      } else if (selectedAuthType === 'hmac') {
+        triggerData.auth.hmacSecret = document.getElementById('hmac-secret-input').value || triggerManager.generateHMACSecret();
+      }
+      
+      const id = triggerManager.addTrigger(triggerData);
+      showToast(`触发器已创建: ${name}`);
+      switchTriggerTab('triggers');
+    }
+
+    function selectTrigger(id) {
+      triggerPanelState.selectedTrigger = id;
+    }
+
+    function toggleTriggerEnable(id, enabled) {
+      if (enabled) {
+        triggerManager.enableTrigger(id);
+      } else {
+        triggerManager.disableTrigger(id);
+      }
+    }
+
+    function testTrigger(id) {
+      triggerManager.simulateWebhook(id, { _test: true });
+      showToast('测试触发已发送');
+    }
+
+    function viewTriggerHistory(id) {
+      triggerPanelState.selectedTrigger = id;
+      switchTriggerTab('history');
+    }
+
+    function renderTriggerHistory(content) {
+      if (!triggerPanelState.selectedTrigger) {
+        content.innerHTML = '<div class="ai-empty-state"><div class="ai-empty-state-text">请先选择一个触发器</div></div>';
+        return;
+      }
+      
+      const trigger = triggerManager.triggers.find(t => t.id === triggerPanelState.selectedTrigger);
+      const history = triggerManager.getTriggerHistory(triggerPanelState.selectedTrigger);
+      
+      if (!history || history.length === 0) {
+        content.innerHTML = `
+          <div class="ai-empty-state">
+            <div class="ai-empty-state-icon">📜</div>
+            <div class="ai-empty-state-text">暂无触发历史</div>
+          </div>
+        `;
+        return;
+      }
+      
+      content.innerHTML = `
+        <div style="margin-bottom:12px;">
+          <strong>${trigger?.name || '未知'}</strong> 的触发历史
+        </div>
+        <div class="trigger-history">
+          ${history.map(h => `
+            <div class="trigger-history-item">
+              <div class="trigger-history-status ${h.type}"></div>
+              <span>${h.type === 'success' ? '成功' : '失败'}</span>
+              <span class="trigger-history-time">${new Date(h.timestamp).toLocaleString()}</span>
+              <span class="trigger-history-duration">${h.duration}ms</span>
+              ${h.retryCount > 0 ? `<span style="color:var(--warning);font-size:10px;">重试 ${h.retryCount} 次</span>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function deleteTrigger(id) {
+      if (confirm('确定删除此触发器?')) {
+        triggerManager.removeTrigger(id);
+        showToast('触发器已删除');
+        switchTriggerTab('triggers');
+      }
+    }
+
+    // ============ Scheduler Panel v18 ============
+    let schedulerPanelState = { currentTab: 'tasks' };
+
+    function showSchedulerPanel() {
+      document.getElementById('scheduler-panel').classList.add('active');
+      switchSchedulerTab('tasks');
+    }
+
+    function closeSchedulerPanel() {
+      document.getElementById('scheduler-panel').classList.remove('active');
+    }
+
+    function switchSchedulerTab(tab) {
+      schedulerPanelState.currentTab = tab;
+      document.querySelectorAll('.scheduler-panel-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.scheduler-panel-tab[data-tab="${tab}"]`).classList.add('active');
+      
+      const content = document.getElementById('scheduler-panel-content');
+      
+      switch(tab) {
+        case 'tasks':
+          renderTaskList(content);
+          break;
+        case 'create':
+          renderTaskCreate(content);
+          break;
+        case 'cron':
+          renderCronBuilder(content);
+          break;
+      }
+    }
+
+    function renderTaskList(content) {
+      const tasks = scheduler.getTasks();
+      const stats = scheduler.getUsageStats();
+      
+      content.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+          <div class="quota-card">
+            <div class="quota-value">${stats.totalTasks}</div>
+            <div class="quota-label">总任务</div>
+          </div>
+          <div class="quota-card">
+            <div class="quota-value">${stats.activeTasks}</div>
+            <div class="quota-label">活跃任务</div>
+          </div>
+          <div class="quota-card">
+            <div class="quota-value">${stats.runningTasks}</div>
+            <div class="quota-label">运行中</div>
+          </div>
+          <div class="quota-card">
+            <div class="quota-value">${stats.totalExecutions}</div>
+            <div class="quota-label">总执行</div>
+          </div>
+        </div>
+        
+        <div class="task-list">
+          ${tasks.length === 0 ? `
+            <div class="ai-empty-state">
+              <div class="ai-empty-state-icon">⏰</div>
+              <div class="ai-empty-state-text">暂无调度任务<br>点击"创建任务"添加</div>
+            </div>
+          ` : tasks.map(t => `
+            <div class="task-item ${t.status}">
+              <div class="task-item-header">
+                <div class="task-item-name">
+                  ${t.name}
+                  <span class="task-item-status ${t.status}">${t.status === 'idle' ? '就绪' : t.status === 'running' ? '运行中' : t.status === 'paused' ? '已暂停' : '已完成'}</span>
+                </div>
+                <label class="switch" style="transform:scale(0.8);">
+                  <input type="checkbox" ${t.enabled ? 'checked' : ''} onchange="toggleTaskEnable('${t.id}', this.checked)">
+                </label>
+              </div>
+              <div class="task-item-schedule">
+                ${t.type === 'cron' && t.cron ? `Cron: ${t.cron}` : t.type === 'interval' ? `间隔: ${t.interval / 1000}秒` : '一次性'}
+              </div>
+              <div class="task-item-meta">
+                <span>执行次数: ${t.runCount || 0}</span>
+                <span>下次执行: ${t.nextRun ? new Date(t.nextRun).toLocaleString() : 'N/A'}</span>
+                <span>最后执行: ${t.lastRun ? new Date(t.lastRun).toLocaleString() : '从未'}</span>
+              </div>
+              <div class="task-item-actions">
+                <button class="trigger-action-btn" onclick="runTaskNow('${t.id}')">▶ 立即执行</button>
+                <button class="trigger-action-btn" onclick="pauseTask('${t.id}')">⏸ 暂停</button>
+                <button class="trigger-action-btn" onclick="viewTaskHistory('${t.id}')">📜 历史</button>
+                <button class="trigger-action-btn danger" onclick="deleteTask('${t.id}')">🗑️ 删除</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderTaskCreate(content) {
+      content.innerHTML = `
+        <div class="webhook-config-form">
+          <div class="webhook-config-section">
+            <div class="webhook-config-section-title">📋 任务信息</div>
+            <div class="webhook-config-row">
+              <span class="webhook-config-label">任务名称</span>
+              <input type="text" class="webhook-config-input" id="task-name" placeholder="我的定时任务">
+            </div>
+            <div class="webhook-config-row">
+              <span class="webhook-config-label">任务类型</span>
+              <select class="webhook-config-select" id="task-type" onchange="onTaskTypeChange()">
+                <option value="interval">间隔执行</option>
+                <option value="cron">Cron表达式</option>
+                <option value="oneshot">一次性</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="webhook-config-section" id="interval-config">
+            <div class="webhook-config-section-title">⏱ 间隔配置</div>
+            <div class="webhook-config-row">
+              <span class="webhook-config-label">间隔(秒)</span>
+              <input type="number" class="webhook-config-input" id="task-interval" value="3600" min="1">
+            </div>
+          </div>
+          
+          <div class="webhook-config-section" id="cron-config" style="display:none;">
+            <div class="webhook-config-section-title">⏱ Cron表达式</div>
+            <div class="cron-builder">
+              <div class="cron-fields">
+                <div class="cron-field">
+                  <div class="cron-field-label">秒</div>
+                  <input type="text" class="cron-field-input" id="cron-second" value="0" placeholder="*">
+                </div>
+                <div class="cron-field">
+                  <div class="cron-field-label">分</div>
+                  <input type="text" class="cron-field-input" id="cron-minute" value="*" placeholder="*">
+                </div>
+                <div class="cron-field">
+                  <div class="cron-field-label">时</div>
+                  <input type="text" class="cron-field-input" id="cron-hour" value="*" placeholder="*">
+                </div>
+                <div class="cron-field">
+                  <div class="cron-field-label">日</div>
+                  <input type="text" class="cron-field-input" id="cron-day" value="*" placeholder="*">
+                </div>
+                <div class="cron-field">
+                  <div class="cron-field-label">月</div>
+                  <input type="text" class="cron-field-input" id="cron-month" value="*" placeholder="*">
+                </div>
+                <div class="cron-field">
+                  <div class="cron-field-label">周</div>
+                  <input type="text" class="cron-field-input" id="cron-weekday" value="*" placeholder="*">
+                </div>
+              </div>
+              <div class="cron-presets">
+                <span style="font-size:11px;color:var(--text-dim);">快捷:</span>
+                <button class="cron-preset" onclick="applyCronPreset('0 * * * *')">每小时</button>
+                <button class="cron-preset" onclick="applyCronPreset('0 0 * * *')">每天</button>
+                <button class="cron-preset" onclick="applyCronPreset('0 0 * * 0')">每周</button>
+                <button class="cron-preset" onclick="applyCronPreset('0 0 1 * *')">每月</button>
+              </div>
+              <div class="cron-description" id="cron-description">每秒执行</div>
+            </div>
+          </div>
+          
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button class="btn-small" onclick="switchSchedulerTab('tasks')">取消</button>
+            <button class="btn-small primary" onclick="createScheduledTask()">创建任务</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function onTaskTypeChange() {
+      const type = document.getElementById('task-type').value;
+      document.getElementById('interval-config').style.display = type === 'interval' ? 'block' : 'none';
+      document.getElementById('cron-config').style.display = type === 'cron' ? 'block' : 'none';
+    }
+
+    function applyCronPreset(cron) {
+      const parts = cron.split(' ');
+      if (parts.length === 5) {
+        parts.unshift('0');
+      }
+      document.getElementById('cron-second').value = parts[0];
+      document.getElementById('cron-minute').value = parts[1];
+      document.getElementById('cron-hour').value = parts[2];
+      document.getElementById('cron-day').value = parts[3];
+      document.getElementById('cron-month').value = parts[4];
+      document.getElementById('cron-weekday').value = parts[5];
+      updateCronDescription();
+    }
+
+    function updateCronDescription() {
+      const second = document.getElementById('cron-second').value;
+      const minute = document.getElementById('cron-minute').value;
+      const hour = document.getElementById('cron-hour').value;
+      const day = document.getElementById('cron-day').value;
+      const month = document.getElementById('cron-month').value;
+      const weekday = document.getElementById('cron-weekday').value;
+      
+      const desc = scheduler.describeCron(`${second} ${minute} ${hour} ${day} ${month} ${weekday}`);
+      document.getElementById('cron-description').textContent = desc;
+    }
+
+    function renderCronBuilder(content) {
+      const cronStr = '0 * * * * *';
+      const desc = scheduler.describeCron(cronStr);
+      
+      content.innerHTML = `
+        <div class="cron-builder">
+          <div class="cron-builder-title">⏱ Cron 表达式生成器</div>
+          <div class="cron-fields">
+            <div class="cron-field">
+              <div class="cron-field-label">秒 (0-59)</div>
+              <input type="text" class="cron-field-input" id="cb-second" value="0" oninput="updateCronBuilderDesc()">
+            </div>
+            <div class="cron-field">
+              <div class="cron-field-label">分 (0-59)</div>
+              <input type="text" class="cron-field-input" id="cb-minute" value="*" oninput="updateCronBuilderDesc()">
+            </div>
+            <div class="cron-field">
+              <div class="cron-field-label">时 (0-23)</div>
+              <input type="text" class="cron-field-input" id="cb-hour" value="*" oninput="updateCronBuilderDesc()">
+            </div>
+            <div class="cron-field">
+              <div class="cron-field-label">日 (1-31)</div>
+              <input type="text" class="cron-field-input" id="cb-day" value="*" oninput="updateCronBuilderDesc()">
+            </div>
+            <div class="cron-field">
+              <div class="cron-field-label">月 (1-12)</div>
+              <input type="text" class="cron-field-input" id="cb-month" value="*" oninput="updateCronBuilderDesc()">
+            </div>
+            <div class="cron-field">
+              <div class="cron-field-label">周 (0-6)</div>
+              <input type="text" class="cron-field-input" id="cb-weekday" value="*" oninput="updateCronBuilderDesc()">
+            </div>
+          </div>
+          <div class="cron-presets">
+            <button class="cron-preset" onclick="applyCronBuilderPreset('0', '*', '*', '*', '*', '*')">每秒</button>
+            <button class="cron-preset" onclick="applyCronBuilderPreset('0', '*', '*', '*', '*', '0')">每分钟</button>
+            <button class="cron-preset" onclick="applyCronBuilderPreset('0', '0', '*', '*', '*', '*')">每小时</button>
+            <button class="cron-preset" onclick="applyCronBuilderPreset('0', '0', '0', '*', '*', '*')">每天午夜</button>
+            <button class="cron-preset" onclick="applyCronBuilderPreset('0', '0', '12', '*', '*', '*')">每天中午</button>
+            <button class="cron-preset" onclick="applyCronBuilderPreset('0', '0', '0', '*', '*', '0')">每周日</button>
+          </div>
+          <div class="cron-description" id="cron-builder-desc">每分钟整秒执行</div>
+          <div style="margin-top:12px;">
+            <strong style="font-size:12px;">表达式:</strong>
+            <code id="cron-builder-expression" style="margin-left:8px;font-family:monospace;font-size:12px;color:var(--primary);">0 * * * * *</code>
+          </div>
+        </div>
+      `;
+    }
+
+    function applyCronBuilderPreset(second, minute, hour, day, month, weekday) {
+      document.getElementById('cb-second').value = second;
+      document.getElementById('cb-minute').value = minute;
+      document.getElementById('cb-hour').value = hour;
+      document.getElementById('cb-day').value = day;
+      document.getElementById('cb-month').value = month;
+      document.getElementById('cb-weekday').value = weekday;
+      updateCronBuilderDesc();
+    }
+
+    function updateCronBuilderDesc() {
+      const second = document.getElementById('cb-second').value;
+      const minute = document.getElementById('cb-minute').value;
+      const hour = document.getElementById('cb-hour').value;
+      const day = document.getElementById('cb-day').value;
+      const month = document.getElementById('cb-month').value;
+      const weekday = document.getElementById('cb-weekday').value;
+      
+      const cronStr = `${second} ${minute} ${hour} ${day} ${month} ${weekday}`;
+      const desc = scheduler.describeCron(cronStr);
+      document.getElementById('cron-builder-desc').textContent = desc;
+      document.getElementById('cron-builder-expression').textContent = cronStr;
+    }
+
+    function createScheduledTask() {
+      const name = document.getElementById('task-name').value || '未命名任务';
+      const type = document.getElementById('task-type').value;
+      
+      const taskData = {
+        name,
+        type,
+        workflowId: state.workflow.id,
+        workflow: state.workflow
+      };
+      
+      if (type === 'interval') {
+        taskData.interval = parseInt(document.getElementById('task-interval').value, 10) * 1000;
+      } else if (type === 'cron') {
+        taskData.cron = `${document.getElementById('cron-second').value} ${document.getElementById('cron-minute').value} ${document.getElementById('cron-hour').value} ${document.getElementById('cron-day').value} ${document.getElementById('cron-month').value} ${document.getElementById('cron-weekday').value}`;
+        taskData.cronFields = {
+          second: document.getElementById('cron-second').value,
+          minute: document.getElementById('cron-minute').value,
+          hour: document.getElementById('cron-hour').value,
+          day: document.getElementById('cron-day').value,
+          month: document.getElementById('cron-month').value,
+          weekday: document.getElementById('cron-weekday').value
+        };
+      }
+      
+      scheduler.addTask(taskData);
+      showToast(`任务已创建: ${name}`);
+      switchSchedulerTab('tasks');
+    }
+
+    function toggleTaskEnable(id, enabled) {
+      if (enabled) {
+        scheduler.enableTask(id);
+      } else {
+        scheduler.disableTask(id);
+      }
+    }
+
+    function runTaskNow(id) {
+      scheduler.runTaskNow(id);
+      showToast('任务已开始执行');
+    }
+
+    function pauseTask(id) {
+      scheduler.pauseTask(id);
+      showToast('任务已暂停');
+      switchSchedulerTab('tasks');
+    }
+
+    function viewTaskHistory(id) {
+      const history = scheduler.getTaskHistory(id);
+      showToast(`历史记录: ${history.length} 条`);
+    }
+
+    function deleteTask(id) {
+      if (confirm('确定删除此任务?')) {
+        scheduler.removeTask(id);
+        showToast('任务已删除');
+        switchSchedulerTab('tasks');
+      }
+    }
+
+    // ============ API Docs Panel v18 ============
+    function showAPIDocs() {
+      document.getElementById('api-docs-panel').classList.add('active');
+      renderAPIDocs();
+    }
+
+    function closeAPIDocs() {
+      document.getElementById('api-docs-panel').classList.remove('active');
+    }
+
+    function renderAPIDocs() {
+      const content = document.getElementById('api-docs-content');
+      const docs = workflowRESTAPI.getAPIDocs();
+      const quota = workflowRESTAPI.checkQuota();
+      const usage = workflowRESTAPI.usage;
+      const sdkExamples = workflowRESTAPI.generateSDKExample();
+      
+      content.innerHTML = `
+        <div class="quota-display">
+          <div class="quota-card">
+            <div class="quota-value ${usage.dailyRequests > quota.quota.requestsPerDay * 0.8 ? 'warning' : ''}">${quota.remaining.day}</div>
+            <div class="quota-label">今日剩余</div>
+          </div>
+          <div class="quota-card">
+            <div class="quota-value ${usage.hourlyRequests > quota.quota.requestsPerHour * 0.8 ? 'warning' : ''}">${quota.remaining.hour}</div>
+            <div class="quota-label">本小时剩余</div>
+          </div>
+          <div class="quota-card">
+            <div class="quota-value ${usage.minuteRequests > quota.quota.requestsPerMinute * 0.8 ? 'warning' : ''}">${quota.remaining.minute}</div>
+            <div class="quota-label">本分钟剩余</div>
+          </div>
+          <div class="quota-card">
+            <div class="quota-value">${usage.totalRequests}</div>
+            <div class="quota-label">总请求</div>
+          </div>
+        </div>
+        
+        <div class="panel-section">
+          <div class="panel-label">API Key</div>
+          <div class="api-key-display">${localStorage.getItem('ai_creator_api_key') || '未设置'}</div>
+        </div>
+        
+        <div class="panel-section">
+          <div class="panel-label">API 端点</div>
+          <div class="api-endpoints-list">
+            ${docs.paths ? Object.entries(docs.paths).map(([path, methods]) => 
+              Object.entries(methods).map(([method, details]) => `
+                <div class="api-endpoint-item">
+                  <div class="api-endpoint-header" onclick="toggleEndpointBody(this)">
+                    <span class="api-endpoint-method ${method}">${method.toUpperCase()}</span>
+                    <span class="api-endpoint-path">${path}</span>
+                    <span class="api-endpoint-desc">${details.summary || ''}</span>
+                  </div>
+                  <div class="api-endpoint-body" style="display:none;">
+                    <div style="margin-bottom:8px;color:var(--text-dim);">${details.description || ''}</div>
+                    ${details.security ? '<div style="color:var(--warning);font-size:11px;">🔐 需要认证</div>' : '<div style="color:var(--success);font-size:11px;">🔓 无需认证</div>'}
+                  </div>
+                </div>
+              `).join('')
+            ).flat().join('') : '<div style="color:var(--text-dim);font-size:12px;">暂无端点</div>'}
+          </div>
+        </div>
+        
+        <div class="sdk-example">
+          <div class="sdk-example-tabs">
+            <button class="sdk-example-tab active" onclick="switchSDKTab('js', this)">JavaScript</button>
+            <button class="sdk-example-tab" onclick="switchSDKTab('curl', this)">cURL</button>
+          </div>
+          <pre class="sdk-example-code" id="sdk-code">${sdkExamples.javascript}</pre>
+        </div>
+      `;
+    }
+
+    function toggleEndpointBody(header) {
+      const body = header.nextElementSibling;
+      body.style.display = body.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function switchSDKTab(tab, btn) {
+      document.querySelectorAll('.sdk-example-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const examples = workflowRESTAPI.generateSDKExample();
+      document.getElementById('sdk-code').textContent = tab === 'js' ? examples.javascript : examples.curl;
+    }
   </script>
 </body>
 </html>
