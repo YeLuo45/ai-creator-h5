@@ -147,6 +147,166 @@
     .palette-node[data-type="loop"] .icon { background: #EC4899; }
 .palette-node[data-type="subflow"] .icon { background: #8B5CF6; }
 
+    /* AI Intent Panel */
+    .ai-intent-panel {
+      background: var(--bg-dark);
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    .ai-intent-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--primary);
+    }
+
+    .ai-intent-header .sparkle {
+      font-size: 14px;
+    }
+
+    .ai-intent-input-wrapper {
+      position: relative;
+    }
+
+    .ai-intent-input {
+      width: 100%;
+      padding: 10px 36px 10px 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      transition: border-color 0.2s;
+    }
+
+    .ai-intent-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .ai-intent-input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .ai-intent-btn {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .ai-intent-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Autocomplete Dropdown */
+    .ai-intent-autocomplete {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-top: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .ai-intent-autocomplete.visible {
+      display: block;
+    }
+
+    .autocomplete-item {
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-item:hover {
+      background: var(--bg-node);
+    }
+
+    .autocomplete-item.active {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .autocomplete-hint {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-left: 8px;
+    }
+
+    /* Node AI Description Tag */
+    .node-ai-desc {
+      font-size: 10px;
+      color: var(--text-dim);
+      padding: 4px 12px;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+      border-radius: 0 0 6px 6px;
+    }
+
+    /* Semantic Search Results */
+    .semantic-results {
+      margin-top: 8px;
+    }
+
+    .semantic-result-item {
+      padding: 6px 10px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .semantic-result-item:hover {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .semantic-result-item .match-score {
+      font-size: 9px;
+      color: var(--success);
+      margin-left: 6px;
+    }
+
+    /* Connection Line Labels */
+    .connection-label {
+      font-size: 10px;
+      fill: var(--text-dim);
+      background: var(--bg-panel);
+    }
+
     /* Palette Tabs */
     .palette-tabs {
       display: flex;
@@ -1217,7 +1377,23 @@
 
     <!-- Node Palette -->
     <div class="node-palette">
-<input type="text" class="palette-search" placeholder="搜索节点..." id="palette-search">
+<input type="text" class="palette-search" placeholder="搜索节点...（支持语义搜索）" id="palette-search">
+
+      <!-- AI Intent Input Panel -->
+      <div class="ai-intent-panel">
+        <div class="ai-intent-header">
+          <span class="sparkle">✨</span>
+          <span>AI工作流生成</span>
+        </div>
+        <div class="ai-intent-input-wrapper">
+          <input type="text" class="ai-intent-input" id="ai-intent-input" 
+            placeholder="如：获取数据→清洗→AI分析→导出报告" 
+            autocomplete="off">
+          <button class="ai-intent-btn" id="ai-intent-btn" title="生成工作流">→</button>
+          <div class="ai-intent-autocomplete" id="ai-intent-autocomplete"></div>
+        </div>
+        <div class="semantic-results" id="semantic-results"></div>
+      </div>
       
       <div class="palette-tabs">
         <button class="palette-tab active" data-tab="builtin">内置</button>
@@ -1580,6 +1756,7 @@
   <script src="../services/timeTravel.js"></script>
   <script src="../services/workflowDebugger.js"></script>
   <script src="../services/workflowDebuggerUI.js"></script>
+  <script src="../services/workflowIntentUnderstanding.js"></script>
   <script>
     // ============ State ============
     const state = {
@@ -1657,6 +1834,9 @@
         
         // 初始化节点推荐
         initNodeRecommender();
+        
+        // 初始化AI意图理解 (v13)
+        initAIIntentUnderstanding();
         
         // 初始化AI助手输入
         initAIAssistInput();
@@ -2221,6 +2401,14 @@
       });
 
       document.getElementById('workflow-canvas').appendChild(el);
+      
+      // Add AI description (v13)
+      setTimeout(() => {
+        const desc = workflowIntentUnderstanding.getNodeDescriptor(node.subtype);
+        if (desc) {
+          addNodeAIDescription(node.id, desc.desc);
+        }
+      }, 0);
     }
 
     function getNodeDesc(node) {
@@ -2638,6 +2826,9 @@
         
         svg.appendChild(line);
       }
+      
+      // Add connection labels (v13)
+      setTimeout(() => addConnectionLabels(), 0);
     }
 
     // ============ Canvas Pan & Zoom ============
@@ -3099,6 +3290,322 @@
     function escHtml(str) {
       if (str == null) return '';
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // ============ AI Intent Understanding v13 ============
+    function initAIIntentUnderstanding() {
+      const input = document.getElementById('ai-intent-input');
+      const btn = document.getElementById('ai-intent-btn');
+      const autocomplete = document.getElementById('ai-intent-autocomplete');
+      
+      if (!input || !btn) return;
+      
+      // Input event handler with debounce for autocomplete
+      let debounceTimer;
+      input.addEventListener('input', e => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          showIntentAutocomplete(e.target.value);
+        }, 150);
+      });
+      
+      // Enter key to generate workflow
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          generateWorkflowFromIntent(input.value);
+        } else if (e.key === 'ArrowDown') {
+          navigateAutocomplete(1);
+        } else if (e.key === 'ArrowUp') {
+          navigateAutocomplete(-1);
+        } else if (e.key === 'Escape') {
+          hideAutocomplete();
+        }
+      });
+      
+      // Button click
+      btn.addEventListener('click', () => {
+        generateWorkflowFromIntent(input.value);
+      });
+      
+      // Close autocomplete on outside click
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.ai-intent-input-wrapper')) {
+          hideAutocomplete();
+        }
+      });
+      
+      // Semantic search in palette search
+      const paletteSearch = document.getElementById('palette-search');
+      if (paletteSearch) {
+        paletteSearch.addEventListener('input', e => {
+          performSemanticSearch(e.target.value);
+        });
+      }
+    }
+
+    function showIntentAutocomplete(query) {
+      const autocomplete = document.getElementById('ai-intent-autocomplete');
+      if (!autocomplete || !query || query.length < 1) {
+        hideAutocomplete();
+        return;
+      }
+      
+      const suggestions = workflowIntentUnderstanding.getAutocompleteSuggestions(query);
+      
+      if (suggestions.length === 0) {
+        hideAutocomplete();
+        return;
+      }
+      
+      let html = '';
+      suggestions.forEach((s, i) => {
+        html += `
+          <div class="autocomplete-item ${i === 0 ? 'active' : ''}" 
+               data-index="${i}" 
+               data-text="${escHtml(s.text)}"
+               onclick="selectAutocomplete('${escHtml(s.text)}')">
+            ${escHtml(s.text)}
+            <span class="autocomplete-hint">↵ 选择</span>
+          </div>
+        `;
+      });
+      
+      autocomplete.innerHTML = html;
+      autocomplete.classList.add('visible');
+    }
+
+    function hideAutocomplete() {
+      const autocomplete = document.getElementById('ai-intent-autocomplete');
+      if (autocomplete) {
+        autocomplete.classList.remove('visible');
+      }
+    }
+
+    function navigateAutocomplete(direction) {
+      const autocomplete = document.getElementById('ai-intent-autocomplete');
+      if (!autocomplete || !autocomplete.classList.contains('visible')) return;
+      
+      const items = autocomplete.querySelectorAll('.autocomplete-item');
+      const current = autocomplete.querySelector('.autocomplete-item.active');
+      let idx = 0;
+      
+      if (current) {
+        idx = parseInt(current.dataset.index) + direction;
+        current.classList.remove('active');
+      }
+      
+      idx = Math.max(0, Math.min(items.length - 1, idx));
+      if (items[idx]) {
+        items[idx].classList.add('active');
+        items[idx].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function selectAutocomplete(text) {
+      const input = document.getElementById('ai-intent-input');
+      if (input) {
+        input.value = text;
+      }
+      hideAutocomplete();
+      generateWorkflowFromIntent(text);
+    }
+
+    function generateWorkflowFromIntent(inputStr) {
+      if (!inputStr || !inputStr.trim()) {
+        showToast('请输入工作流描述');
+        return;
+      }
+      
+      const nodes = workflowIntentUnderstanding.parseNaturalLanguage(inputStr);
+      
+      if (nodes.length === 0) {
+        showToast('未能解析工作流，请尝试更清晰的描述');
+        return;
+      }
+      
+      pushUndoState();
+      
+      // Add nodes to workflow
+      const canvas = document.getElementById('canvas-container');
+      const rect = canvas.getBoundingClientRect();
+      
+      // Calculate starting position
+      const startX = Math.max(100, (rect.width / 2) - (nodes.length * 100));
+      const startY = 200;
+      
+      nodes.forEach((item, index) => {
+        const node = item.node;
+        node.x = startX + index * 200;
+        node.y = startY;
+        
+        state.workflow.nodes.push(node);
+        renderNode(node);
+        
+        // Add connection
+        if (item.connection) {
+          state.workflow.connections.push(item.connection);
+        }
+      });
+      
+      // Render all connections
+      renderConnections();
+      
+      // Add AI descriptions to nodes
+      nodes.forEach(item => {
+        addNodeAIDescription(item.node.id, item.node.description);
+      });
+      
+      // Add connection labels
+      addConnectionLabels();
+      
+      saveToURL();
+      updateNodeCount();
+      
+      showToast(`已生成 ${nodes.length} 个节点`);
+      WorkflowLogger.info(`AI生成工作流: ${inputStr} → ${nodes.length}个节点`);
+      
+      // Clear input
+      const input = document.getElementById('ai-intent-input');
+      if (input) input.value = '';
+      hideAutocomplete();
+    }
+
+    function addNodeAIDescription(nodeId, description) {
+      const nodeEl = document.querySelector(`[data-node-id="${nodeId}"]`);
+      if (!nodeEl) return;
+      
+      // Remove existing desc if any
+      const existing = nodeEl.querySelector('.node-ai-desc');
+      if (existing) existing.remove();
+      
+      // Add description tag
+      const descEl = document.createElement('div');
+      descEl.className = 'node-ai-desc';
+      descEl.textContent = description || '';
+      descEl.title = 'AI描述: ' + (description || '');
+      
+      nodeEl.appendChild(descEl);
+    }
+
+    function addConnectionLabels() {
+      const svg = document.getElementById('connections-svg');
+      if (!svg) return;
+      
+      // Remove existing labels
+      svg.querySelectorAll('.connection-label').forEach(l => l.remove());
+      
+      // Add labels to each connection
+      state.workflow.connections.forEach((conn, idx) => {
+        const fromNode = state.workflow.nodes.find(n => n.id === conn.from);
+        const toNode = state.workflow.nodes.find(n => n.id === conn.to);
+        
+        if (!fromNode || !toNode) return;
+        
+        const fromEl = document.querySelector(`[data-node-id="${conn.from}"]`);
+        const toEl = document.querySelector(`[data-node-id="${conn.to}"]`);
+        
+        if (!fromEl || !toEl) return;
+        
+        const canvasRect = document.getElementById('workflow-canvas').getBoundingClientRect();
+        const fromRect = fromEl.getBoundingClientRect();
+        const toRect = toEl.getBoundingClientRect();
+        
+        const x = (fromRect.right + toRect.left) / 2 - canvasRect.left;
+        const y = (fromRect.top + toRect.top) / 2 - canvasRect.top;
+        
+        const label = workflowIntentUnderstanding.getConnectionLabel(fromNode.subtype, toNode.subtype);
+        
+        const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        textEl.setAttribute('x', x);
+        textEl.setAttribute('y', y);
+        textEl.setAttribute('class', 'connection-label');
+        textEl.setAttribute('text-anchor', 'middle');
+        textEl.setAttribute('dominant-baseline', 'middle');
+        textEl.textContent = label;
+        
+        svg.appendChild(textEl);
+      });
+    }
+
+    function performSemanticSearch(query) {
+      const resultsContainer = document.getElementById('semantic-results');
+      if (!resultsContainer || !query || query.length < 2) {
+        resultsContainer.innerHTML = '';
+        return;
+      }
+      
+      const results = workflowIntentUnderstanding.semanticSearch(query);
+      
+      if (results.length === 0) {
+        resultsContainer.innerHTML = '';
+        return;
+      }
+      
+      let html = '<div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">语义匹配:</div>';
+      
+      results.slice(0, 5).forEach(r => {
+        const desc = workflowIntentUnderstanding.getNodeDescriptor(r.id);
+        if (desc) {
+          const scorePct = Math.round(r.score * 100);
+          html += `
+            <div class="semantic-result-item" onclick="addNodeFromSemanticSearch('${r.id}')">
+              ${desc.short}
+              <span class="match-score">${scorePct}%</span>
+            </div>
+          `;
+        }
+      });
+      
+      resultsContainer.innerHTML = html;
+    }
+
+    function addNodeFromSemanticSearch(subtype) {
+      const desc = workflowIntentUnderstanding.getNodeDescriptor(subtype);
+      if (!desc) return;
+      
+      // Map subtype to node type
+      const typeMap = {
+        'manual': 'trigger',
+        'character': 'creator',
+        'music': 'creator',
+        'tts': 'creator',
+        'poster': 'creator',
+        'loop': 'loop',
+        'condition': 'logic',
+        'save': 'output',
+        'share': 'output',
+        'forLoop': 'loop',
+        'whileLoop': 'loop',
+        'doWhileLoop': 'loop',
+        'subflowCall': 'subflow',
+        'trigger': 'trigger',
+        'creator': 'creator',
+        'output': 'output',
+        'logic': 'logic'
+      };
+      
+      const nodeId = 'n' + Date.now() + Math.random().toString(36).slice(2, 6);
+      const node = {
+        id: nodeId,
+        type: typeMap[subtype] || 'creator',
+        subtype: subtype,
+        name: desc.short,
+        x: 200 + Math.random() * 100,
+        y: 200 + Math.random() * 100,
+        config: {},
+        description: desc.desc
+      };
+      
+      pushUndoState();
+      state.workflow.nodes.push(node);
+      renderNode(node);
+      addNodeAIDescription(nodeId, desc.desc);
+      saveToURL();
+      updateNodeCount();
+      
+      showToast(`已添加: ${desc.short}`);
+      WorkflowLogger.info(`语义搜索添加节点: ${desc.short}`);
     }
 
     // Start
