@@ -6286,6 +6286,315 @@
     /* ========== v29 Performance Dashboard CSS ========== */
     .toolbar-btn.perf-btn { border-color: var(--success); color: var(--success); }
 
+    /* ========== v31 Blockchain CSS ========== */
+    .toolbar-btn.blockchain-btn { border-color: var(--warning); color: var(--warning); }
+    .toolbar-btn.blockchain-btn:hover { background: rgba(245,158,11,0.1); }
+
+    /* Blockchain Panel */
+    .blockchain-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--warning);
+      border-radius: 12px;
+      width: 1000px;
+      max-height: 88vh;
+      z-index: 1007;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .blockchain-panel.active { display: block; }
+    .blockchain-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .blockchain-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--warning);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .blockchain-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .blockchain-close:hover { color: var(--text); }
+    .blockchain-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .blockchain-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .blockchain-tab:hover { color: var(--text); }
+    .blockchain-tab.active {
+      background: var(--warning);
+      border-color: var(--warning);
+      color: #000;
+    }
+    .blockchain-content {
+      padding: 16px 20px;
+      max-height: calc(88vh - 130px);
+      overflow-y: auto;
+    }
+    .blockchain-section {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .blockchain-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .blockchain-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .blockchain-stat-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .blockchain-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--warning);
+    }
+    .blockchain-stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .blockchain-chain-view {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .blockchain-block {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .blockchain-block:hover {
+      border-color: var(--warning);
+      background: rgba(245,158,11,0.05);
+    }
+    .blockchain-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .blockchain-block-index {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--warning);
+    }
+    .blockchain-block-time {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .blockchain-block-hash {
+      font-size: 10px;
+      color: var(--text-dim);
+      font-family: monospace;
+      word-break: break-all;
+      margin-bottom: 4px;
+    }
+    .blockchain-block-txs {
+      font-size: 11px;
+      color: var(--success);
+    }
+    .blockchain-block.valid { border-left: 3px solid var(--success); }
+    .blockchain-block.invalid { border-left: 3px solid var(--error); }
+    .blockchain-block.pending { border-left: 3px solid var(--text-dim); }
+    .blockchain-verification-result {
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+    .blockchain-verification-result.success {
+      background: rgba(16,185,129,0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    .blockchain-verification-result.error {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+    .blockchain-node-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .blockchain-node-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .blockchain-node-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .blockchain-node-info {
+      font-size: 11px;
+      color: var(--text-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .blockchain-node-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .blockchain-node-status::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .blockchain-node-status.online::before { background: var(--success); }
+    .blockchain-node-status.offline::before { background: var(--error); }
+    .blockchain-node-status.syncing::before { background: var(--warning); }
+    .blockchain-storage-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .blockchain-cid {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--primary);
+      word-break: break-all;
+    }
+    .blockchain-log-entry {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+    .blockchain-log-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .blockchain-log-operation {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .blockchain-log-time {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+    .blockchain-log-hash {
+      font-family: monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      word-break: break-all;
+    }
+    .blockchain-log-alert {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    .blockchain-config-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .blockchain-config-row:last-child { border-bottom: none; }
+    .blockchain-toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--bg-node);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .blockchain-toggle.active { background: var(--success); }
+    .blockchain-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .blockchain-toggle.active::after { left: 22px; }
+    .blockchain-action-btn {
+      padding: 6px 12px;
+      background: var(--warning);
+      border: none;
+      border-radius: 4px;
+      color: #000;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .blockchain-action-btn:hover { opacity: 0.9; }
+    .blockchain-action-btn.secondary {
+      background: var(--bg-node);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
     /* ========== v30 AI Self-Evolution CSS ========== */
     .toolbar-btn.evolution-btn { border-color: var(--primary); color: var(--primary); }
     .toolbar-btn.evolution-btn:hover { background: rgba(99,102,241,0.1); }
@@ -8007,6 +8316,7 @@
       <button class="toolbar-btn collab-btn" id="btn-collab" title="实时协作" onclick="toggleCollabPanel()">🤝 协作</button>
       <button class="toolbar-btn perf-btn" id="btn-perf" title="性能监控" onclick="togglePerfDashboard()">📡 性能</button>
       <button class="toolbar-btn evolution-btn" id="btn-evolution" title="AI自我进化" onclick="toggleEvolutionPanel()">🧬 进化</button>
+      <button class="toolbar-btn blockchain-btn" id="btn-blockchain" title="区块链管理" onclick="toggleBlockchainPanel()">⛓️ 区块链</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -8896,6 +9206,27 @@
       <button class="perf-tab" data-tab="optimization" onclick="PerfDashboard.switchTab('optimization')">💡 优化</button>
     </div>
     <div class="perf-content" id="perf-content">
+      <!-- Content will be dynamically loaded -->
+    </div>
+  </div>
+
+  <!-- Blockchain Panel v31 -->
+  <div class="blockchain-panel" id="blockchain-panel">
+    <div class="blockchain-header">
+      <div class="blockchain-title">
+        <span>⛓️</span>
+        <span>区块链管理中心</span>
+      </div>
+      <button class="blockchain-close" onclick="toggleBlockchainPanel()">×</button>
+    </div>
+    <div class="blockchain-tabs">
+      <button class="blockchain-tab active" data-tab="dashboard" onclick="BlockchainPanel.switchTab('dashboard')">📊 状态总览</button>
+      <button class="blockchain-tab" data-tab="chain" onclick="BlockchainPanel.switchTab('chain')">🔗 链浏览</button>
+      <button class="blockchain-tab" data-tab="log" onclick="BlockchainPanel.switchTab('log')">📋 审计日志</button>
+      <button class="blockchain-tab" data-tab="storage" onclick="BlockchainPanel.switchTab('storage')">💾 分布式存储</button>
+      <button class="blockchain-tab" data-tab="settings" onclick="BlockchainPanel.switchTab('settings')">⚙️ 配置</button>
+    </div>
+    <div class="blockchain-content" id="blockchain-content">
       <!-- Content will be dynamically loaded -->
     </div>
   </div>
@@ -22094,6 +22425,861 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============ End v30 AI Self-Evolution System ============
+
+// ============ v31 Blockchain System ============
+
+// SHA-256 Hash Function
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Merkle Tree for computing Merkle root
+async function computeMerkleRoot(transactions) {
+  if (transactions.length === 0) return sha256('');
+  if (transactions.length === 1) return await sha256(transactions[0]);
+  
+  let level = transactions.map(async t => await sha256(typeof t === 'string' ? t : JSON.stringify(t)));
+  level = await Promise.all(level);
+  
+  while (level.length > 1) {
+    if (level.length % 2 !== 0) level.push(level[level.length - 1]);
+    const newLevel = [];
+    for (let i = 0; i < level.length; i += 2) {
+      newLevel.push(await sha256(level[i] + level[i + 1]));
+    }
+    level = newLevel;
+  }
+  return level[0];
+}
+
+// Blockchain State
+const BlockchainState = {
+  chain: [],
+  pendingTransactions: [],
+  storageNodes: [],
+  auditLog: [],
+  settings: {
+    autoMine: true,
+    consensusEnabled: true,
+    storageRedundancy: 3,
+    logRetentionDays: 90
+  },
+  isActive: false
+};
+
+// Block Class
+class Block {
+  constructor(index, timestamp, transactions, previousHash) {
+    this.index = index;
+    this.timestamp = timestamp;
+    this.transactions = transactions;
+    this.previousHash = previousHash;
+    this.hash = null;
+    this.merkleRoot = null;
+    this.nonce = 0;
+    this.status = 'pending';
+  }
+
+  async computeHash() {
+    const data = `${this.index}${this.timestamp}${JSON.stringify(this.transactions)}${this.previousHash}${this.nonce}`;
+    return await sha256(data);
+  }
+
+  async mine(difficulty = 4) {
+    const target = '0'.repeat(difficulty);
+    while (this.hash?.substring(0, difficulty) !== target) {
+      this.nonce++;
+      this.hash = await this.computeHash();
+    }
+    return this.hash;
+  }
+}
+
+// Blockchain Core
+const Blockchain = {
+  async createGenesisBlock() {
+    const genesis = new Block(0, Date.now(), ['Genesis Block'], '0');
+    genesis.hash = await genesis.computeHash();
+    genesis.status = 'valid';
+    return genesis;
+  },
+
+  async getLatestBlock() {
+    return BlockchainState.chain[BlockchainState.chain.length - 1] || null;
+  },
+
+  async addBlock(transactions) {
+    const latest = await this.getLatestBlock();
+    const block = new Block(
+      latest ? latest.index + 1 : 0,
+      Date.now(),
+      transactions,
+      latest ? latest.hash : '0'
+    );
+    block.merkleRoot = await computeMerkleRoot(transactions);
+    
+    if (BlockchainState.settings.autoMine) {
+      block.status = 'pending';
+      await block.mine();
+      block.status = 'valid';
+    }
+    
+    BlockchainState.chain.push(block);
+    BlockchainState.pendingTransactions = [];
+    this.saveToStorage();
+    return block;
+  },
+
+  async verifyChain() {
+    for (let i = 1; i < BlockchainState.chain.length; i++) {
+      const current = BlockchainState.chain[i];
+      const previous = BlockchainState.chain[i - 1];
+      
+      if (current.previousHash !== previous.hash) {
+        return { valid: false, error: `Chain broken at block ${current.index}` };
+      }
+      
+      const computedHash = await current.computeHash();
+      if (current.hash !== computedHash) {
+        return { valid: false, error: `Hash mismatch at block ${current.index}` };
+      }
+    }
+    return { valid: true };
+  },
+
+  async addTransaction(data) {
+    const txHash = await sha256(JSON.stringify(data) + Date.now());
+    BlockchainState.pendingTransactions.push({ ...data, hash: txHash, timestamp: Date.now() });
+    return txHash;
+  },
+
+  saveToStorage() {
+    localStorage.setItem('workflow_blockchain', JSON.stringify({
+      chain: BlockchainState.chain,
+      auditLog: BlockchainState.auditLog,
+      settings: BlockchainState.settings
+    }));
+  },
+
+  loadFromStorage() {
+    const saved = localStorage.getItem('workflow_blockchain');
+    if (saved) {
+      const data = JSON.parse(saved);
+      BlockchainState.chain = data.chain || [];
+      BlockchainState.auditLog = data.auditLog || [];
+      BlockchainState.settings = { ...BlockchainState.settings, ...data.settings };
+    }
+  }
+};
+
+// Consensus Mechanism Simulation
+const Consensus = {
+  votes: {},
+  
+  async simulateConsensus(block) {
+    if (!BlockchainState.settings.consensusEnabled) return true;
+    
+    const nodes = BlockchainState.storageNodes.filter(n => n.status === 'online');
+    const approvalThreshold = Math.floor(nodes.length * 0.51);
+    let approvals = 0;
+    
+    for (const node of nodes) {
+      await new Promise(r => setTimeout(r, 100));
+      if (Math.random() > 0.2) {
+        approvals++;
+        this.votes[`${node.id}_${block.index}`] = true;
+      }
+    }
+    
+    return approvals >= approvalThreshold;
+  },
+
+  async runConsensusRound() {
+    if (!BlockchainState.settings.consensusEnabled) return;
+    
+    const pending = BlockchainState.pendingTransactions;
+    if (pending.length > 0) {
+      const block = await Blockchain.addBlock(pending);
+      const approved = await this.simulateConsensus(block);
+      
+      if (!approved) {
+        block.status = 'rejected';
+        showToast(`区块 ${block.index} 未达成共识`, 'error');
+      }
+    }
+  }
+};
+
+// Immutable Audit Log
+const AuditLog = {
+  async addLog(operation, data) {
+    const latestEntry = BlockchainState.auditLog[BlockchainState.auditLog.length - 1];
+    const previousHash = latestEntry ? latestEntry.hash : '0';
+    
+    const entry = {
+      id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      operation,
+      data,
+      timestamp: Date.now(),
+      previousHash,
+      hash: null
+    };
+    
+    entry.hash = await sha256(JSON.stringify({ ...entry, hash: null }));
+    
+    BlockchainState.auditLog.push(entry);
+    Blockchain.saveToStorage();
+    
+    return entry;
+  },
+
+  async verifyIntegrity() {
+    const results = [];
+    
+    for (let i = 1; i < BlockchainState.auditLog.length; i++) {
+      const current = BlockchainState.auditLog[i];
+      const previous = BlockchainState.auditLog[i - 1];
+      
+      if (current.previousHash !== previous.hash) {
+        results.push({
+          id: current.id,
+          valid: false,
+          error: 'Previous hash mismatch'
+        });
+      }
+      
+      const computedHash = await sha256(JSON.stringify({ ...current, hash: null }));
+      if (current.hash !== computedHash) {
+        results.push({
+          id: current.id,
+          valid: false,
+          error: 'Hash mismatch - potential tampering detected'
+        });
+      }
+    }
+    
+    return {
+      valid: results.length === 0,
+      results,
+      totalChecked: BlockchainState.auditLog.length
+    };
+  },
+
+  async detectTampering() {
+    const verification = await this.verifyIntegrity();
+    if (!verification.valid) {
+      showToast('警告：检测到审计日志被篡改！', 'error');
+      return verification.results;
+    }
+    return [];
+  }
+};
+
+// Distributed Storage (IPFS-style simulation)
+const DistributedStorage = {
+  generateCID(content) {
+    const hash = sha256(content + Date.now());
+    return `Qm${hash.substring(0, 44)}`;
+  },
+
+  async store(content, metadata = {}) {
+    const cid = this.generateCID(content);
+    const shards = this.createShards(content);
+    const nodes = this.selectStorageNodes(shards.length);
+    
+    for (let i = 0; i < shards.length; i++) {
+      const node = nodes[i];
+      node.data = node.data || {};
+      node.data[cid] = shards[i];
+      node.storageUsed = (node.storageUsed || 0) + shards[i].length;
+    }
+    
+    const storageRecord = {
+      cid,
+      content,
+      metadata,
+      shards: shards.map((s, i) => ({
+        shardId: i,
+        nodeId: nodes[i].id,
+        hash: sha256(s)
+      })),
+      timestamp: Date.now()
+    };
+    
+    BlockchainState.storageNodes.forEach(n => {
+      if (n.data) {
+        n.data[cid] = storageRecord;
+      }
+    });
+    
+    return cid;
+  },
+
+  createShards(content) {
+    const redundancy = BlockchainState.settings.storageRedundancy;
+    const shardSize = Math.ceil(content.length / redundancy);
+    const shards = [];
+    
+    for (let i = 0; i < redundancy; i++) {
+      const start = i * shardSize;
+      shards.push(content.substring(start, start + shardSize));
+    }
+    
+    return shards;
+  },
+
+  selectStorageNodes(count) {
+    const online = BlockchainState.storageNodes.filter(n => n.status === 'online');
+    const selected = [];
+    
+    for (let i = 0; i < count && i < online.length; i++) {
+      selected.push(online[i % online.length]);
+    }
+    
+    return selected;
+  },
+
+  async retrieve(cid) {
+    const shards = [];
+    const nodeMap = {};
+    
+    for (const node of BlockchainState.storageNodes) {
+      if (node.data && node.data[cid]) {
+        const record = node.data[cid];
+        if (record.shards) {
+          record.shards.forEach(s => {
+            nodeMap[s.nodeId] = s.shardId;
+          });
+          shards.push(...record.shards.map(s => ({
+            ...s,
+            data: node.data[cid + '_' + s.shardId]
+          })));
+        }
+      }
+    }
+    
+    if (shards.length > 0) {
+      const content = shards.sort((a, b) => a.shardId - b.shardId)
+        .map(s => s.data || '')
+        .join('');
+      return { content, complete: true };
+    }
+    
+    return { content: null, complete: false };
+  }
+};
+
+// Storage Nodes Manager
+const StorageNodesManager = {
+  init() {
+    if (BlockchainState.storageNodes.length === 0) {
+      const nodeCount = 6;
+      const regions = ['北京', '上海', '广州', '深圳', '杭州', '成都'];
+      
+      for (let i = 0; i < nodeCount; i++) {
+        BlockchainState.storageNodes.push({
+          id: `node_${i + 1}`,
+          name: `存储节点 ${i + 1}`,
+          region: regions[i],
+          status: Math.random() > 0.2 ? 'online' : 'offline',
+          storageUsed: Math.floor(Math.random() * 1000),
+          storageLimit: 5000,
+          lastSync: Date.now() - Math.floor(Math.random() * 3600000),
+          data: {}
+        });
+      }
+    }
+  },
+
+  getStorageStats() {
+    const online = BlockchainState.storageNodes.filter(n => n.status === 'online').length;
+    const total = BlockchainState.storageNodes.length;
+    const totalUsed = BlockchainState.storageNodes.reduce((sum, n) => sum + (n.storageUsed || 0), 0);
+    const totalLimit = BlockchainState.storageNodes.reduce((sum, n) => sum + n.storageLimit, 0);
+    
+    return { online, total, totalUsed, totalLimit };
+  },
+
+  async syncNodes() {
+    for (const node of BlockchainState.storageNodes) {
+      if (node.status === 'online') {
+        node.status = 'syncing';
+        await new Promise(r => setTimeout(r, 500));
+        node.status = 'online';
+        node.lastSync = Date.now();
+      }
+    }
+  }
+};
+
+// Blockchain Panel UI
+const BlockchainPanel = {
+  currentTab: 'dashboard',
+
+  init() {
+    Blockchain.loadFromStorage();
+    StorageNodesManager.init();
+    
+    if (BlockchainState.chain.length === 0) {
+      Blockchain.createGenesisBlock().then(genesis => {
+        BlockchainState.chain.push(genesis);
+        Blockchain.saveToStorage();
+      });
+    }
+  },
+
+  toggle() {
+    const panel = document.getElementById('blockchain-panel');
+    if (panel) {
+      panel.classList.toggle('active');
+      if (panel.classList.contains('active')) {
+        this.refresh();
+      }
+    }
+  },
+
+  switchTab(tab) {
+    this.currentTab = tab;
+    document.querySelectorAll('.blockchain-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === tab);
+    });
+    this.refresh();
+  },
+
+  refresh() {
+    const content = document.getElementById('blockchain-content');
+    if (!content) return;
+    
+    switch (this.currentTab) {
+      case 'dashboard': content.innerHTML = this.renderDashboard(); break;
+      case 'chain': content.innerHTML = this.renderChainView(); break;
+      case 'log': content.innerHTML = this.renderAuditLog(); break;
+      case 'storage': content.innerHTML = this.renderStorage(); break;
+      case 'settings': content.innerHTML = this.renderSettings(); break;
+    }
+  },
+
+  renderDashboard() {
+    const stats = StorageNodesManager.getStorageStats();
+    const chainLength = BlockchainState.chain.length;
+    const pendingTxs = BlockchainState.pendingTransactions.length;
+    const logEntries = BlockchainState.auditLog.length;
+    
+    return `
+      <div class="blockchain-stats-grid">
+        <div class="blockchain-stat-card">
+          <div class="blockchain-stat-value">${chainLength}</div>
+          <div class="blockchain-stat-label">区块数量</div>
+        </div>
+        <div class="blockchain-stat-card">
+          <div class="blockchain-stat-value">${pendingTxs}</div>
+          <div class="blockchain-stat-label">待处理交易</div>
+        </div>
+        <div class="blockchain-stat-card">
+          <div class="blockchain-stat-value">${stats.online}/${stats.total}</div>
+          <div class="blockchain-stat-label">在线节点</div>
+        </div>
+        <div class="blockchain-stat-card">
+          <div class="blockchain-stat-value">${logEntries}</div>
+          <div class="blockchain-stat-label">审计日志</div>
+        </div>
+      </div>
+      
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">📊 区块链状态</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">链状态</div>
+            <div style="font-size:14px;color:var(--success);margin-top:4px;">✅ 正常运行</div>
+          </div>
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">共识机制</div>
+            <div style="font-size:14px;color:${BlockchainState.settings.consensusEnabled ? 'var(--success)' : 'var(--text-dim)'};margin-top:4px;">${BlockchainState.settings.consensusEnabled ? '✅ 已启用' : '⚪ 已禁用'}</div>
+          </div>
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">存储使用</div>
+            <div style="font-size:14px;color:var(--text);margin-top:4px;">${stats.totalUsed} / ${stats.totalLimit} 单位</div>
+          </div>
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">数据冗余</div>
+            <div style="font-size:14px;color:var(--text);margin-top:4px;">${BlockchainState.settings.storageRedundancy} 副本</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">⚡ 快速操作</div>
+        <div style="display:flex;gap:8px;">
+          <button class="blockchain-action-btn" onclick="BlockchainPanel.minePendingBlock()">⛏️ 挖矿</button>
+          <button class="blockchain-action-btn secondary" onclick="BlockchainPanel.verifyChain()">🔍 验证链</button>
+          <button class="blockchain-action-btn secondary" onclick="BlockchainPanel.verifyAuditLog()">📋 验证日志</button>
+          <button class="blockchain-action-btn secondary" onclick="StorageNodesManager.syncNodes()">🔄 同步节点</button>
+        </div>
+        <div id="blockchain-verification-result"></div>
+      </div>
+    `;
+  },
+
+  renderChainView() {
+    const chainHtml = BlockchainState.chain.map(block => `
+      <div class="blockchain-block ${block.status}" onclick="BlockchainPanel.showBlockDetails(${block.index})">
+        <div class="blockchain-block-header">
+          <span class="blockchain-block-index">区块 #${block.index}</span>
+          <span class="blockchain-block-time">${new Date(block.timestamp).toLocaleString()}</span>
+        </div>
+        <div class="blockchain-block-hash">Hash: ${block.hash || 'N/A'}</div>
+        <div class="blockchain-block-hash">Prev: ${block.previousHash}</div>
+        <div class="blockchain-block-txs">📝 ${block.transactions?.length || 0} 笔交易</div>
+      </div>
+    `).join('');
+    
+    return `
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">🔗 区块链浏览器</div>
+        <div class="blockchain-chain-view">
+          ${chainHtml || '<div style="text-align:center;color:var(--text-dim);padding:40px;">暂无区块</div>'}
+        </div>
+      </div>
+      
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">➕ 创建新区块</div>
+        <div style="display:flex;gap:8px;">
+          <button class="blockchain-action-btn" onclick="BlockchainPanel.addTransactionToPending()">📝 添加交易</button>
+          <button class="blockchain-action-btn" onclick="BlockchainPanel.minePendingBlock()">⛏️ 挖矿</button>
+        </div>
+        ${BlockchainState.pendingTransactions.length > 0 ? `
+          <div style="margin-top:12px;">
+            <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">待处理交易 (${BlockchainState.pendingTransactions.length})</div>
+            ${BlockchainState.pendingTransactions.map(tx => `
+              <div style="background:var(--bg-panel);padding:8px;border-radius:4px;margin-bottom:4px;font-size:11px;">
+                ${typeof tx === 'string' ? tx : (tx.operation || JSON.stringify(tx).substring(0, 50))}
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  },
+
+  renderAuditLog() {
+    const logsHtml = BlockchainState.auditLog.slice().reverse().map(entry => `
+      <div class="blockchain-log-entry">
+        <div class="blockchain-log-header">
+          <span class="blockchain-log-operation">${entry.operation}</span>
+          <span class="blockchain-log-time">${new Date(entry.timestamp).toLocaleString()}</span>
+        </div>
+        <div class="blockchain-log-hash">Hash: ${entry.hash}</div>
+        <div class="blockchain-log-hash">Prev: ${entry.previousHash}</div>
+        <div style="font-size:11px;margin-top:6px;color:var(--text-dim);">
+          ${JSON.stringify(entry.data)?.substring(0, 100)}...
+        </div>
+      </div>
+    `).join('');
+    
+    return `
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">📋 Immutable 审计日志</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <button class="blockchain-action-btn" onclick="BlockchainPanel.addTestLog()">➕ 添加测试日志</button>
+          <button class="blockchain-action-btn secondary" onclick="BlockchainPanel.verifyAuditLog()">🔍 完整性验证</button>
+          <button class="blockchain-action-btn secondary" onclick="BlockchainPanel.detectTampering()">🚨 篡改检测</button>
+        </div>
+        <div id="blockchain-log-alert"></div>
+        <div class="blockchain-chain-view">
+          ${logsHtml || '<div style="text-align:center;color:var(--text-dim);padding:40px;">暂无日志</div>'}
+        </div>
+      </div>
+    `;
+  },
+
+  renderStorage() {
+    const stats = StorageNodesManager.getStorageStats();
+    const nodesHtml = BlockchainState.storageNodes.map(node => `
+      <div class="blockchain-node-card">
+        <div class="blockchain-node-name">${node.name}</div>
+        <div class="blockchain-node-info">
+          <div class="blockchain-node-status ${node.status}">${node.status === 'online' ? '在线' : node.status === 'syncing' ? '同步中' : '离线'}</div>
+          <div>区域: ${node.region}</div>
+          <div>存储: ${node.storageUsed || 0} / ${node.storageLimit}</div>
+          <div>最后同步: ${new Date(node.lastSync).toLocaleString()}</div>
+        </div>
+      </div>
+    `).join('');
+    
+    return `
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">💾 分布式存储节点</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <button class="blockchain-action-btn" onclick="BlockchainPanel.testStorage()">📦 测试存储</button>
+          <button class="blockchain-action-btn secondary" onclick="StorageNodesManager.syncNodes()">🔄 同步所有节点</button>
+        </div>
+        <div class="blockchain-node-list">
+          ${nodesHtml}
+        </div>
+      </div>
+      
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">📊 存储统计</div>
+        <div class="blockchain-stats-grid">
+          <div class="blockchain-stat-card">
+            <div class="blockchain-stat-value">${stats.total}</div>
+            <div class="blockchain-stat-label">总节点数</div>
+          </div>
+          <div class="blockchain-stat-card">
+            <div class="blockchain-stat-value">${stats.online}</div>
+            <div class="blockchain-stat-label">在线节点</div>
+          </div>
+          <div class="blockchain-stat-card">
+            <div class="blockchain-stat-value">${stats.totalUsed}</div>
+            <div class="blockchain-stat-label">已用存储</div>
+          </div>
+          <div class="blockchain-stat-card">
+            <div class="blockchain-stat-value">${stats.totalLimit}</div>
+            <div class="blockchain-stat-label">总容量</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">🔍 CID 检索</div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="storage-cid-input" placeholder="输入 CID..." style="flex:1;padding:8px;border-radius:4px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);">
+          <button class="blockchain-action-btn" onclick="BlockchainPanel.retrieveByCID()">检索</button>
+        </div>
+        <div id="storage-retrieve-result" style="margin-top:12px;"></div>
+      </div>
+    `;
+  },
+
+  renderSettings() {
+    return `
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">⚙️ 区块链配置</div>
+        
+        <div class="blockchain-config-row">
+          <div>
+            <div style="font-size:13px;color:var(--text);">自动挖矿</div>
+            <div style="font-size:11px;color:var(--text-dim);">新区块自动添加到链</div>
+          </div>
+          <div class="blockchain-toggle ${BlockchainState.settings.autoMine ? 'active' : ''}" onclick="BlockchainPanel.toggleSetting('autoMine')"></div>
+        </div>
+        
+        <div class="blockchain-config-row">
+          <div>
+            <div style="font-size:13px;color:var(--text);">共识机制</div>
+            <div style="font-size:11px;color:var(--text-dim);">模拟多节点共识验证</div>
+          </div>
+          <div class="blockchain-toggle ${BlockchainState.settings.consensusEnabled ? 'active' : ''}" onclick="BlockchainPanel.toggleSetting('consensusEnabled')"></div>
+        </div>
+        
+        <div class="blockchain-config-row">
+          <div>
+            <div style="font-size:13px;color:var(--text);">数据冗余度</div>
+            <div style="font-size:11px;color:var(--text-dim);">存储副本数量</div>
+          </div>
+          <select id="storage-redundancy" onchange="BlockchainPanel.updateSetting('storageRedundancy', parseInt(this.value))" style="padding:6px;border-radius:4px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);">
+            <option value="2" ${BlockchainState.settings.storageRedundancy === 2 ? 'selected' : ''}>2 副本</option>
+            <option value="3" ${BlockchainState.settings.storageRedundancy === 3 ? 'selected' : ''}>3 副本</option>
+            <option value="5" ${BlockchainState.settings.storageRedundancy === 5 ? 'selected' : ''}>5 副本</option>
+          </select>
+        </div>
+        
+        <div class="blockchain-config-row">
+          <div>
+            <div style="font-size:13px;color:var(--text);">日志保留天数</div>
+            <div style="font-size:11px;color:var(--text-dim);">审计日志保留期限</div>
+          </div>
+          <select id="log-retention" onchange="BlockchainPanel.updateSetting('logRetentionDays', parseInt(this.value))" style="padding:6px;border-radius:4px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);">
+            <option value="30" ${BlockchainState.settings.logRetentionDays === 30 ? 'selected' : ''}>30 天</option>
+            <option value="60" ${BlockchainState.settings.logRetentionDays === 60 ? 'selected' : ''}>60 天</option>
+            <option value="90" ${BlockchainState.settings.logRetentionDays === 90 ? 'selected' : ''}>90 天</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="blockchain-section">
+        <div class="blockchain-section-title">🗑️ 数据管理</div>
+        <div style="display:flex;gap:8px;">
+          <button class="blockchain-action-btn" onclick="BlockchainPanel.exportChain()">📤 导出链数据</button>
+          <button class="blockchain-action-btn secondary" onclick="BlockchainPanel.clearPending()">🗑️ 清除待处理</button>
+          <button class="blockchain-action-btn secondary" onclick="if(confirm('确定重置区块链吗？')) BlockchainPanel.resetChain()">🔄 重置链</button>
+        </div>
+      </div>
+    `;
+  },
+
+  toggleSetting(key) {
+    BlockchainState.settings[key] = !BlockchainState.settings[key];
+    Blockchain.saveToStorage();
+    this.refresh();
+  },
+
+  updateSetting(key, value) {
+    BlockchainState.settings[key] = value;
+    Blockchain.saveToStorage();
+  },
+
+  async minePendingBlock() {
+    if (BlockchainState.pendingTransactions.length === 0) {
+      showToast('没有待处理的交易');
+      return;
+    }
+    
+    showToast('正在挖矿...');
+    const block = await Blockchain.addBlock(BlockchainState.pendingTransactions);
+    const approved = await Consensus.simulateConsensus(block);
+    
+    if (approved) {
+      showToast(`区块 #${block.index} 已添加并通过共识`);
+    } else {
+      showToast(`区块 #${block.index} 未通过共识`, 'error');
+    }
+    
+    this.refresh();
+  },
+
+  async verifyChain() {
+    const result = await Blockchain.verifyChain();
+    const el = document.getElementById('blockchain-verification-result');
+    if (el) {
+      if (result.valid) {
+        el.innerHTML = '<div class="blockchain-verification-result success">✅ 区块链完整性验证通过</div>';
+      } else {
+        el.innerHTML = `<div class="blockchain-verification-result error">❌ 验证失败: ${result.error}</div>`;
+      }
+    }
+  },
+
+  async verifyAuditLog() {
+    const result = await AuditLog.verifyIntegrity();
+    const el = document.getElementById('blockchain-log-alert');
+    if (el) {
+      if (result.valid) {
+        el.innerHTML = '<div class="blockchain-verification-result success">✅ 审计日志完整性验证通过</div>';
+      } else {
+        el.innerHTML = `<div class="blockchain-verification-result error">❌ 验证失败: ${result.results.map(r => r.error).join(', ')}</div>`;
+      }
+    }
+  },
+
+  async detectTampering() {
+    const alerts = await AuditLog.detectTampering();
+    const el = document.getElementById('blockchain-log-alert');
+    if (el) {
+      if (alerts.length === 0) {
+        el.innerHTML = '<div class="blockchain-verification-result success">✅ 未检测到篡改</div>';
+      } else {
+        el.innerHTML = `<div class="blockchain-verification-result error">🚨 检测到 ${alerts.length} 处篡改!</div>`;
+      }
+    }
+  },
+
+  async addTransactionToPending() {
+    const operations = ['工作流保存', '节点添加', '连接创建', '工作流执行', '配置修改'];
+    const op = operations[Math.floor(Math.random() * operations.length)];
+    const txHash = await Blockchain.addTransaction({
+      operation: op,
+      user: 'current_user',
+      details: `测试${op}操作`
+    });
+    showToast(`交易已添加: ${txHash.substring(0, 16)}...`);
+    this.refresh();
+  },
+
+  async addTestLog() {
+    const operations = ['工作流创建', '节点编辑', '权限变更', '设置更新', '数据导出'];
+    const op = operations[Math.floor(Math.random() * operations.length)];
+    await AuditLog.addLog(op, {
+      user: 'admin',
+      target: 'workflow_001',
+      changes: { field: 'name', old: 'Test', new: 'Updated Test' }
+    });
+    showToast('测试日志已添加');
+    this.refresh();
+  },
+
+  async testStorage() {
+    const testContent = `测试内容 ${Date.now()}`;
+    const cid = await DistributedStorage.store(testContent, { type: 'test' });
+    showToast(`内容已存储 CID: ${cid.substring(0, 20)}...`);
+    this.refresh();
+  },
+
+  async retrieveByCID() {
+    const input = document.getElementById('storage-cid-input');
+    const resultEl = document.getElementById('storage-retrieve-result');
+    if (!input || !input.value) return;
+    
+    const result = await DistributedStorage.retrieve(input.value);
+    if (resultEl) {
+      if (result.complete) {
+        resultEl.innerHTML = `<div class="blockchain-verification-result success">✅ 内容已检索:<br><pre style="margin-top:8px;font-size:11px;white-space:pre-wrap;">${result.content}</pre></div>`;
+      } else {
+        resultEl.innerHTML = '<div class="blockchain-verification-result error">❌ 未找到内容或数据不完整</div>';
+      }
+    }
+  },
+
+  showBlockDetails(index) {
+    const block = BlockchainState.chain[index];
+    if (!block) return;
+    
+    alert(`区块 #${block.index}\n\nHash: ${block.hash}\nMerkle Root: ${block.merkleRoot || 'N/A'}\nPrevious Hash: ${block.previousHash}\n时间戳: ${new Date(block.timestamp).toLocaleString()}\n交易数: ${block.transactions?.length || 0}\nNonce: ${block.nonce}\n状态: ${block.status}`);
+  },
+
+  exportChain() {
+    const data = JSON.stringify(BlockchainState.chain, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `blockchain_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('链数据已导出');
+  },
+
+  clearPending() {
+    BlockchainState.pendingTransactions = [];
+    Blockchain.saveToStorage();
+    showToast('待处理交易已清除');
+    this.refresh();
+  },
+
+  resetChain() {
+    BlockchainState.chain = [];
+    BlockchainState.pendingTransactions = [];
+    BlockchainState.auditLog = [];
+    Blockchain.createGenesisBlock().then(genesis => {
+      BlockchainState.chain.push(genesis);
+      Blockchain.saveToStorage();
+      showToast('区块链已重置');
+      this.refresh();
+    });
+  }
+};
+
+// Toggle function for external access
+function toggleBlockchainPanel() {
+  BlockchainPanel.toggle();
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  BlockchainPanel.init();
+  
+  // Auto-mine interval
+  setInterval(() => {
+    if (BlockchainState.settings.autoMine && BlockchainState.pendingTransactions.length > 0) {
+      Consensus.runConsensusRound();
+    }
+  }, 30000);
+});
+
+// ============ End v31 Blockchain System ============
 
 // ============ End v19 Mobile, PWA & Offline Features ============
 </script>
