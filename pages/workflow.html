@@ -102,6 +102,468 @@
       display: block;
     }
 
+    /* Edge Management Panel v26 */
+    .edge-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 900px;
+      max-height: 85vh;
+      z-index: 1003;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .edge-panel.active {
+      display: block;
+    }
+
+    .edge-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .edge-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .edge-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .edge-close:hover {
+      color: var(--text);
+    }
+
+    .edge-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .edge-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .edge-tab:hover {
+      color: var(--text);
+    }
+
+    .edge-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .edge-content {
+      padding: 16px 20px;
+      max-height: calc(85vh - 130px);
+      overflow-y: auto;
+    }
+
+    .edge-section {
+      margin-bottom: 20px;
+    }
+
+    .edge-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .edge-node-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .edge-node-card {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .edge-node-card:hover {
+      border-color: var(--primary);
+    }
+
+    .edge-node-card.online {
+      border-left: 3px solid var(--success);
+    }
+
+    .edge-node-card.offline {
+      border-left: 3px solid var(--error);
+    }
+
+    .edge-node-card.warning {
+      border-left: 3px solid var(--warning);
+    }
+
+    .edge-node-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .edge-node-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .edge-node-status {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--bg-dark);
+    }
+
+    .edge-node-status.online { background: var(--success); color: white; }
+    .edge-node-status.offline { background: var(--error); color: white; }
+    .edge-node-status.warning { background: var(--warning); color: black; }
+
+    .edge-node-info {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .edge-node-metrics {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .edge-metric {
+      flex: 1;
+      text-align: center;
+    }
+
+    .edge-metric-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .edge-metric-label {
+      font-size: 9px;
+      color: var(--text-dim);
+    }
+
+    .edge-stat-card {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .edge-stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .edge-stat-value.success { color: var(--success); }
+    .edge-stat-value.warning { color: var(--warning); }
+    .edge-stat-value.error { color: var(--error); }
+
+    .edge-stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .edge-item {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .edge-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .edge-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .edge-item-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--bg-dark);
+    }
+
+    .edge-item-badge.running { background: var(--primary); color: white; }
+    .edge-item-badge.completed { background: var(--success); color: white; }
+    .edge-item-badge.failed { background: var(--error); color: white; }
+    .edge-item-badge.pending { background: var(--warning); color: black; }
+
+    .edge-item-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .edge-item-value {
+      font-size: 12px;
+      color: var(--text);
+      background: var(--bg-dark);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .edge-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .edge-bar-label {
+      width: 80px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .edge-bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .edge-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .edge-bar-value {
+      width: 50px;
+      text-align: right;
+      font-size: 11px;
+      color: var(--text);
+    }
+
+    .edge-model-card {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .edge-model-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .edge-model-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .edge-model-version {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .edge-model-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .edge-strategy-card {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .edge-strategy-card:hover {
+      border-color: var(--primary);
+    }
+
+    .edge-strategy-card.active {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.1);
+    }
+
+    .edge-strategy-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .edge-strategy-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .edge-strategy-icon {
+      font-size: 16px;
+    }
+
+    .edge-strategy-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .edge-sync-item {
+      padding: 10px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .edge-sync-icon {
+      font-size: 18px;
+    }
+
+    .edge-sync-info {
+      flex: 1;
+    }
+
+    .edge-sync-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .edge-sync-meta {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .edge-conflict-item {
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--warning);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .edge-conflict-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .edge-conflict-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--warning);
+    }
+
+    .edge-conflict-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .edge-empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+    }
+
+    .edge-empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .edge-empty-state-text {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .edge-toolbar {
+      display: flex;
+      gap: 8px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .edge-toolbar-btn {
+      padding: 6px 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+
+    .edge-toolbar-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
     /* Prediction Panel v25 */
     .prediction-panel {
       display: none;
@@ -5558,6 +6020,7 @@
       <button class="toolbar-btn security-btn" id="btn-security" title="插件安全" onclick="toggleSecurityPanel()">🔒 安全</button>
       <button class="toolbar-btn enterprise-btn" id="btn-enterprise" title="企业管理员" onclick="toggleEnterprisePanel()">🏢 企业</button>
       <button class="toolbar-btn prediction-btn" id="btn-prediction" title="AI预测" onclick="showPredictionPanel()">🔮 预测</button>
+      <button class="toolbar-btn" id="btn-edge" title="边缘节点管理" onclick="showEdgePanel()">🖥️ 边缘</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -6422,6 +6885,27 @@
       <button class="prediction-tab" data-tab="accuracy" onclick="switchPredictionTab('accuracy')">📈 准确率</button>
     </div>
     <div class="prediction-content" id="prediction-content">
+      <!-- Content will be dynamically loaded -->
+    </div>
+  </div>
+
+  <!-- Edge Management Panel v26 -->
+  <div class="edge-panel" id="edge-panel">
+    <div class="edge-header">
+      <div class="edge-title">
+        <span>🖥️</span>
+        <span>边缘节点管理</span>
+      </div>
+      <button class="edge-close" onclick="closeEdgePanel()">×</button>
+    </div>
+    <div class="edge-tabs">
+      <button class="edge-tab active" data-tab="nodes" onclick="switchEdgeTab('nodes')">🖥️ 节点列表</button>
+      <button class="edge-tab" data-tab="models" onclick="switchEdgeTab('models')">🤖 模型管理</button>
+      <button class="edge-tab" data-tab="collaboration" onclick="switchEdgeTab('collaboration')">🔄 协同调度</button>
+      <button class="edge-tab" data-tab="sync" onclick="switchEdgeTab('sync')">📡 数据同步</button>
+      <button class="edge-tab" data-tab="performance" onclick="switchEdgeTab('performance')">📊 性能监控</button>
+    </div>
+    <div class="edge-content" id="edge-content">
       <!-- Content will be dynamically loaded -->
     </div>
   </div>
@@ -15881,6 +16365,920 @@ function applyPredictionSuggestion(type) {
 }
 
 // ============ End v25 Prediction Panel ============
+
+// ============ v26 Edge Computing & Offline AI ============
+
+// Edge Computing State
+const edgeState = {
+  currentTab: 'nodes',
+  nodes: [],
+  models: [],
+  strategies: [],
+  syncQueue: [],
+  conflicts: [],
+  currentStrategy: 'hybrid'
+};
+
+// Edge Node Registry Service
+const EdgeNodeRegistry = {
+  nodes: new Map(),
+
+  register(nodeData) {
+    const node = {
+      id: nodeData.id || 'edge_' + Date.now(),
+      name: nodeData.name || 'Edge Node ' + (this.nodes.size + 1),
+      host: nodeData.host || 'localhost',
+      port: nodeData.port || 8080,
+      status: 'offline',
+      capabilities: nodeData.capabilities || ['inference', 'storage'],
+      cpu: 0,
+      memory: 0,
+      disk: 0,
+      lastHeartbeat: null,
+      registeredAt: new Date().toISOString(),
+      agentId: null,
+      models: []
+    };
+    this.nodes.set(node.id, node);
+    return node;
+  },
+
+  unregister(nodeId) {
+    this.nodes.delete(nodeId);
+  },
+
+  getNode(nodeId) {
+    return this.nodes.get(nodeId);
+  },
+
+  listNodes() {
+    return Array.from(this.nodes.values());
+  },
+
+  updateStatus(nodeId, status, metrics = {}) {
+    const node = this.nodes.get(nodeId);
+    if (node) {
+      node.status = status;
+      node.cpu = metrics.cpu || node.cpu;
+      node.memory = metrics.memory || node.memory;
+      node.disk = metrics.disk || node.disk;
+      node.lastHeartbeat = new Date().toISOString();
+    }
+  },
+
+  deployAgent(nodeId, agentData) {
+    const node = this.nodes.get(nodeId);
+    if (node) {
+      node.agentId = agentData.id || 'agent_' + Date.now();
+      node.status = 'online';
+      return node.agentId;
+    }
+    return null;
+  },
+
+  removeAgent(nodeId) {
+    const node = this.nodes.get(nodeId);
+    if (node) {
+      node.agentId = null;
+      node.status = 'offline';
+    }
+  }
+};
+
+// Offline AI Inference Engine
+const OfflineInferenceEngine = {
+  loadedModels: new Map(),
+
+  async loadModel(modelId, version) {
+    const key = `${modelId}:${version}`;
+    if (this.loadedModels.has(key)) {
+      return this.loadedModels.get(key);
+    }
+    const model = {
+      id: modelId,
+      version: version,
+      size: Math.floor(Math.random() * 500) + 100,
+      loadedAt: new Date().toISOString(),
+      status: 'loaded',
+      inferenceCount: 0
+    };
+    this.loadedModels.set(key, model);
+    return model;
+  },
+
+  async unloadModel(modelId, version) {
+    const key = `${modelId}:${version}`;
+    this.loadedModels.delete(key);
+  },
+
+  async infer(modelId, version, input) {
+    const key = `${modelId}:${version}`;
+    let model = this.loadedModels.get(key);
+    if (!model) {
+      model = await this.loadModel(modelId, version);
+    }
+    model.inferenceCount++;
+    return {
+      success: true,
+      output: `Inference result for ${input.substring(0, 20)}...`,
+      latency: Math.floor(Math.random() * 100) + 10,
+      model: modelId,
+      version: version,
+      cached: false
+    };
+  },
+
+  getLoadedModels() {
+    return Array.from(this.loadedModels.values());
+  }
+};
+
+// Model Version Manager
+const ModelVersionManager = {
+  versions: new Map(),
+
+  addVersion(modelId, versionData) {
+    const versions = this.versions.get(modelId) || [];
+    const version = {
+      id: versionData.id || versionData.version,
+      version: versionData.version || versionData.id,
+      size: versionData.size || 0,
+      createdAt: versionData.createdAt || new Date().toISOString(),
+      status: versionData.status || 'available',
+      downloadCount: 0
+    };
+    versions.push(version);
+    this.versions.set(modelId, versions);
+    return version;
+  },
+
+  getVersions(modelId) {
+    return this.versions.get(modelId) || [];
+  },
+
+  setActiveVersion(modelId, version) {
+    const versions = this.versions.get(modelId) || [];
+    versions.forEach(v => v.status = v.version === version ? 'active' : 'available');
+    this.versions.set(modelId, versions);
+  }
+};
+
+// Inference Cache
+const InferenceCache = {
+  cache: new Map(),
+
+  get(key) {
+    const entry = this.cache.get(key);
+    if (entry && Date.now() - entry.timestamp < 3600000) {
+      entry.hits = (entry.hits || 0) + 1;
+      return entry.result;
+    }
+    return null;
+  },
+
+  set(key, result) {
+    this.cache.set(key, {
+      result: result,
+      timestamp: Date.now(),
+      hits: 0
+    });
+  },
+
+  clear() {
+    this.cache.clear();
+  },
+
+  getStats() {
+    let totalHits = 0;
+    let totalSize = 0;
+    this.cache.forEach(entry => {
+      totalHits += entry.hits || 0;
+      totalSize += JSON.stringify(entry.result).length;
+    });
+    return {
+      size: this.cache.size,
+      hits: totalHits,
+      estimatedSize: totalSize
+    };
+  }
+};
+
+// Edge-Cloud Collaboration Strategies
+const EdgeCloudCollaboration = {
+  strategies: {
+    edgeFirst: {
+      name: '边缘优先',
+      icon: '📱',
+      description: '优先使用边缘节点进行推理，降低延迟',
+      priority: ['edge', 'cloud']
+    },
+    cloudFirst: {
+      name: '云端优先',
+      icon: '☁️',
+      description: '优先使用云端资源，保证计算能力',
+      priority: ['cloud', 'edge']
+    },
+    hybrid: {
+      name: '混合策略',
+      icon: '🔄',
+      description: '根据任务类型和资源状况动态分配',
+      priority: ['auto']
+    }
+  },
+
+  currentStrategy: 'hybrid',
+
+  setStrategy(strategy) {
+    this.currentStrategy = strategy;
+    edgeState.currentStrategy = strategy;
+  },
+
+  getStrategy() {
+    return this.strategies[this.currentStrategy];
+  },
+
+  selectTarget(task) {
+    const strategy = this.getStrategy();
+    if (strategy.priority[0] === 'auto') {
+      if (task.latencySensitive) return 'edge';
+      if (task.computeHeavy) return 'cloud';
+      return Math.random() > 0.5 ? 'edge' : 'cloud';
+    }
+    return strategy.priority[0];
+  }
+};
+
+// Data Sync Manager
+const DataSyncManager = {
+  syncQueue: [],
+  syncHistory: [],
+
+  addToSyncQueue(item) {
+    const syncItem = {
+      id: 'sync_' + Date.now(),
+      type: item.type || 'data',
+      source: item.source || 'cloud',
+      target: item.target || 'edge',
+      data: item.data,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      priority: item.priority || 'normal'
+    };
+    this.syncQueue.push(syncItem);
+    return syncItem.id;
+  },
+
+  getSyncQueue() {
+    return this.syncQueue;
+  },
+
+  processSyncQueue() {
+    this.syncQueue.forEach(item => {
+      if (item.status === 'pending') {
+        item.status = 'syncing';
+        setTimeout(() => {
+          item.status = 'completed';
+          item.completedAt = new Date().toISOString();
+          this.syncHistory.push(item);
+        }, 500);
+      }
+    });
+  },
+
+  resolveConflict(conflictId, resolution) {
+    const conflict = edgeState.conflicts.find(c => c.id === conflictId);
+    if (conflict) {
+      conflict.resolution = resolution;
+      conflict.resolvedAt = new Date().toISOString();
+      conflict.resolved = true;
+    }
+  }
+};
+
+// Collaborative Scheduler
+const CollaborativeScheduler = {
+  tasks: [],
+
+  addTask(task) {
+    const scheduledTask = {
+      id: 'task_' + Date.now(),
+      name: task.name || 'Task',
+      type: task.type || 'inference',
+      target: EdgeCloudCollaboration.selectTarget(task),
+      status: 'pending',
+      progress: 0,
+      createdAt: new Date().toISOString(),
+      assignedTo: null
+    };
+    this.tasks.push(scheduledTask);
+    return scheduledTask.id;
+  },
+
+  assignTask(taskId, nodeId) {
+    const task = this.tasks.find(t => t.id === taskId);
+    if (task) {
+      task.assignedTo = nodeId;
+      task.status = 'assigned';
+    }
+  },
+
+  updateTaskProgress(taskId, progress) {
+    const task = this.tasks.find(t => t.id === taskId);
+    if (task) {
+      task.progress = progress;
+      if (progress >= 100) {
+        task.status = 'completed';
+        task.completedAt = new Date().toISOString();
+      }
+    }
+  },
+
+  getTasks() {
+    return this.tasks;
+  }
+};
+
+// Initialize Edge Panel
+function initEdgePanel() {
+  // Register sample edge nodes
+  const sampleNodes = [
+    { id: 'edge_001', name: '北京边缘节点', host: 'bj-edge-01.local', port: 8080, status: 'online', cpu: 45, memory: 62 },
+    { id: 'edge_002', name: '上海边缘节点', host: 'sh-edge-01.local', port: 8080, status: 'online', cpu: 78, memory: 45 },
+    { id: 'edge_003', name: '广州边缘节点', host: 'gz-edge-01.local', port: 8080, status: 'warning', cpu: 89, memory: 82 },
+    { id: 'edge_004', name: '深圳边缘节点', host: 'sz-edge-01.local', port: 8080, status: 'offline', cpu: 0, memory: 0 }
+  ];
+
+  sampleNodes.forEach(nodeData => {
+    EdgeNodeRegistry.register(nodeData);
+  });
+
+  // Register sample models
+  const sampleModels = [
+    { id: 'model_001', version: '1.0.0', size: 256, status: 'active' },
+    { id: 'model_001', version: '1.1.0', size: 320, status: 'available' },
+    { id: 'model_002', version: '2.0.0', size: 512, status: 'available' }
+  ];
+
+  sampleModels.forEach(m => ModelVersionManager.addVersion(m.id, m));
+
+  // Preload some models
+  OfflineInferenceEngine.loadModel('model_001', '1.0.0');
+  OfflineInferenceEngine.loadModel('model_002', '2.0.0');
+}
+
+// Show edge panel
+function showEdgePanel() {
+  document.getElementById('edge-panel').classList.add('active');
+  switchEdgeTab('nodes');
+}
+
+// Close edge panel
+function closeEdgePanel() {
+  document.getElementById('edge-panel').classList.remove('active');
+}
+
+// Switch edge tab
+function switchEdgeTab(tabName) {
+  edgeState.currentTab = tabName;
+
+  document.querySelectorAll('.edge-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.tab === tabName);
+  });
+
+  const content = document.getElementById('edge-content');
+
+  switch (tabName) {
+    case 'nodes':
+      loadEdgeNodes();
+      break;
+    case 'models':
+      loadEdgeModels();
+      break;
+    case 'collaboration':
+      loadEdgeCollaboration();
+      break;
+    case 'sync':
+      loadEdgeSync();
+      break;
+    case 'performance':
+      loadEdgePerformance();
+      break;
+  }
+}
+
+// Load edge nodes tab
+function loadEdgeNodes() {
+  const content = document.getElementById('edge-content');
+  const nodes = EdgeNodeRegistry.listNodes();
+
+  if (nodes.length === 0) {
+    content.innerHTML = `
+      <div class="edge-empty-state">
+        <div class="edge-empty-state-icon">🖥️</div>
+        <div class="edge-empty-state-text">
+          暂无边缘节点<br>
+          点击"添加节点"注册新的边缘节点
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const onlineCount = nodes.filter(n => n.status === 'online').length;
+  const offlineCount = nodes.filter(n => n.status === 'offline').length;
+  const warningCount = nodes.filter(n => n.status === 'warning').length;
+
+  content.innerHTML = `
+    <div class="edge-toolbar">
+      <button class="edge-toolbar-btn" onclick="showAddEdgeNodeForm()">➕ 添加节点</button>
+      <button class="edge-toolbar-btn" onclick="refreshEdgeNodes()">🔄 刷新</button>
+      <button class="edge-toolbar-btn" onclick="deployToAllNodes()">🚀 批量部署</button>
+    </div>
+
+    <div class="edge-section">
+      <div class="edge-section-title">📊 概览</div>
+      <div class="edge-node-grid">
+        <div class="edge-stat-card">
+          <div class="edge-stat-value">${nodes.length}</div>
+          <div class="edge-stat-label">节点总数</div>
+        </div>
+        <div class="edge-stat-card">
+          <div class="edge-stat-value success">${onlineCount}</div>
+          <div class="edge-stat-label">在线</div>
+        </div>
+        <div class="edge-stat-card">
+          <div class="edge-stat-value warning">${warningCount}</div>
+          <div class="edge-stat-label">警告</div>
+        </div>
+        <div class="edge-stat-card">
+          <div class="edge-stat-value error">${offlineCount}</div>
+          <div class="edge-stat-label">离线</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="edge-section">
+      <div class="edge-section-title">🖥️ 节点列表</div>
+      ${nodes.map(node => `
+        <div class="edge-node-card ${node.status}" onclick="selectEdgeNode('${node.id}')">
+          <div class="edge-node-header">
+            <div class="edge-node-name">
+              ${getEdgeStatusIcon(node.status)} ${node.name}
+            </div>
+            <span class="edge-node-status ${node.status}">${getEdgeStatusText(node.status)}</span>
+          </div>
+          <div class="edge-node-info">${node.host}:${node.port}</div>
+          <div class="edge-node-info">能力: ${node.capabilities.join(', ')}</div>
+          <div class="edge-node-metrics">
+            <div class="edge-metric">
+              <div class="edge-metric-value">${node.cpu}%</div>
+              <div class="edge-metric-label">CPU</div>
+            </div>
+            <div class="edge-metric">
+              <div class="edge-metric-value">${node.memory}%</div>
+              <div class="edge-metric-label">内存</div>
+            </div>
+            <div class="edge-metric">
+              <div class="edge-metric-value">${node.disk}%</div>
+              <div class="edge-metric-label">磁盘</div>
+            </div>
+          </div>
+          <div class="edge-model-actions">
+            <button class="edge-toolbar-btn" onclick="event.stopPropagation(); deployAgentToNode('${node.id}')">部署代理</button>
+            <button class="edge-toolbar-btn" onclick="event.stopPropagation(); remoteControlNode('${node.id}')">远程控制</button>
+            <button class="edge-toolbar-btn" onclick="event.stopPropagation(); removeEdgeNode('${node.id}')">移除</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Load edge models tab
+function loadEdgeModels() {
+  const content = document.getElementById('edge-content');
+  const models = OfflineInferenceEngine.getLoadedModels();
+  const allVersions = [];
+
+  OfflineInferenceEngine.loadedModels.forEach((model, key) => {
+    allVersions.push(model);
+  });
+
+  if (allVersions.length === 0) {
+    content.innerHTML = `
+      <div class="edge-toolbar">
+        <button class="edge-toolbar-btn" onclick="showUploadModelForm()">📤 上传模型</button>
+        <button class="edge-toolbar-btn" onclick="refreshModels()">🔄 刷新</button>
+      </div>
+      <div class="edge-empty-state">
+        <div class="edge-empty-state-icon">🤖</div>
+        <div class="edge-empty-state-text">
+          暂无已加载模型<br>
+          上传或同步模型到边缘节点
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const cacheStats = InferenceCache.getStats();
+
+  content.innerHTML = `
+    <div class="edge-toolbar">
+      <button class="edge-toolbar-btn" onclick="showUploadModelForm()">📤 上传模型</button>
+      <button class="edge-toolbar-btn" onclick="refreshModels()">🔄 刷新</button>
+      <button class="edge-toolbar-btn" onclick="clearInferenceCache()">🗑️ 清除缓存</button>
+    </div>
+
+    <div class="edge-section">
+      <div class="edge-section-title">📊 缓存统计</div>
+      <div class="edge-node-grid">
+        <div class="edge-stat-card">
+          <div class="edge-stat-value">${cacheStats.size}</div>
+          <div class="edge-stat-label">缓存项</div>
+        </div>
+        <div class="edge-stat-card">
+          <div class="edge-stat-value success">${cacheStats.hits}</div>
+          <div class="edge-stat-label">缓存命中</div>
+        </div>
+        <div class="edge-stat-card">
+          <div class="edge-stat-value">${(cacheStats.estimatedSize / 1024).toFixed(1)}KB</div>
+          <div class="edge-stat-label">预估大小</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="edge-section">
+      <div class="edge-section-title">🤖 已加载模型</div>
+      ${allVersions.map(model => `
+        <div class="edge-model-card">
+          <div class="edge-model-header">
+            <div class="edge-model-name">${model.id}</div>
+            <div class="edge-model-version">v${model.version}</div>
+          </div>
+          <div class="edge-item-value">大小: ${model.size}MB</div>
+          <div class="edge-item-value">推理次数: ${model.inferenceCount}</div>
+          <div class="edge-item-value">加载时间: ${new Date(model.loadedAt).toLocaleString()}</div>
+          <div class="edge-model-actions">
+            <button class="edge-toolbar-btn" onclick="runOfflineInference('${model.id}', '${model.version}')">▶️ 推理</button>
+            <button class="edge-toolbar-btn" onclick="unloadModel('${model.id}', '${model.version}')">📤 卸载</button>
+            <button class="edge-toolbar-btn" onclick="showModelVersions('${model.id}')">📜 版本</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Load collaboration tab
+function loadEdgeCollaboration() {
+  const content = document.getElementById('edge-content');
+  const strategy = EdgeCloudCollaboration.getStrategy();
+  const tasks = CollaborativeScheduler.getTasks();
+
+  content.innerHTML = `
+    <div class="edge-section">
+      <div class="edge-section-title">🎯 任务分发策略</div>
+      <div class="edge-strategy-card ${edgeState.currentStrategy === 'edgeFirst' ? 'active' : ''}" onclick="selectStrategy('edgeFirst')">
+        <div class="edge-strategy-header">
+          <div class="edge-strategy-title">📱 边缘优先</div>
+          <div class="edge-strategy-icon">${EdgeCloudCollaboration.strategies.edgeFirst.icon}</div>
+        </div>
+        <div class="edge-strategy-desc">${EdgeCloudCollaboration.strategies.edgeFirst.description}</div>
+      </div>
+      <div class="edge-strategy-card ${edgeState.currentStrategy === 'cloudFirst' ? 'active' : ''}" onclick="selectStrategy('cloudFirst')">
+        <div class="edge-strategy-header">
+          <div class="edge-strategy-title">☁️ 云端优先</div>
+          <div class="edge-strategy-icon">${EdgeCloudCollaboration.strategies.cloudFirst.icon}</div>
+        </div>
+        <div class="edge-strategy-desc">${EdgeCloudCollaboration.strategies.cloudFirst.description}</div>
+      </div>
+      <div class="edge-strategy-card ${edgeState.currentStrategy === 'hybrid' ? 'active' : ''}" onclick="selectStrategy('hybrid')">
+        <div class="edge-strategy-header">
+          <div class="edge-strategy-title">🔄 混合策略</div>
+          <div class="edge-strategy-icon">${EdgeCloudCollaboration.strategies.hybrid.icon}</div>
+        </div>
+        <div class="edge-strategy-desc">${EdgeCloudCollaboration.strategies.hybrid.description}</div>
+      </div>
+    </div>
+
+    <div class="edge-section">
+      <div class="edge-section-title">📋 调度任务</div>
+      <div class="edge-toolbar">
+        <button class="edge-toolbar-btn" onclick="createTestTask()">➕ 创建测试任务</button>
+        <button class="edge-toolbar-btn" onclick="runCollaborativeScheduling()">▶️ 执行调度</button>
+      </div>
+      ${tasks.length === 0 ? `
+        <div class="edge-empty-state">
+          <div class="edge-empty-state-icon">📋</div>
+          <div class="edge-empty-state-text">暂无调度任务</div>
+        </div>
+      ` : tasks.map(task => `
+        <div class="edge-item">
+          <div class="edge-item-header">
+            <div class="edge-item-title">${task.name}</div>
+            <span class="edge-item-badge ${task.status}">${task.status}</span>
+          </div>
+          <div class="edge-item-value">类型: ${task.type}</div>
+          <div class="edge-item-value">目标: ${task.target}</div>
+          <div class="edge-bar">
+            <div class="edge-bar-label">进度</div>
+            <div class="edge-bar-track">
+              <div class="edge-bar-fill" style="width: ${task.progress}%; background: var(--primary);"></div>
+            </div>
+            <div class="edge-bar-value">${task.progress}%</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Load sync tab
+function loadEdgeSync() {
+  const content = document.getElementById('edge-content');
+  const syncQueue = DataSyncManager.getSyncQueue();
+  const conflicts = edgeState.conflicts;
+
+  content.innerHTML = `
+    <div class="edge-section">
+      <div class="edge-section-title">📡 同步队列</div>
+      <div class="edge-toolbar">
+        <button class="edge-toolbar-btn" onclick="createSyncTask()">➕ 创建同步</button>
+        <button class="edge-toolbar-btn" onclick="DataSyncManager.processSyncQueue()">▶️ 执行同步</button>
+        <button class="edge-toolbar-btn" onclick="refreshSyncQueue()">🔄 刷新</button>
+      </div>
+      ${syncQueue.length === 0 ? `
+        <div class="edge-empty-state">
+          <div class="edge-empty-state-icon">📡</div>
+          <div class="edge-empty-state-text">同步队列为空</div>
+        </div>
+      ` : syncQueue.map(item => `
+        <div class="edge-sync-item">
+          <div class="edge-sync-icon">${getSyncIcon(item.type)}</div>
+          <div class="edge-sync-info">
+            <div class="edge-sync-name">${item.type} - ${item.source} → ${item.target}</div>
+            <div class="edge-sync-meta">优先级: ${item.priority} | 状态: ${item.status}</div>
+          </div>
+          <span class="edge-item-badge ${item.status}">${item.status}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="edge-section">
+      <div class="edge-section-title">⚠️ 冲突解决</div>
+      ${conflicts.length === 0 ? `
+        <div class="edge-empty-state">
+          <div class="edge-empty-state-icon">✅</div>
+          <div class="edge-empty-state-text">暂无冲突</div>
+        </div>
+      ` : conflicts.map(conflict => `
+        <div class="edge-conflict-item">
+          <div class="edge-conflict-header">
+            <div class="edge-conflict-title">${conflict.type} 冲突</div>
+            <div class="edge-conflict-actions">
+              <button class="edge-toolbar-btn" onclick="resolveConflict('${conflict.id}', 'local')">保留本地</button>
+              <button class="edge-toolbar-btn" onclick="resolveConflict('${conflict.id}', 'cloud')">保留云端</button>
+            </div>
+          </div>
+          <div class="edge-item-desc">${conflict.description}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Load performance tab
+function loadEdgePerformance() {
+  const content = document.getElementById('edge-content');
+  const nodes = EdgeNodeRegistry.listNodes();
+
+  content.innerHTML = `
+    <div class="edge-section">
+      <div class="edge-section-title">📊 性能监控</div>
+      <div class="edge-node-grid">
+        <div class="edge-stat-card">
+          <div class="edge-stat-value">${calculateAvgCpu(nodes)}%</div>
+          <div class="edge-stat-label">平均CPU</div>
+        </div>
+        <div class="edge-stat-card">
+          <div class="edge-stat-value">${calculateAvgMemory(nodes)}%</div>
+          <div class="edge-stat-label">平均内存</div>
+        </div>
+        <div class="edge-stat-card">
+          <div class="edge-stat-value">${OfflineInferenceEngine.getLoadedModels().length}</div>
+          <div class="edge-stat-label">加载模型</div>
+        </div>
+        <div class="edge-stat-card">
+          <div class="edge-stat-value">${InferenceCache.getStats().hits}</div>
+          <div class="edge-stat-label">缓存命中</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="edge-section">
+      <div class="edge-section-title">🖥️ 节点性能详情</div>
+      ${nodes.map(node => `
+        <div class="edge-item">
+          <div class="edge-item-header">
+            <div class="edge-item-title">${getEdgeStatusIcon(node.status)} ${node.name}</div>
+            <span class="edge-node-status ${node.status}">${getEdgeStatusText(node.status)}</span>
+          </div>
+          <div class="edge-bar">
+            <div class="edge-bar-label">CPU</div>
+            <div class="edge-bar-track">
+              <div class="edge-bar-fill" style="width: ${node.cpu}%; background: ${node.cpu > 80 ? 'var(--error)' : node.cpu > 60 ? 'var(--warning)' : 'var(--success)'};"></div>
+            </div>
+            <div class="edge-bar-value">${node.cpu}%</div>
+          </div>
+          <div class="edge-bar">
+            <div class="edge-bar-label">内存</div>
+            <div class="edge-bar-track">
+              <div class="edge-bar-fill" style="width: ${node.memory}%; background: ${node.memory > 80 ? 'var(--error)' : node.memory > 60 ? 'var(--warning)' : 'var(--success)'};"></div>
+            </div>
+            <div class="edge-bar-value">${node.memory}%</div>
+          </div>
+          <div class="edge-bar">
+            <div class="edge-bar-label">磁盘</div>
+            <div class="edge-bar-track">
+              <div class="edge-bar-fill" style="width: ${node.disk}%; background: ${node.disk > 80 ? 'var(--error)' : node.disk > 60 ? 'var(--warning)' : 'var(--success)'};"></div>
+            </div>
+            <div class="edge-bar-value">${node.disk}%</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Helper functions
+function getEdgeStatusIcon(status) {
+  const icons = { online: '🟢', offline: '🔴', warning: '🟡' };
+  return icons[status] || '⚪';
+}
+
+function getEdgeStatusText(status) {
+  const texts = { online: '在线', offline: '离线', warning: '警告' };
+  return texts[status] || '未知';
+}
+
+function getSyncIcon(type) {
+  const icons = { model: '🤖', data: '📊', config: '⚙️', workflow: '🔄' };
+  return icons[type] || '📁';
+}
+
+function calculateAvgCpu(nodes) {
+  if (nodes.length === 0) return 0;
+  const onlineNodes = nodes.filter(n => n.status !== 'offline');
+  if (onlineNodes.length === 0) return 0;
+  return Math.round(onlineNodes.reduce((sum, n) => sum + n.cpu, 0) / onlineNodes.length);
+}
+
+function calculateAvgMemory(nodes) {
+  if (nodes.length === 0) return 0;
+  const onlineNodes = nodes.filter(n => n.status !== 'offline');
+  if (onlineNodes.length === 0) return 0;
+  return Math.round(onlineNodes.reduce((sum, n) => sum + n.memory, 0) / onlineNodes.length);
+}
+
+// Action functions
+function showAddEdgeNodeForm() {
+  showToast('打开添加边缘节点表单');
+}
+
+function refreshEdgeNodes() {
+  EdgeNodeRegistry.listNodes().forEach(node => {
+    EdgeNodeRegistry.updateStatus(node.id, node.status, {
+      cpu: Math.floor(Math.random() * 40) + 30,
+      memory: Math.floor(Math.random() * 40) + 30
+    });
+  });
+  loadEdgeNodes();
+  showToast('节点状态已刷新');
+}
+
+function deployAgentToNode(nodeId) {
+  const agentId = EdgeNodeRegistry.deployAgent(nodeId, { id: 'agent_' + Date.now() });
+  if (agentId) {
+    showToast(`代理已部署到节点 ${nodeId}`);
+    loadEdgeNodes();
+  }
+}
+
+function remoteControlNode(nodeId) {
+  showToast(`远程控制节点 ${nodeId}`);
+}
+
+function removeEdgeNode(nodeId) {
+  EdgeNodeRegistry.removeAgent(nodeId);
+  EdgeNodeRegistry.unregister(nodeId);
+  showToast(`节点 ${nodeId} 已移除`);
+  loadEdgeNodes();
+}
+
+function deployToAllNodes() {
+  EdgeNodeRegistry.listNodes().forEach(node => {
+    if (node.status !== 'offline') {
+      EdgeNodeRegistry.deployAgent(node.id, { id: 'agent_' + Date.now() });
+    }
+  });
+  showToast('批量部署完成');
+  loadEdgeNodes();
+}
+
+function selectEdgeNode(nodeId) {
+  showToast(`已选择节点 ${nodeId}`);
+}
+
+function showUploadModelForm() {
+  showToast('打开模型上传表单');
+}
+
+function refreshModels() {
+  loadEdgeModels();
+  showToast('模型列表已刷新');
+}
+
+function clearInferenceCache() {
+  InferenceCache.clear();
+  showToast('推理缓存已清除');
+  loadEdgeModels();
+}
+
+function runOfflineInference(modelId, version) {
+  const result = OfflineInferenceEngine.infer(modelId, version, 'test input');
+  showToast(`推理完成，延迟: ${result.latency}ms`);
+}
+
+function unloadModel(modelId, version) {
+  OfflineInferenceEngine.unloadModel(modelId, version);
+  showToast(`模型 ${modelId}:${version} 已卸载`);
+  loadEdgeModels();
+}
+
+function showModelVersions(modelId) {
+  const versions = ModelVersionManager.getVersions(modelId);
+  showToast(`模型 ${modelId} 共有 ${versions.length} 个版本`);
+}
+
+function selectStrategy(strategy) {
+  EdgeCloudCollaboration.setStrategy(strategy);
+  loadEdgeCollaboration();
+}
+
+function createTestTask() {
+  const taskId = CollaborativeScheduler.addTask({
+    name: '测试任务 ' + (CollaborativeScheduler.tasks.length + 1),
+    type: 'inference',
+    latencySensitive: Math.random() > 0.5
+  });
+  showToast(`测试任务已创建: ${taskId}`);
+  loadEdgeCollaboration();
+}
+
+function runCollaborativeScheduling() {
+  const tasks = CollaborativeScheduler.tasks.filter(t => t.status === 'pending');
+  tasks.forEach(task => {
+    const target = EdgeCloudCollaboration.selectTarget(task);
+    CollaborativeScheduler.assignTask(task.id, target === 'edge' ? 'edge_001' : 'cloud');
+    CollaborativeScheduler.updateTaskProgress(task.id, 100);
+  });
+  showToast('协同调度执行完成');
+  loadEdgeCollaboration();
+}
+
+function createSyncTask() {
+  const types = ['model', 'data', 'config', 'workflow'];
+  const type = types[Math.floor(Math.random() * types.length)];
+  DataSyncManager.addToSyncQueue({
+    type: type,
+    source: 'cloud',
+    target: 'edge',
+    data: { id: 'sync_' + Date.now() },
+    priority: 'normal'
+  });
+  showToast('同步任务已创建');
+  loadEdgeSync();
+}
+
+function refreshSyncQueue() {
+  loadEdgeSync();
+  showToast('同步队列已刷新');
+}
+
+function resolveConflict(conflictId, resolution) {
+  DataSyncManager.resolveConflict(conflictId, resolution);
+  edgeState.conflicts = edgeState.conflicts.filter(c => c.id !== conflictId);
+  showToast(`冲突已解决: ${resolution}`);
+  loadEdgeSync();
+}
+
+// Initialize edge panel on page load
+document.addEventListener('DOMContentLoaded', () => {
+  initEdgePanel();
+});
+
+// ============ End v26 Edge Computing ============
 
     // ============ End v19 Mobile, PWA & Offline Features ============
   </script>
