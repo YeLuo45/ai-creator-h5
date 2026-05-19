@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Creator - 模板市场</title>
+  <style>
+    .page {
+      min-height: 100vh;
+      background: #f5f5f5;
+      padding-bottom: 80px;
+    }
+
+    .header {
+      padding: 24px 16px 16px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .header-back {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: rgba(255,255,255,0.9);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 12px;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      background: #fff;
+      outline: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #999;
+    }
+
+    .sort-btn {
+      padding: 10px 14px;
+      background: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #666;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* Category Tabs */
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .category-tab {
+      flex-shrink: 0;
+      padding: 6px 16px;
+      border-radius: 16px;
+      font-size: 13px;
+      background: #fff;
+      color: #666;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .category-tab.active {
+      background: #667eea;
+      color: #fff;
+    }
+
+    .category-tab:active {
+      opacity: 0.8;
+    }
+
+    /* Template Grid */
+    .template-grid {
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .template-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .template-card:active {
+      transform: scale(0.98);
+    }
+
+    .template-cover {
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .template-cover-icon {
+      font-size: 36px;
+      margin-bottom: 4px;
+    }
+
+    .template-cover-text {
+      font-size: 11px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .favorite-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .favorite-btn.active {
+      background: #ff6b6b;
+    }
+
+    .template-info {
+      padding: 10px 12px;
+    }
+
+    .template-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .template-author {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 6px;
+    }
+
+    .template-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .template-rating {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 12px;
+      color: #f5a623;
+    }
+
+    .template-favorites {
+      font-size: 11px;
+      color: #999;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-text {
+      font-size: 14px;
+    }
+
+    /* Rating Modal */
+    .rating-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      display: none;
+    }
+
+    .rating-modal.show {
+      display: flex;
+    }
+
+    .rating-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      width: 280px;
+      text-align: center;
+    }
+
+    .rating-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+
+    .rating-stars {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .rating-star {
+      font-size: 32px;
+      cursor: pointer;
+      color: #ddd;
+      transition: color 0.2s;
+    }
+
+    .rating-star.active {
+      color: #f5a623;
+    }
+
+    .rating-submit {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-back" onclick="goBack()">← 返回</div>
+      <div class="header-title">🏪 模板市场</div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索模板..." />
+      </div>
+      <button class="sort-btn" id="sortBtn" onclick="toggleSort()">最新 ∨</button>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="category-tabs" id="categoryTabs"></div>
+
+    <!-- Template Grid -->
+    <div class="template-grid" id="templateGrid"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="empty-icon">📦</div>
+      <div class="empty-text">暂无模板</div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">加载中...</div>
+  </div>
+
+  <!-- Rating Modal -->
+  <div class="rating-modal" id="ratingModal">
+    <div class="rating-box">
+      <div class="rating-title">给模板评分</div>
+      <div class="rating-stars" id="ratingStars">
+        <span class="rating-star" data-rating="1">☆</span>
+        <span class="rating-star" data-rating="2">☆</span>
+        <span class="rating-star" data-rating="3">☆</span>
+        <span class="rating-star" data-rating="4">☆</span>
+        <span class="rating-star" data-rating="5">☆</span>
+      </div>
+      <button class="rating-submit" id="ratingSubmit">提交评分</button>
+    </div>
+  </div>
+
+  <script>
+    // State
+    const state = {
+      currentCategory: 'all',
+      currentSort: 'latest',
+      searchKeyword: '',
+      templates: [],
+      currentTemplateId: null,
+      selectedRating: 0
+    };
+
+    const sortOptions = [
+      { id: 'latest', label: '最新' },
+      { id: 'hottest', label: '最热' },
+      { id: 'rating', label: '评分' }
+    ];
+
+    // Initialize
+    window.pageInit = function() {
+      loadCategories();
+      loadTemplates();
+      setupEventListeners();
+    };
+
+    function setupEventListeners() {
+      // Search input
+      const searchInput = document.getElementById('searchInput');
+      let searchTimeout;
+      searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          state.searchKeyword = this.value;
+          loadTemplates();
+        }, 300);
+      });
+
+      // Rating stars
+      document.querySelectorAll('.rating-star').forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.dataset.rating);
+          state.selectedRating = rating;
+          updateRatingStars(rating);
+        });
+      });
+
+      // Rating submit
+      document.getElementById('ratingSubmit').addEventListener('click', submitRating);
+
+      // Close modal on overlay click
+      document.getElementById('ratingModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeRatingModal();
+        }
+      });
+    }
+
+    function loadCategories() {
+      const categories = [
+        { id: 'all', name: '全部', count: 0 },
+        { id: 'image', name: '🖼️ 图片', count: 0 },
+        { id: 'music', name: '🎵 音乐', count: 0 },
+        { id: 'tts', name: '🎤 语音', count: 0 },
+        { id: 'other', name: '📦 其他', count: 0 }
+      ];
+
+      const tabContainer = document.getElementById('categoryTabs');
+      tabContainer.innerHTML = categories.map(cat => {
+        const isActive = cat.id === state.currentCategory;
+        return `<button class="category-tab ${isActive ? 'active' : ''}" data-category="${cat.id}">${cat.name}</button>`;
+      }).join('');
+
+      // Add click handlers
+      tabContainer.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          state.currentCategory = this.dataset.category;
+          loadCategories();
+          loadTemplates();
+        });
+      });
+    }
+
+    function loadTemplates() {
+      const filter = {
+        category: state.currentCategory,
+        search: state.searchKeyword,
+        sort: state.currentSort
+      };
+
+      if (window.MarketService) {
+        state.templates = window.MarketService.getTemplates(filter);
+      } else {
+        console.warn('MarketService not loaded');
+        state.templates = [];
+      }
+
+      renderTemplates();
+    }
+
+    function renderTemplates() {
+      const grid = document.getElementById('templateGrid');
+      const emptyState = document.getElementById('emptyState');
+      const loading = document.getElementById('loading');
+
+      loading.style.display = 'none';
+
+      if (state.templates.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      grid.style.display = 'grid';
+      emptyState.style.display = 'none';
+
+      grid.innerHTML = state.templates.map(tpl => `
+        <div class="template-card" onclick="onTemplateTap('${tpl.id}')">
+          <div class="template-cover" style="background: ${tpl.coverGradient}">
+            <span class="template-cover-icon">${tpl.icon}</span>
+            <span class="template-cover-text">${tpl.category === 'image' ? '图片' : tpl.category === 'music' ? '音乐' : tpl.category === 'tts' ? '语音' : '其他'}</span>
+            <button class="favorite-btn ${tpl.isFavorited ? 'active' : ''}" onclick="event.stopPropagation();toggleFavorite('${tpl.id}')">
+              ${tpl.isFavorited ? '❤️' : '🤍'}
+            </button>
+          </div>
+          <div class="template-info">
+            <div class="template-name">${tpl.name}</div>
+            <div class="template-author">by ${tpl.author}</div>
+            <div class="template-meta">
+              <div class="template-rating">★ ${tpl.rating.toFixed(1)}</div>
+              <div class="template-favorites">❤️ ${tpl.favorites}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function onTemplateTap(templateId) {
+      const template = state.templates.find(t => t.id === templateId);
+      if (!template) return;
+
+      // Show rating modal
+      state.currentTemplateId = templateId;
+      state.selectedRating = 0;
+      updateRatingStars(0);
+      document.getElementById('ratingModal').classList.add('show');
+    }
+
+    function toggleSort() {
+      const currentIndex = sortOptions.findIndex(s => s.id === state.currentSort);
+      const nextIndex = (currentIndex + 1) % sortOptions.length;
+      state.currentSort = sortOptions[nextIndex].id;
+      
+      document.getElementById('sortBtn').textContent = sortOptions[nextIndex].label + ' ∨';
+      loadTemplates();
+    }
+
+    function toggleFavorite(templateId) {
+      if (!window.MarketService) return;
+
+      const result = window.MarketService.favoriteTemplate(templateId);
+      if (result.success) {
+        // Update local state
+        const template = state.templates.find(t => t.id === templateId);
+        if (template) {
+          template.isFavorited = result.isFavorited;
+          template.favorites = result.favorites;
+        }
+        renderTemplates();
+        showToast(result.isFavorited ? '已收藏' : '已取消收藏', 'success');
+      }
+    }
+
+    function updateRatingStars(rating) {
+      document.querySelectorAll('.rating-star').forEach((star, index) => {
+        star.textContent = index < rating ? '★' : '☆';
+        star.classList.toggle('active', index < rating);
+      });
+    }
+
+    function submitRating() {
+      if (!state.selectedRating || !window.MarketService) {
+        showToast('请选择评分', 'warning');
+        return;
+      }
+
+      const result = window.MarketService.rateTemplate(state.currentTemplateId, state.selectedRating);
+      if (result.success) {
+        closeRatingModal();
+        loadTemplates();
+        showToast('评分成功，感谢您的反馈！', 'success');
+      }
+    }
+
+    function closeRatingModal() {
+      document.getElementById('ratingModal').classList.remove('show');
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function showToast(message, type) {
+      if (window.showToast) {
+        window.showToast(message, type);
+      } else if (window.app && window.app.showToast) {
+        window.app.showToast(message, type);
+      } else {
+        alert(message);
+      }
+    }
+  </script>
+</body>
+</html>

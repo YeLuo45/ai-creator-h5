@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工作流市场 - AI Creator H5</title>
+  <link rel="stylesheet" href="../app.css">
+  <style>
+    :root {
+      --primary: #6366F1;
+      --primary-dark: #4F46E5;
+      --bg-dark: #0F0F1A;
+      --bg-panel: #1A1A2E;
+      --bg-node: #252542;
+      --border: #333355;
+      --text: #E0E0FF;
+      --text-dim: #8888AA;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --error: #EF4444;
+      --star: #FBBF24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .marketplace-header {
+      background: linear-gradient(135deg, var(--primary), #764ba2);
+      padding: 32px 24px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+    .header-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .header-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+    }
+
+    .header-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .header-btn.primary {
+      background: white;
+      color: var(--primary);
+    }
+
+    .header-btn.secondary {
+      background: rgba(255,255,255,0.15);
+      color: white;
+    }
+
+    .header-btn:hover { opacity: 0.9; }
+
+    /* Search Bar */
+    .search-bar {
+      display: flex;
+      gap: 8px;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 40px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+    }
+
+    .search-input::placeholder { color: rgba(255,255,255,0.6); }
+    .search-input:focus { outline: none; background: rgba(255,255,255,0.2); }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Filters Bar */
+    .filters-bar {
+      padding: 16px 24px;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover { background: var(--bg-node); color: var(--text); }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    /* Category Tabs */
+    .category-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 12px 24px;
+      background: var(--bg-dark);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .category-tab {
+      padding: 6px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      color: var(--text-dim);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .category-tab:hover { border-color: var(--primary); color: var(--text); }
+    .category-tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    /* Main Content */
+    .marketplace-content {
+      padding: 16px 24px;
+    }
+
+    /* Featured Section */
+    .featured-section {
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .featured-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .featured-card {
+      flex-shrink: 0;
+      width: 280px;
+      background: var(--bg-panel);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .featured-card:hover { transform: translateY(-2px); }
+
+    .featured-cover {
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .featured-icon { font-size: 48px; margin-bottom: 8px; }
+
+    .featured-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: var(--warning);
+      color: #000;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .featured-info { padding: 12px; }
+
+    .featured-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .featured-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* Waterfall Grid */
+    .waterfall-grid {
+      column-count: 2;
+      column-gap: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .waterfall-grid { column-count: 3; }
+    }
+
+    @media (min-width: 1024px) {
+      .waterfall-grid { column-count: 4; }
+    }
+
+    .workflow-card {
+      break-inside: avoid;
+      margin-bottom: 12px;
+      background: var(--bg-panel);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .workflow-card:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .card-cover {
+      aspect-ratio: 4/3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .card-icon { font-size: 36px; }
+
+    .card-favorite {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .card-favorite:hover { background: rgba(0,0,0,0.7); }
+    .card-favorite.active { background: var(--error); }
+
+    .card-info { padding: 10px 12px; }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 28px;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .card-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      background: var(--bg-node);
+      border-radius: 4px;
+      color: var(--text-dim);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-author {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .card-stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .card-rating {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--star);
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 24px;
+    }
+
+    .page-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .page-btn:hover:not(:disabled) { background: var(--bg-node); }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .page-btn.active { background: var(--primary); border-color: var(--primary); }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+    }
+
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-text { font-size: 14px; margin-bottom: 16px; }
+
+    .empty-btn {
+      padding: 10px 20px;
+      background: var(--primary);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.visible { display: flex; }
+
+    .modal {
+      background: var(--bg-panel);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title { font-size: 18px; font-weight: 600; }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-node);
+      border: none;
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover { background: var(--border); }
+
+    .modal-body { padding: 20px; }
+
+    .form-group { margin-bottom: 16px; }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-textarea { resize: vertical; min-height: 80px; }
+
+    .form-select { cursor: pointer; }
+
+    .form-hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .form-row { display: flex; gap: 12px; }
+
+    .form-row .form-group { flex: 1; }
+
+    /* Visibility Options */
+    .visibility-options {
+      display: flex;
+      gap: 12px;
+    }
+
+    .visibility-option {
+      flex: 1;
+      padding: 12px;
+      background: var(--bg-node);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .visibility-option:hover { border-color: var(--primary); }
+    .visibility-option.active { border-color: var(--primary); background: rgba(99,102,241,0.1); }
+
+    .visibility-option .icon { font-size: 24px; margin-bottom: 4px; }
+    .visibility-option .label { font-size: 13px; }
+    .visibility-option .desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+    /* Color Picker */
+    .color-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .color-option {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .color-option:hover { transform: scale(1.1); }
+    .color-option.selected { border-color: white; }
+
+    /* Icon Picker */
+    .icon-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .icon-option {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--bg-node);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-option:hover { border-color: var(--primary); }
+    .icon-option.selected { border-color: var(--primary); background: rgba(99,102,241,0.2); }
+
+    /* Tags Input */
+    .tags-input-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      min-height: 42px;
+    }
+
+    .tags-input-wrap:focus-within { border-color: var(--primary); }
+
+    .tag-chip {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: var(--primary);
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .tag-chip-remove {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .tag-chip-remove:hover { opacity: 1; }
+
+    .tags-input {
+      flex: 1;
+      min-width: 80px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    /* Modal Footer */
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: var(--bg-node);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover { background: var(--border); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    /* Workflow Detail Modal */
+    .detail-modal .modal { max-width: 800px; }
+
+    .detail-cover {
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .detail-icon { font-size: 64px; margin-bottom: 12px; }
+
+    .detail-body { padding: 20px; }
+
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .detail-title { font-size: 20px; font-weight: 600; }
+    .detail-author { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+
+    .detail-actions { display: flex; gap: 8px; }
+
+    .detail-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .detail-btn:hover { background: var(--bg-node); }
+    .detail-btn.favorited { color: var(--error); border-color: var(--error); }
+
+    .detail-description {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .detail-tags { display: flex; gap: 6px; margin-bottom: 20px; }
+
+    .detail-tag {
+      padding: 4px 10px;
+      background: var(--bg-node);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .detail-stats {
+      display: flex;
+      gap: 20px;
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value { font-size: 18px; font-weight: 600; color: var(--primary); }
+    .stat-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+    /* Rating Stars */
+    .rating-section {
+      margin-bottom: 20px;
+    }
+
+    .rating-title {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .rating-stars {
+      display: flex;
+      gap: 4px;
+    }
+
+    .star-btn {
+      font-size: 28px;
+      background: none;
+      border: none;
+      color: var(--border);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .star-btn:hover, .star-btn.active { color: var(--star); }
+
+    .rating-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* Comments Section */
+    .comments-section {}
+
+    .comments-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .comments-title { font-size: 16px; font-weight: 600; }
+    .comments-count { font-size: 13px; color: var(--text-dim); }
+
+    .comment-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .comment-input {
+      flex: 1;
+      padding: 10px 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .comment-input:focus { outline: none; border-color: var(--primary); }
+
+    .comment-submit {
+      padding: 10px 16px;
+      background: var(--primary);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .comment-submit:hover { background: var(--primary-dark); }
+
+    .comments-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .comment-item {
+      background: var(--bg-node);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .comment-author { font-size: 13px; font-weight: 600; }
+    .comment-time { font-size: 11px; color: var(--text-dim); }
+
+    .comment-content { font-size: 14px; line-height: 1.5; margin-bottom: 8px; }
+
+    .comment-actions { display: flex; gap: 12px; }
+
+    .comment-action {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--text-dim);
+      cursor: pointer;
+    }
+
+    .comment-action:hover { color: var(--text); }
+    .comment-action.liked { color: var(--primary); }
+
+    .comment-replies {
+      margin-left: 16px;
+      margin-top: 12px;
+      padding-left: 12px;
+      border-left: 2px solid var(--border);
+    }
+
+    .reply-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .reply-input {
+      flex: 1;
+      padding: 8px 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .reply-input:focus { outline: none; border-color: var(--primary); }
+
+    .reply-btn {
+      padding: 8px 12px;
+      background: var(--primary);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-panel);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.3s;
+      border: 1px solid var(--border);
+    }
+
+    .toast.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Loading */
+    .loading {
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="marketplace-header">
+    <div class="header-top">
+      <button class="back-btn" onclick="goBack()">←</button>
+      <h1 class="header-title">⚡ 工作流市场</h1>
+      <div class="header-actions">
+        <button class="header-btn primary" onclick="openPublishModal()">发布工作流</button>
+      </div>
+    </div>
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="search-input" placeholder="搜索工作流、标签、作者..." oninput="handleSearch()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="filter-group" id="sort-filters">
+      <button class="filter-btn active" data-sort="latest" onclick="setSort('latest')">最新</button>
+      <button class="filter-btn" data-sort="popular" onclick="setSort('popular')">最热</button>
+      <button class="filter-btn" data-sort="rating" onclick="setSort('rating')">评分</button>
+      <button class="filter-btn" data-sort="editor" onclick="setSort('editor')">编辑精选</button>
+    </div>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="category-tabs" id="category-tabs"></div>
+
+  <!-- Main Content -->
+  <div class="marketplace-content">
+    <!-- Featured Section -->
+    <div class="featured-section" id="featured-section">
+      <h2 class="section-title">🏆 编辑精选</h2>
+      <div class="featured-scroll" id="featured-scroll"></div>
+    </div>
+
+    <!-- Workflow Grid -->
+    <div class="section-title">📚 所有工作流</div>
+    <div class="waterfall-grid" id="workflow-grid"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-text">没有找到符合条件的工作流</div>
+      <button class="empty-btn" onclick="resetFilters()">重置筛选</button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" id="pagination"></div>
+
+  <!-- Publish Modal -->
+  <div class="modal-overlay" id="publish-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">发布工作流到市场</h2>
+        <button class="modal-close" onclick="closePublishModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">工作流名称 *</label>
+          <input type="text" class="form-input" id="publish-name" placeholder="给工作流起个名字">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">描述</label>
+          <textarea class="form-textarea" id="publish-desc" placeholder="描述工作流的功能和用途"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">分类</label>
+            <select class="form-select" id="publish-category">
+              <option value="image">图像</option>
+              <option value="video">视频</option>
+              <option value="music">音乐</option>
+              <option value="chat">对话</option>
+              <option value="data">数据</option>
+              <option value="text">文本</option>
+              <option value="utility">工具</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">标签</label>
+            <select class="form-select" id="publish-tag">
+              <option value="">选择标签</option>
+              <option value="creation">创作</option>
+              <option value="automation">自动化</option>
+              <option value="ai">AI</option>
+              <option value="data">数据处理</option>
+              <option value="media">媒体</option>
+              <option value="utility">工具</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">封面颜色</label>
+          <div class="color-options" id="color-options">
+            <div class="color-option selected" data-color="linear-gradient(135deg, #667eea, #764ba2)" style="background:#667eea" onclick="selectColor(this)"></div>
+            <div class="color-option" data-color="linear-gradient(135deg, #4facfe, #00f2fe)" style="background:#4facfe" onclick="selectColor(this)"></div>
+            <div class="color-option" data-color="linear-gradient(135deg, #fa709a, #fee140)" style="background:#fa709a" onclick="selectColor(this)"></div>
+            <div class="color-option" data-color="linear-gradient(135deg, #a8edea, #fed6e3)" style="background:#a8edea" onclick="selectColor(this)"></div>
+            <div class="color-option" data-color="linear-gradient(135deg, #5ee7df, #b490ca)" style="background:#5ee7df" onclick="selectColor(this)"></div>
+            <div class="color-option" data-color="linear-gradient(135deg, #f5af19, #f12711)" style="background:#f5af19" onclick="selectColor(this)"></div>
+            <div class="color-option" data-color="linear-gradient(135deg, #d4fc79, #96e6a1)" style="background:#d4fc79" onclick="selectColor(this)"></div>
+            <div class="color-option" data-color="linear-gradient(135deg, #e0c3fc, #8ec5fc)" style="background:#e0c3fc" onclick="selectColor(this)"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">图标</label>
+          <div class="icon-options" id="icon-options">
+            <div class="icon-option selected" data-icon="⚡" onclick="selectIcon(this)">⚡</div>
+            <div class="icon-option" data-icon="🎨" onclick="selectIcon(this)">🎨</div>
+            <div class="icon-option" data-icon="💬" onclick="selectIcon(this)">💬</div>
+            <div class="icon-option" data-icon="🎵" onclick="selectIcon(this)">🎵</div>
+            <div class="icon-option" data-icon="🎬" onclick="selectIcon(this)">🎬</div>
+            <div class="icon-option" data-icon="📝" onclick="selectIcon(this)">📝</div>
+            <div class="icon-option" data-icon="⚙️" onclick="selectIcon(this)">⚙️</div>
+            <div class="icon-option" data-icon="🚀" onclick="selectIcon(this)">🚀</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">可见性</label>
+          <div class="visibility-options">
+            <div class="visibility-option active" data-visibility="public" onclick="selectVisibility(this)">
+              <div class="icon">🌐</div>
+              <div class="label">公开</div>
+              <div class="desc">所有人可见</div>
+            </div>
+            <div class="visibility-option" data-visibility="private" onclick="selectVisibility(this)">
+              <div class="icon">🔒</div>
+              <div class="label">私有</div>
+              <div class="desc">仅自己可见</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">选择要发布的工作流</label>
+          <select class="form-select" id="publish-workflow-select">
+            <option value="">-- 选择工作流 --</option>
+          </select>
+          <div class="form-hint">从您的本地工作流中选择发布到市场</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closePublishModal()">取消</button>
+        <button class="btn btn-primary" onclick="publishWorkflow()">发布</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay detail-modal" id="detail-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="detail-title">工作流详情</h2>
+        <button class="modal-close" onclick="closeDetailModal()">×</button>
+      </div>
+      <div class="detail-cover" id="detail-cover">
+        <div class="detail-icon" id="detail-icon">⚡</div>
+      </div>
+      <div class="detail-body">
+        <div class="detail-header">
+          <div>
+            <div class="detail-title" id="detail-name"></div>
+            <div class="detail-author" id="detail-author"></div>
+          </div>
+          <div class="detail-actions">
+            <button class="detail-btn" id="detail-fav-btn" onclick="toggleDetailFavorite()">
+              <span id="detail-fav-icon">🤍</span> 收藏
+            </button>
+            <button class="detail-btn primary" id="detail-use-btn" onclick="useWorkflow()">
+              使用此工作流
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-description" id="detail-desc"></div>
+
+        <div class="detail-tags" id="detail-tags"></div>
+
+        <div class="detail-stats">
+          <div class="stat-item">
+            <div class="stat-value" id="detail-rating">0.0</div>
+            <div class="stat-label">评分</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="detail-rating-count">0</div>
+            <div class="stat-label">评价数</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="detail-favorites">0</div>
+            <div class="stat-label">收藏</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="detail-views">0</div>
+            <div class="stat-label">浏览</div>
+          </div>
+        </div>
+
+        <!-- Rating Section -->
+        <div class="rating-section">
+          <div class="rating-title">为工作流评分</div>
+          <div class="rating-stars" id="rating-stars">
+            <button class="star-btn" data-rating="1" onclick="rateWorkflow(1)">★</button>
+            <button class="star-btn" data-rating="2" onclick="rateWorkflow(2)">★</button>
+            <button class="star-btn" data-rating="3" onclick="rateWorkflow(3)">★</button>
+            <button class="star-btn" data-rating="4" onclick="rateWorkflow(4)">★</button>
+            <button class="star-btn" data-rating="5" onclick="rateWorkflow(5)">★</button>
+          </div>
+          <div class="rating-info">
+            <span id="rating-display">点击星星评分</span>
+            <span id="rating-count-info"></span>
+          </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+          <div class="comments-header">
+            <div class="comments-title">评论</div>
+            <div class="comments-count" id="comments-count">0 条评论</div>
+          </div>
+
+          <div class="comment-form">
+            <input type="text" class="comment-input" id="comment-input" placeholder="写下你的评论...">
+            <button class="comment-submit" onclick="submitComment()">发送</button>
+          </div>
+
+          <div class="comments-list" id="comments-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="../services/workflowMarketService.js"></script>
+  <script src="../services/workflowListManager.js"></script>
+  <script src="../services/workflowStorage.js"></script>
+  <script>
+    // State
+    const state = {
+      currentSort: 'latest',
+      currentCategory: 'all',
+      currentPage: 1,
+      searchQuery: '',
+      selectedWorkflow: null,
+      detailWorkflow: null,
+      selectedColor: 'linear-gradient(135deg, #667eea, #764ba2)',
+      selectedIcon: '⚡',
+      selectedVisibility: 'public'
+    };
+
+    // Initialize
+    function init() {
+      renderCategories();
+      renderFeatured();
+      loadWorkflows();
+      loadWorkflowSelect();
+      setupRatingStars();
+    }
+
+    // Go back
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Render category tabs
+    function renderCategories() {
+      const categories = WorkflowMarketService.getCategories();
+      const container = document.getElementById('category-tabs');
+      let html = '';
+      categories.forEach(cat => {
+        const active = cat.id === state.currentCategory ? 'active' : '';
+        html += `<button class="category-tab ${active}" onclick="setCategory('${cat.id}')">${cat.name} (${cat.count})</button>`;
+      });
+      container.innerHTML = html;
+    }
+
+    // Set category filter
+    function setCategory(category) {
+      state.currentCategory = category;
+      state.currentPage = 1;
+      renderCategories();
+      loadWorkflows();
+    }
+
+    // Set sort
+    function setSort(sort) {
+      state.currentSort = sort;
+      document.querySelectorAll('#sort-filters .filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === sort);
+      });
+      state.currentPage = 1;
+      loadWorkflows();
+    }
+
+    // Handle search
+    let searchTimeout;
+    function handleSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        state.searchQuery = document.getElementById('search-input').value.trim();
+        state.currentPage = 1;
+        loadWorkflows();
+      }, 300);
+    }
+
+    // Reset filters
+    function resetFilters() {
+      state.currentSort = 'latest';
+      state.currentCategory = 'all';
+      state.searchQuery = '';
+      state.currentPage = 1;
+      document.getElementById('search-input').value = '';
+      renderCategories();
+      document.querySelectorAll('#sort-filters .filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === 'latest');
+      });
+      loadWorkflows();
+    }
+
+    // Load workflows
+    function loadWorkflows() {
+      const result = WorkflowMarketService.getWorkflows({
+        sort: state.currentSort,
+        category: state.currentCategory,
+        search: state.searchQuery,
+        page: state.currentPage,
+        pageSize: 12
+      });
+
+      renderWorkflowGrid(result.workflows);
+      renderPagination(result.page, result.totalPages);
+      
+      document.getElementById('empty-state').style.display = result.workflows.length === 0 ? 'block' : 'none';
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    // Render featured workflows
+    function renderFeatured() {
+      const featured = WorkflowMarketService.getFeaturedWorkflows(5);
+      const container = document.getElementById('featured-scroll');
+      
+      if (featured.length === 0) {
+        document.getElementById('featured-section').style.display = 'none';
+        return;
+      }
+
+      let html = '';
+      featured.forEach(w => {
+        html += `
+          <div class="featured-card" onclick="openDetail('${w.id}')">
+            <div class="featured-cover" style="background: ${w.coverGradient}">
+              <div class="featured-badge">编辑精选</div>
+              <div class="featured-icon">${w.icon}</div>
+            </div>
+            <div class="featured-info">
+              <div class="featured-name">${escHtml(w.name)}</div>
+              <div class="featured-meta">
+                <span>⭐ ${w.rating.toFixed(1)}</span>
+                <span>·</span>
+                <span>${w.favorites} 收藏</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // Render workflow grid (waterfall)
+    function renderWorkflowGrid(workflows) {
+      const container = document.getElementById('workflow-grid');
+      let html = '';
+      workflows.forEach(w => {
+        const isFav = WorkflowMarketService.isFavorited(w.id);
+        const tags = (w.tags || []).slice(0, 2).map(t => `<span class="card-tag">${t}</span>`).join('');
+        html += `
+          <div class="workflow-card" onclick="openDetail('${w.id}')">
+            <div class="card-cover" style="background: ${w.coverGradient}">
+              <div class="card-icon">${w.icon}</div>
+              <button class="card-favorite ${isFav ? 'active' : ''}" onclick="event.stopPropagation();toggleFavorite('${w.id}')">
+                ${isFav ? '❤️' : '🤍'}
+              </button>
+            </div>
+            <div class="card-info">
+              <div class="card-name">${escHtml(w.name)}</div>
+              <div class="card-desc">${escHtml(w.description || '')}</div>
+              <div class="card-tags">${tags}</div>
+              <div class="card-footer">
+                <div class="card-author">${escHtml(w.author)}</div>
+                <div class="card-stats">
+                  <div class="card-rating">⭐ ${w.rating.toFixed(1)}</div>
+                  <span>❤️ ${w.favorites}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // Render pagination
+    function renderPagination(currentPage, totalPages) {
+      const container = document.getElementById('pagination');
+      if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+      }
+
+      let html = '';
+      html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+      
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+          html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+        } else if (i === currentPage - 3 || i === currentPage + 3) {
+          html += `<span style="color:var(--text-dim)">...</span>`;
+        }
+      }
+      
+      html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+      container.innerHTML = html;
+    }
+
+    // Go to page
+    function goToPage(page) {
+      state.currentPage = page;
+      loadWorkflows();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Toggle favorite
+    function toggleFavorite(id) {
+      const result = WorkflowMarketService.toggleFavorite(id);
+      if (result.success) {
+        showToast(result.isFavorited ? '已收藏' : '已取消收藏');
+        loadWorkflows();
+        renderFeatured();
+        if (state.detailWorkflow && state.detailWorkflow.id === id) {
+          updateDetailFavorite(result.isFavorited, result.favorites);
+        }
+      }
+    }
+
+    // Open detail modal
+    function openDetail(id) {
+      const workflow = WorkflowMarketService.getWorkflowById(id);
+      if (!workflow) {
+        showToast('工作流不存在');
+        return;
+      }
+
+      state.detailWorkflow = workflow;
+      WorkflowMarketService.incrementViews(id);
+
+      // Update UI
+      document.getElementById('detail-title').textContent = workflow.name;
+      document.getElementById('detail-cover').style.background = workflow.coverGradient;
+      document.getElementById('detail-icon').textContent = workflow.icon;
+      document.getElementById('detail-name').textContent = workflow.name;
+      document.getElementById('detail-author').textContent = '作者: ' + workflow.author;
+      document.getElementById('detail-desc').textContent = workflow.description || '暂无描述';
+      document.getElementById('detail-rating').textContent = workflow.rating.toFixed(1);
+      document.getElementById('detail-rating-count').textContent = workflow.ratingCount;
+      document.getElementById('detail-favorites').textContent = workflow.favorites;
+      document.getElementById('detail-views').textContent = workflow.views;
+
+      // Tags
+      const tagsContainer = document.getElementById('detail-tags');
+      tagsContainer.innerHTML = (workflow.tags || []).map(t => `<span class="detail-tag">${t}</span>`).join('');
+
+      // Favorite button
+      updateDetailFavorite(WorkflowMarketService.isFavorited(id), workflow.favorites);
+
+      // Load comments
+      loadComments(id);
+
+      document.getElementById('detail-modal').classList.add('visible');
+    }
+
+    // Update detail favorite button
+    function updateDetailFavorite(isFavorited, favCount) {
+      const btn = document.getElementById('detail-fav-btn');
+      const icon = document.getElementById('detail-fav-icon');
+      btn.classList.toggle('favorited', isFavorited);
+      icon.textContent = isFavorited ? '❤️' : '🤍';
+      document.getElementById('detail-favorites').textContent = favCount;
+    }
+
+    // Close detail modal
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.remove('visible');
+      state.detailWorkflow = null;
+    }
+
+    // Setup rating stars
+    function setupRatingStars() {
+      const stars = document.querySelectorAll('#rating-stars .star-btn');
+      stars.forEach(star => {
+        star.addEventListener('mouseenter', function() {
+          const rating = parseInt(this.dataset.rating);
+          highlightStars(rating);
+        });
+        star.addEventListener('mouseleave', function() {
+          const currentRating = parseInt(this.dataset.rating);
+          highlightStars(0);
+        });
+      });
+    }
+
+    // Highlight stars
+    function highlightStars(rating) {
+      const stars = document.querySelectorAll('#rating-stars .star-btn');
+      stars.forEach((star, index) => {
+        star.classList.toggle('active', index < rating);
+      });
+    }
+
+    // Rate workflow
+    function rateWorkflow(rating) {
+      if (!state.detailWorkflow) return;
+      
+      const result = WorkflowMarketService.rateWorkflow(state.detailWorkflow.id, rating);
+      if (result.success) {
+        document.getElementById('detail-rating').textContent = result.newRating.toFixed(1);
+        document.getElementById('detail-rating-count').textContent = result.newRatingCount;
+        document.getElementById('rating-display').textContent = `你给出了 ${rating} 星`;
+        showToast('评分成功');
+        highlightStars(rating);
+        
+        // Update state
+        state.detailWorkflow.rating = result.newRating;
+        state.detailWorkflow.ratingCount = result.newRatingCount;
+      }
+    }
+
+    // Load comments
+    function loadComments(workflowId) {
+      const comments = WorkflowMarketService.getComments(workflowId);
+      const container = document.getElementById('comments-list');
+      document.getElementById('comments-count').textContent = `${comments.length} 条评论`;
+
+      if (comments.length === 0) {
+        container.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:20px;">暂无评论，快来抢沙发</div>';
+        return;
+      }
+
+      let html = '';
+      comments.forEach(c => {
+        const isLiked = c.likedBy && c.likedBy['user'];
+        html += `
+          <div class="comment-item">
+            <div class="comment-header">
+              <span class="comment-author">${escHtml(c.author)}</span>
+              <span class="comment-time">${WorkflowMarketService.formatRelativeTime(c.timestamp)}</span>
+            </div>
+            <div class="comment-content">${escHtml(c.content)}</div>
+            <div class="comment-actions">
+              <span class="comment-action ${isLiked ? 'liked' : ''}" onclick="toggleCommentLike('${c.id}')">
+                ${isLiked ? '❤️' : '🤍'} ${c.likes || 0}
+              </span>
+              <span class="comment-action" onclick="showReplyForm('${c.id}')">回复</span>
+            </div>
+            <div id="reply-form-${c.id}" style="display:none;" class="reply-form">
+              <input type="text" class="reply-input" placeholder="写下你的回复..." id="reply-input-${c.id}">
+              <button class="reply-btn" onclick="submitReply('${c.id}')">回复</button>
+            </div>
+            ${renderReplies(c)}
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // Render replies
+    function renderReplies(comment) {
+      if (!comment.replies || comment.replies.length === 0) return '';
+      
+      let html = '<div class="comment-replies">';
+      comment.replies.forEach(r => {
+        html += `
+          <div class="comment-item" style="background:var(--bg-dark)">
+            <div class="comment-header">
+              <span class="comment-author">${escHtml(r.author)}</span>
+              <span class="comment-time">${WorkflowMarketService.formatRelativeTime(r.timestamp)}</span>
+            </div>
+            <div class="comment-content">${escHtml(r.content)}</div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      return html;
+    }
+
+    // Submit comment
+    function submitComment() {
+      if (!state.detailWorkflow) return;
+      const input = document.getElementById('comment-input');
+      const content = input.value.trim();
+      if (!content) {
+        showToast('评论不能为空');
+        return;
+      }
+
+      const result = WorkflowMarketService.addComment(state.detailWorkflow.id, content);
+      if (result.success) {
+        input.value = '';
+        loadComments(state.detailWorkflow.id);
+        showToast('评论成功');
+      }
+    }
+
+    // Show reply form
+    function showReplyForm(commentId) {
+      const form = document.getElementById(`reply-form-${commentId}`);
+      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    // Submit reply
+    function submitReply(commentId) {
+      if (!state.detailWorkflow) return;
+      const input = document.getElementById(`reply-input-${commentId}`);
+      const content = input.value.trim();
+      if (!content) {
+        showToast('回复不能为空');
+        return;
+      }
+
+      const result = WorkflowMarketService.replyToComment(state.detailWorkflow.id, commentId, content);
+      if (result.success) {
+        loadComments(state.detailWorkflow.id);
+        showToast('回复成功');
+      }
+    }
+
+    // Toggle comment like
+    function toggleCommentLike(commentId) {
+      if (!state.detailWorkflow) return;
+      const result = WorkflowMarketService.toggleCommentLike(state.detailWorkflow.id, commentId);
+      if (result.success) {
+        loadComments(state.detailWorkflow.id);
+      }
+    }
+
+    // Toggle detail favorite
+    function toggleDetailFavorite() {
+      if (!state.detailWorkflow) return;
+      toggleFavorite(state.detailWorkflow.id);
+    }
+
+    // Use workflow
+    function useWorkflow() {
+      if (!state.detailWorkflow) return;
+      
+      if (state.detailWorkflow.workflowData) {
+        // Load the workflow into editor
+        try {
+          const workflowData = typeof state.detailWorkflow.workflowData === 'string' 
+            ? JSON.parse(state.detailWorkflow.workflowData) 
+            : state.detailWorkflow.workflowData;
+          
+          // Store in session and navigate
+          sessionStorage.setItem('load_workflow', JSON.stringify(workflowData));
+          window.location.href = 'workflow.html';
+        } catch (e) {
+          showToast('工作流数据加载失败');
+        }
+      } else {
+        showToast('此工作流不包含可加载的数据');
+      }
+    }
+
+    // ========== Publish Modal ==========
+
+    // Open publish modal
+    function openPublishModal() {
+      loadWorkflowSelect();
+      document.getElementById('publish-modal').classList.add('visible');
+    }
+
+    // Close publish modal
+    function closePublishModal() {
+      document.getElementById('publish-modal').classList.remove('visible');
+    }
+
+    // Load workflow select
+    async function loadWorkflowSelect() {
+      const select = document.getElementById('publish-workflow-select');
+      try {
+        const workflows = await WorkflowListManager.getAllWorkflowsWithMeta();
+        let html = '<option value="">-- 选择工作流 --</option>';
+        workflows.forEach(w => {
+          html += `<option value="${w.id}">${w.name} (${w.nodes?.length || 0} 节点)</option>`;
+        });
+        select.innerHTML = html;
+      } catch (e) {
+        console.error('Failed to load workflows:', e);
+      }
+    }
+
+    // Select color
+    function selectColor(el) {
+      document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      state.selectedColor = el.dataset.color;
+    }
+
+    // Select icon
+    function selectIcon(el) {
+      document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      state.selectedIcon = el.dataset.icon;
+    }
+
+    // Select visibility
+    function selectVisibility(el) {
+      document.querySelectorAll('.visibility-option').forEach(opt => opt.classList.remove('active'));
+      el.classList.add('active');
+      state.selectedVisibility = el.dataset.visibility;
+    }
+
+    // Publish workflow
+    async function publishWorkflow() {
+      const name = document.getElementById('publish-name').value.trim();
+      const desc = document.getElementById('publish-desc').value.trim();
+      const category = document.getElementById('publish-category').value;
+      const tag = document.getElementById('publish-tag').value;
+      const workflowId = document.getElementById('publish-workflow-select').value;
+
+      if (!name) {
+        showToast('请输入工作流名称');
+        return;
+      }
+
+      let workflowData = null;
+      if (workflowId) {
+        // Load the workflow data
+        try {
+          workflowData = await WorkflowStorage.load(workflowId);
+        } catch (e) {
+          console.error('Failed to load workflow:', e);
+        }
+      }
+
+      const result = WorkflowMarketService.publishWorkflow({
+        name: name,
+        description: desc,
+        category: category,
+        tags: tag ? [tag] : [],
+        visibility: state.selectedVisibility,
+        coverGradient: state.selectedColor,
+        icon: state.selectedIcon
+      }, workflowData);
+
+      if (result.success) {
+        showToast('发布成功');
+        closePublishModal();
+        loadWorkflows();
+        renderFeatured();
+        
+        // Reset form
+        document.getElementById('publish-name').value = '';
+        document.getElementById('publish-desc').value = '';
+        document.getElementById('publish-tag').value = '';
+        document.getElementById('publish-workflow-select').value = '';
+      } else {
+        showToast('发布失败: ' + (result.error || '未知错误'));
+      }
+    }
+
+    // Show toast
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 2000);
+    }
+
+    // Escape HTML
+    function escHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Init on load
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

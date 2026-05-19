@@ -1,0 +1,53 @@
+{
+  "name": "AI Creator H5",
+  "short_name": "AI创作",
+  "description": "AI图片、AI音乐、AI语音一站式创作平台 - 支持离线编辑",
+  "start_url": "/pages/workflow.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0F0F1A",
+  "theme_color": "#6366F1",
+  "lang": "zh-CN",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "label": "工作流编辑器"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "新建工作流",
+      "short_name": "新建",
+      "description": "创建新的AI工作流",
+      "url": "/pages/workflow.html?action=new",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "我的工作流",
+      "short_name": "我的",
+      "description": "查看我的工作流列表",
+      "url": "/pages/workflow.html?view=list",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
