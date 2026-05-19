@@ -6286,6 +6286,252 @@
     /* ========== v29 Performance Dashboard CSS ========== */
     .toolbar-btn.perf-btn { border-color: var(--success); color: var(--success); }
 
+    /* ========== v30 AI Self-Evolution CSS ========== */
+    .toolbar-btn.evolution-btn { border-color: var(--primary); color: var(--primary); }
+    .toolbar-btn.evolution-btn:hover { background: rgba(99,102,241,0.1); }
+
+    /* Evolution Control Panel */
+    .evolution-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 950px;
+      max-height: 88vh;
+      z-index: 1006;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .evolution-panel.active { display: block; }
+    .evolution-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .evolution-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .evolution-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .evolution-close:hover { color: var(--text); }
+    .evolution-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .evolution-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .evolution-tab:hover { color: var(--text); }
+    .evolution-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    .evolution-content {
+      padding: 16px 20px;
+      max-height: calc(88vh - 130px);
+      overflow-y: auto;
+    }
+    .evolution-section {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .evolution-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .evolution-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .evolution-metric-card {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .evolution-metric-icon { font-size: 20px; margin-bottom: 6px; }
+    .evolution-metric-value { font-size: 20px; font-weight: 700; color: var(--text); }
+    .evolution-metric-label { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+    .evolution-metric-card.warning .evolution-metric-value { color: var(--warning); }
+    .evolution-metric-card.danger .evolution-metric-value { color: var(--error); }
+    .evolution-metric-card.success .evolution-metric-value { color: var(--success); }
+    .evolution-progress-bar {
+      height: 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .evolution-progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+    .evolution-progress-fill.success { background: var(--success); }
+    .evolution-progress-fill.warning { background: var(--warning); }
+    .evolution-list { display: flex; flex-direction: column; gap: 8px; }
+    .evolution-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      border-left: 3px solid var(--primary);
+    }
+    .evolution-item-icon { font-size: 16px; }
+    .evolution-item-content { flex: 1; }
+    .evolution-item-title { font-size: 13px; font-weight: 500; color: var(--text); }
+    .evolution-item-desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+    .evolution-item-status { font-size: 11px; padding: 3px 8px; border-radius: 4px; }
+    .evolution-status-active { background: rgba(16,185,129,0.2); color: var(--success); }
+    .evolution-status-pending { background: rgba(245,158,11,0.2); color: var(--warning); }
+    .evolution-status-idle { background: rgba(100,100,120,0.2); color: var(--text-dim); }
+    .evolution-btn-small {
+      padding: 6px 12px;
+      background: var(--primary);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .evolution-btn-small:hover { background: var(--primary-dark); }
+    .evolution-btn-small:disabled { opacity: 0.5; cursor: not-allowed; }
+    .evolution-chart-container {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .evolution-chart-title { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+    .evolution-chart-canvas { width: 100%; height: 120px; }
+    .evolution-form-group { margin-bottom: 12px; }
+    .evolution-form-label { font-size: 12px; color: var(--text-dim); margin-bottom: 6px; display: block; }
+    .evolution-form-input {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+    }
+    .evolution-form-input:focus { outline: none; border-color: var(--primary); }
+    .evolution-form-select {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+    }
+    .evolution-form-row { display: flex; gap: 12px; }
+    .evolution-form-row > div { flex: 1; }
+    .evolution-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .evolution-toggle-label { font-size: 13px; color: var(--text); }
+    .evolution-toggle-desc { font-size: 11px; color: var(--text-dim); }
+    .evolution-toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--bg-dark);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .evolution-toggle.active { background: var(--primary); }
+    .evolution-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .evolution-toggle.active::after { transform: translateX(20px); }
+    .evolution-changelog {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .evolution-changelog-item {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .evolution-changelog-item:last-child { border-bottom: none; }
+    .evolution-changelog-version {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .evolution-changelog-date { font-size: 10px; color: var(--text-dim); }
+    .evolution-changelog-desc { font-size: 12px; color: var(--text); margin-top: 6px; }
+    .evolution-knowledge-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .evolution-knowledge-type { font-size: 14px; }
+    .evolution-knowledge-label { flex: 1; color: var(--text); }
+    .evolution-knowledge-count { color: var(--text-dim); font-size: 10px; }
+
     /* Performance Dashboard Panel */
     .perf-dashboard {
       display: none;
@@ -7760,6 +8006,7 @@
       <button class="toolbar-btn" id="btn-knowledge" title="知识图谱" onclick="toggleKnowledgePanel()">🕸️ 知识</button>
       <button class="toolbar-btn collab-btn" id="btn-collab" title="实时协作" onclick="toggleCollabPanel()">🤝 协作</button>
       <button class="toolbar-btn perf-btn" id="btn-perf" title="性能监控" onclick="togglePerfDashboard()">📡 性能</button>
+      <button class="toolbar-btn evolution-btn" id="btn-evolution" title="AI自我进化" onclick="toggleEvolutionPanel()">🧬 进化</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -8649,6 +8896,26 @@
       <button class="perf-tab" data-tab="optimization" onclick="PerfDashboard.switchTab('optimization')">💡 优化</button>
     </div>
     <div class="perf-content" id="perf-content">
+      <!-- Content will be dynamically loaded -->
+    </div>
+  </div>
+
+  <!-- Evolution Control Panel v30 -->
+  <div class="evolution-panel" id="evolution-panel">
+    <div class="evolution-header">
+      <div class="evolution-title">
+        <span>🧬</span>
+        <span>AI 自我进化中心</span>
+      </div>
+      <button class="evolution-close" onclick="toggleEvolutionPanel()">×</button>
+    </div>
+    <div class="evolution-tabs">
+      <button class="evolution-tab active" data-tab="status" onclick="EvolutionPanel.switchTab('status')">📊 进化状态</button>
+      <button class="evolution-tab" data-tab="learning" onclick="EvolutionPanel.switchTab('learning')">📚 持续学习</button>
+      <button class="evolution-tab" data-tab="model" onclick="EvolutionPanel.switchTab('model')">🤖 模型管理</button>
+      <button class="evolution-tab" data-tab="settings" onclick="EvolutionPanel.switchTab('settings')">⚙️ 更新设置</button>
+    </div>
+    <div class="evolution-content" id="evolution-content">
       <!-- Content will be dynamically loaded -->
     </div>
   </div>
@@ -20770,7 +21037,1065 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ============ End v28 Real-Time Collaboration ============
 
+// ============ v30 AI Self-Evolution System ============
+
+// Evolution State Manager
+const EvolutionState = {
+  isActive: false,
+  currentPhase: 'idle', // idle, assessing, planning, evolving, validating
+  evolutionLevel: 1,
+  experiencePoints: 0,
+  nextLevelXP: 1000,
+  metrics: {
+    performance: 0,
+    accuracy: 0,
+    efficiency: 0,
+    adaptability: 0
+  },
+  trends: {
+    performance: [],
+    accuracy: [],
+    efficiency: []
+  },
+  goals: [],
+  strategies: []
+};
+
+// Self-Assessment Mechanism
+const SelfAssessment = {
+  metrics: [],
+  
+  async assess() {
+    const assessment = {
+      timestamp: Date.now(),
+      performance: this.measurePerformance(),
+      accuracy: this.measureAccuracy(),
+      efficiency: this.measureEfficiency(),
+      adaptability: this.measureAdaptability()
+    };
+    this.metrics.push(assessment);
+    if (this.metrics.length > 100) this.metrics.shift();
+    
+    // Update trends
+    EvolutionState.trends.performance.push({ time: Date.now(), value: assessment.performance });
+    EvolutionState.trends.accuracy.push({ time: Date.now(), value: assessment.accuracy });
+    EvolutionState.trends.efficiency.push({ time: Date.now(), value: assessment.efficiency });
+    
+    if (EvolutionState.trends.performance.length > 50) EvolutionState.trends.performance.shift();
+    if (EvolutionState.trends.accuracy.length > 50) EvolutionState.trends.accuracy.shift();
+    if (EvolutionState.trends.efficiency.length > 50) EvolutionState.trends.efficiency.shift();
+    
+    // Update current metrics
+    EvolutionState.metrics = {
+      performance: assessment.performance,
+      accuracy: assessment.accuracy,
+      efficiency: assessment.efficiency,
+      adaptability: assessment.adaptability
+    };
+    
+    return assessment;
+  },
+  
+  measurePerformance() {
+    const fps = PerfMonitor.getFPS();
+    const mem = PerfMonitor.getMemory();
+    const score = Math.min(100, (fps / 60) * 50 + (1 - mem.used / mem.total) * 50);
+    return Math.round(score);
+  },
+  
+  measureAccuracy() {
+    // Simulated accuracy based on successful operations
+    const total = ContinuousLearning.learningHistory.length;
+    if (total === 0) return 70;
+    const successful = ContinuousLearning.learningHistory.filter(h => h.outcome === 'success').length;
+    return Math.round((successful / total) * 100);
+  },
+  
+  measureEfficiency() {
+    // Based on module load times and cache hit rate
+    const avgLoad = PerfMonitor.getAvgLoadTime ? PerfMonitor.getAvgLoadTime() : 50;
+    return Math.max(0, Math.round(100 - avgLoad / 5));
+  },
+  
+  measureAdaptability() {
+    // Based on successful adaptations
+    const total = AdaptationEngine.adaptations.length;
+    if (total === 0) return 60;
+    const successful = AdaptationEngine.adaptations.filter(a => a.success).length;
+    return Math.round((successful / total) * 100);
+  },
+  
+  getTrend(dimension) {
+    const trend = EvolutionState.trends[dimension];
+    if (trend.length < 5) return 'stable';
+    const recent = trend.slice(-5);
+    const first = recent[0].value;
+    const last = recent[recent.length - 1].value;
+    const delta = last - first;
+    if (delta > 5) return 'improving';
+    if (delta < -5) return 'declining';
+    return 'stable';
+  },
+  
+  generateReport() {
+    return {
+      overall: Math.round((this.metrics.performance + this.metrics.accuracy + this.metrics.efficiency + this.metrics.adaptability) / 4),
+      performance: { value: this.metrics.performance, trend: this.getTrend('performance') },
+      accuracy: { value: this.metrics.accuracy, trend: this.getTrend('accuracy') },
+      efficiency: { value: this.metrics.efficiency, trend: this.getTrend('efficiency') },
+      adaptability: { value: this.metrics.adaptability, trend: this.getTrend('adaptability') }
+    };
+  }
+};
+
+// Performance Trend Analysis
+const TrendAnalysis = {
+  analyze() {
+    const analysis = {
+      patterns: this.detectPatterns(),
+      predictions: this.predictFuture(),
+      recommendations: this.getRecommendations()
+    };
+    return analysis;
+  },
+  
+  detectPatterns() {
+    const patterns = [];
+    const perfTrend = SelfAssessment.getTrend('performance');
+    const accTrend = SelfAssessment.getTrend('accuracy');
+    const effTrend = SelfAssessment.getTrend('efficiency');
+    
+    if (perfTrend === 'declining') patterns.push({ type: 'performance_decline', severity: 'high', description: '性能呈现下降趋势' });
+    if (accTrend === 'improving' && effTrend === 'improving') patterns.push({ type: 'concurrent_improvement', severity: 'low', description: '准确率和效率同步提升' });
+    if (SelfAssessment.metrics.length > 20) {
+      const variance = this.calculateVariance(SelfAssessment.metrics.slice(-20).map(m => m.performance));
+      if (variance > 100) patterns.push({ type: 'high_variance', severity: 'medium', description: '性能波动较大' });
+    }
+    return patterns;
+  },
+  
+  calculateVariance(values) {
+    const mean = values.reduce((a, b) => a + b, 0) / values.length;
+    return values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
+  },
+  
+  predictFuture() {
+    const predictions = [];
+    // Simple linear projection
+    if (EvolutionState.trends.performance.length >= 5) {
+      const recent = EvolutionState.trends.performance.slice(-5);
+      const avgDelta = (recent[recent.length - 1].value - recent[0].value) / 4;
+      predictions.push({
+        dimension: 'performance',
+        predicted: Math.max(0, Math.min(100, recent[recent.length - 1].value + avgDelta * 3)),
+        confidence: 0.7
+      });
+    }
+    return predictions;
+  },
+  
+  getRecommendations() {
+    const recommendations = [];
+    const perf = EvolutionState.metrics.performance;
+    if (perf < 60) recommendations.push({ action: 'optimize_performance', priority: 'high', description: '优化性能表现' });
+    if (SelfAssessment.getTrend('performance') === 'declining') recommendations.push({ action: 'investigate_decline', priority: 'high', description: '调查性能下降原因' });
+    return recommendations;
+  }
+};
+
+// Evolution Goals Manager
+const EvolutionGoals = {
+  goals: [],
+  
+  addGoal(title, targetDimension, targetValue, deadline) {
+    const goal = {
+      id: 'goal_' + Date.now(),
+      title,
+      targetDimension,
+      targetValue,
+      deadline,
+      progress: 0,
+      status: 'active',
+      createdAt: Date.now()
+    };
+    this.goals.push(goal);
+    EvolutionState.goals = this.goals;
+    this.saveToStorage();
+    return goal;
+  },
+  
+  updateGoalProgress(goalId, progress) {
+    const goal = this.goals.find(g => g.id === goalId);
+    if (goal) {
+      goal.progress = Math.min(100, Math.max(0, progress));
+      if (goal.progress >= 100) goal.status = 'completed';
+      this.saveToStorage();
+    }
+  },
+  
+  getActiveGoals() {
+    return this.goals.filter(g => g.status === 'active');
+  },
+  
+  removeGoal(goalId) {
+    this.goals = this.goals.filter(g => g.id !== goalId);
+    EvolutionState.goals = this.goals;
+    this.saveToStorage();
+  },
+  
+  saveToStorage() {
+    try {
+      localStorage.setItem('evolution_goals', JSON.stringify(this.goals));
+    } catch (e) {}
+  },
+  
+  loadFromStorage() {
+    try {
+      const saved = localStorage.getItem('evolution_goals');
+      if (saved) {
+        this.goals = JSON.parse(saved);
+        EvolutionState.goals = this.goals;
+      }
+    } catch (e) {}
+  }
+};
+
+// Evolution Strategy Management
+const EvolutionStrategies = {
+  strategies: [
+    { id: 'incremental', name: '渐进式优化', description: '小幅改进，持续积累', active: true },
+    { id: 'breakthrough', name: '突破式进化', description: '大幅度改进，风险较高', active: false },
+    { id: 'adaptive', name: '自适应调整', description: '根据环境自动调整策略', active: true },
+    { id: 'conservative', name: '保守式进化', description: '最小化变更，稳定第一', active: false }
+  ],
+  
+  setActive(strategyId, active) {
+    const strategy = this.strategies.find(s => s.id === strategyId);
+    if (strategy) {
+      strategy.active = active;
+      EvolutionState.strategies = this.strategies.filter(s => s.active);
+      this.saveToStorage();
+    }
+  },
+  
+  getActiveStrategies() {
+    return this.strategies.filter(s => s.active);
+  },
+  
+  saveToStorage() {
+    try {
+      localStorage.setItem('evolution_strategies', JSON.stringify(this.strategies));
+    } catch (e) {}
+  },
+  
+  loadFromStorage() {
+    try {
+      const saved = localStorage.getItem('evolution_strategies');
+      if (saved) {
+        this.strategies = JSON.parse(saved);
+        EvolutionState.strategies = this.strategies.filter(s => s.active);
+      }
+    } catch (e) {}
+  }
+};
+
+// Continuous Learning System
+const ContinuousLearning = {
+  learningHistory: [],
+  userBehaviorProfile: {},
+  workflowPatterns: [],
+  knowledgeBase: [],
+  
+  async learn(eventType, data) {
+    const record = {
+      id: 'lr_' + Date.now(),
+      eventType,
+      data,
+      timestamp: Date.now(),
+      outcome: null
+    };
+    
+    // Analyze and update user behavior profile
+    this.updateUserBehavior(eventType, data);
+    
+    // Detect workflow patterns
+    this.detectWorkflowPattern(eventType, data);
+    
+    // Accumulate knowledge
+    this.accumulateKnowledge(eventType, data);
+    
+    record.outcome = 'success';
+    this.learningHistory.push(record);
+    if (this.learningHistory.length > 500) this.learningHistory.shift();
+    
+    this.saveToIndexedDB();
+    return record;
+  },
+  
+  updateUserBehavior(eventType, data) {
+    if (!this.userBehaviorProfile[eventType]) {
+      this.userBehaviorProfile[eventType] = { count: 0, lastUsed: null, avgDuration: 0 };
+    }
+    const profile = this.userBehaviorProfile[eventType];
+    profile.count++;
+    profile.lastUsed = Date.now();
+    
+    if (data && data.duration) {
+      profile.avgDuration = (profile.avgDuration * (profile.count - 1) + data.duration) / profile.count;
+    }
+  },
+  
+  detectWorkflowPattern(eventType, data) {
+    // Look for common sequences
+    if (eventType === 'node_executed' && data && data.nodeId) {
+      const pattern = {
+        type: 'sequence',
+        nodes: [data.nodeId],
+        frequency: 1,
+        lastSeen: Date.now()
+      };
+      
+      const existing = this.workflowPatterns.find(p => 
+        p.type === 'sequence' && 
+        p.nodes.length === 1 && 
+        p.nodes[0] === data.nodeId
+      );
+      
+      if (existing) {
+        existing.frequency++;
+        existing.lastSeen = Date.now();
+      } else {
+        this.workflowPatterns.push(pattern);
+      }
+      
+      if (this.workflowPatterns.length > 100) this.workflowPatterns.shift();
+    }
+  },
+  
+  accumulateKnowledge(eventType, data) {
+    const knowledge = {
+      type: eventType,
+      content: data,
+      timestamp: Date.now(),
+      confidence: 0.8
+    };
+    
+    // Avoid duplicates
+    const exists = this.knowledgeBase.some(k => 
+      k.type === eventType && 
+      JSON.stringify(k.content) === JSON.stringify(data)
+    );
+    
+    if (!exists) {
+      this.knowledgeBase.push(knowledge);
+      if (this.knowledgeBase.length > 200) this.knowledgeBase.shift();
+    }
+  },
+  
+  async saveToIndexedDB() {
+    try {
+      const request = indexedDB.open('AICreatorEvolution', 1);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('learningHistory')) {
+          db.createObjectStore('learningHistory', { keyPath: 'id' });
+        }
+        if (!db.objectStoreNames.contains('knowledgeBase')) {
+          db.createObjectStore('knowledgeBase', { keyPath: 'timestamp' });
+        }
+      };
+      request.onsuccess = (e) => {
+        const db = e.target.result;
+        const tx = db.transaction(['learningHistory', 'knowledgeBase'], 'readwrite');
+        
+        const lrStore = tx.objectStore('learningHistory');
+        this.learningHistory.slice(-50).forEach(record => {
+          lrStore.put(record);
+        });
+        
+        const kbStore = tx.objectStore('knowledgeBase');
+        this.knowledgeBase.slice(-50).forEach(knowledge => {
+          kbStore.put(knowledge);
+        });
+      };
+    } catch (e) {
+      console.warn('IndexedDB save failed:', e);
+    }
+  },
+  
+  async loadFromIndexedDB() {
+    try {
+      const request = indexedDB.open('AICreatorEvolution', 1);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('learningHistory')) {
+          db.createObjectStore('learningHistory', { keyPath: 'id' });
+        }
+        if (!db.objectStoreNames.contains('knowledgeBase')) {
+          db.createObjectStore('knowledgeBase', { keyPath: 'timestamp' });
+        }
+      };
+      request.onsuccess = (e) => {
+        const db = e.target.result;
+        const tx = db.transaction(['learningHistory', 'knowledgeBase'], 'readonly');
+        
+        const lrStore = tx.objectStore('learningHistory');
+        const lrRequest = lrStore.getAll();
+        lrRequest.onsuccess = () => {
+          this.learningHistory = lrRequest.result.slice(-100);
+        };
+        
+        const kbStore = tx.objectStore('knowledgeBase');
+        const kbRequest = kbStore.getAll();
+        kbRequest.onsuccess = () => {
+          this.knowledgeBase = kbRequest.result.slice(-100);
+        };
+      };
+    } catch (e) {
+      console.warn('IndexedDB load failed:', e);
+    }
+  },
+  
+  getLearningStats() {
+    return {
+      totalRecords: this.learningHistory.length,
+      knowledgeItems: this.knowledgeBase.length,
+      patterns: this.workflowPatterns.length,
+      behaviorProfileCount: Object.keys(this.userBehaviorProfile).length
+    };
+  }
+};
+
+// Auto Model Update System
+const ModelUpdater = {
+  currentVersion: '1.0.0',
+  availableVersion: null,
+  updateChangelog: [
+    { version: '1.0.0', date: '2026-05-19', changes: ['初始版本'] },
+    { version: '1.1.0', date: '2026-05-20', changes: ['性能优化', '新增进化系统'] }
+  ],
+  isChecking: false,
+  autoUpdateEnabled: true,
+  rollbackVersions: [],
+  
+  async checkForUpdates() {
+    if (this.isChecking) return;
+    this.isChecking = true;
+    
+    // Simulate version check
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Simulate available version
+    const major = parseInt(this.currentVersion.split('.')[0]);
+    const minor = parseInt(this.currentVersion.split('.')[1]);
+    this.availableVersion = `${major}.${minor + 1}.0`;
+    
+    this.isChecking = false;
+    return this.availableVersion;
+  },
+  
+  async downloadUpdate(version) {
+    if (!version || version === this.currentVersion) return false;
+    
+    showToast(`正在下载模型 v${version}...`);
+    
+    // Simulate download progress
+    for (let i = 0; i <= 100; i += 20) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      showToast(`下载进度: ${i}%`);
+    }
+    
+    // Store rollback version
+    this.rollbackVersions.push({
+      version: this.currentVersion,
+      timestamp: Date.now()
+    });
+    
+    if (this.rollbackVersions.length > 5) this.rollbackVersions.shift();
+    
+    this.currentVersion = version;
+    showToast(`模型已更新到 v${version}`);
+    return true;
+  },
+  
+  rollback() {
+    if (this.rollbackVersions.length === 0) {
+      showToast('没有可回滚的版本');
+      return false;
+    }
+    
+    const previous = this.rollbackVersions.pop();
+    this.currentVersion = previous.version;
+    showToast(`已回滚到 v${previous.version}`);
+    return true;
+  },
+  
+  getChangelog(version) {
+    const entry = this.updateChangelog.find(c => c.version === version);
+    return entry ? entry.changes : [];
+  },
+  
+  setAutoUpdate(enabled) {
+    this.autoUpdateEnabled = enabled;
+    try {
+      localStorage.setItem('auto_update_enabled', JSON.stringify(enabled));
+    } catch (e) {}
+  },
+  
+  loadSettings() {
+    try {
+      const saved = localStorage.getItem('auto_update_enabled');
+      if (saved !== null) this.autoUpdateEnabled = JSON.parse(saved);
+    } catch (e) {}
+  }
+};
+
+// Adaptation Engine
+const AdaptationEngine = {
+  adaptations: [],
+  
+  adapt(trigger, action) {
+    const adaptation = {
+      id: 'adapt_' + Date.now(),
+      trigger,
+      action,
+      timestamp: Date.now(),
+      success: false
+    };
+    
+    // Apply adaptation
+    try {
+      if (action.type === 'parameter_adjustment') {
+        // Simulate parameter adjustment
+        adaptation.success = true;
+      } else if (action.type === 'strategy_switch') {
+        // Switch evolution strategy
+        EvolutionStrategies.setActive(action.strategy, true);
+        adaptation.success = true;
+      }
+    } catch (e) {
+      adaptation.success = false;
+    }
+    
+    this.adaptations.push(adaptation);
+    if (this.adaptations.length > 100) this.adaptations.shift();
+    
+    return adaptation;
+  }
+};
+
+// Evolution Panel Controller
+const EvolutionPanel = {
+  activeTab: 'status',
+  
+  toggle() {
+    const panel = document.getElementById('evolution-panel');
+    if (!panel) return;
+    panel.classList.toggle('active');
+    if (panel.classList.contains('active')) {
+      this.refresh();
+      // Start evolution cycle if not active
+      if (!EvolutionState.isActive) {
+        this.startEvolutionCycle();
+      }
+    }
+  },
+  
+  switchTab(tab) {
+    this.activeTab = tab;
+    document.querySelectorAll('.evolution-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.evolution-tab[data-tab="${tab}"]`)?.classList.add('active');
+    this.refresh();
+  },
+  
+  refresh() {
+    const content = document.getElementById('evolution-content');
+    if (!content) return;
+    
+    switch (this.activeTab) {
+      case 'status':
+        content.innerHTML = this.getStatusContent();
+        break;
+      case 'learning':
+        content.innerHTML = this.getLearningContent();
+        break;
+      case 'model':
+        content.innerHTML = this.getModelContent();
+        break;
+      case 'settings':
+        content.innerHTML = this.getSettingsContent();
+        break;
+    }
+  },
+  
+  getStatusContent() {
+    const report = SelfAssessment.generateReport();
+    const analysis = TrendAnalysis.analyze();
+    const activeGoals = EvolutionGoals.getActiveGoals();
+    
+    return `
+      <div class="evolution-metrics-grid">
+        <div class="evolution-metric-card ${report.performance.value < 50 ? 'warning' : 'success'}">
+          <div class="evolution-metric-icon">⚡</div>
+          <div class="evolution-metric-value">${report.performance.value}%</div>
+          <div class="evolution-metric-label">性能 ${report.performance.trend}</div>
+        </div>
+        <div class="evolution-metric-card ${report.accuracy.value < 50 ? 'warning' : 'success'}">
+          <div class="evolution-metric-icon">🎯</div>
+          <div class="evolution-metric-value">${report.accuracy.value}%</div>
+          <div class="evolution-metric-label">准确率 ${report.accuracy.trend}</div>
+        </div>
+        <div class="evolution-metric-card ${report.efficiency.value < 50 ? 'warning' : 'success'}">
+          <div class="evolution-metric-icon">⚙️</div>
+          <div class="evolution-metric-value">${report.efficiency.value}%</div>
+          <div class="evolution-metric-label">效率 ${report.efficiency.trend}</div>
+        </div>
+        <div class="evolution-metric-card ${report.adaptability.value < 50 ? 'warning' : 'success'}">
+          <div class="evolution-metric-icon">🔄</div>
+          <div class="evolution-metric-value">${report.adaptability.value}%</div>
+          <div class="evolution-metric-label">适应性</div>
+        </div>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">📈 性能趋势</div>
+        <div class="evolution-chart-container">
+          <div class="evolution-chart-title">最近评估趋势</div>
+          <canvas id="trend-chart" class="evolution-chart-canvas"></canvas>
+        </div>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">🎯 进化目标 (${activeGoals.length})</div>
+        <div class="evolution-list">
+          ${activeGoals.length === 0 ? '<div style="color:var(--text-dim);padding:12px;text-align:center;">暂无活动目标</div>' : ''}
+          ${activeGoals.map(g => `
+            <div class="evolution-item">
+              <div class="evolution-item-icon">🎯</div>
+              <div class="evolution-item-content">
+                <div class="evolution-item-title">${g.title}</div>
+                <div class="evolution-item-desc">目标: ${g.targetDimension} ${g.targetValue}%</div>
+                <div class="evolution-progress-bar">
+                  <div class="evolution-progress-fill" style="width:${g.progress}%"></div>
+                </div>
+              </div>
+              <span class="evolution-item-status evolution-status-${g.status === 'completed' ? 'active' : 'pending'}">${g.status === 'completed' ? '完成' : Math.round(g.progress) + '%'}</span>
+              <button class="evolution-btn-small" onclick="EvolutionGoals.removeGoal('${g.id}')">删除</button>
+            </div>
+          `).join('')}
+        </div>
+        <button class="evolution-btn-small" onclick="EvolutionPanel.showAddGoalForm()" style="margin-top:12px;">+ 添加目标</button>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">🧠 检测到的模式</div>
+        <div class="evolution-list">
+          ${analysis.patterns.length === 0 ? '<div style="color:var(--text-dim);padding:12px;text-align:center;">未检测到明显模式</div>' : ''}
+          ${analysis.patterns.map(p => `
+            <div class="evolution-item">
+              <div class="evolution-item-icon">${p.severity === 'high' ? '⚠️' : p.severity === 'medium' ? '⚡' : 'ℹ️'}</div>
+              <div class="evolution-item-content">
+                <div class="evolution-item-title">${p.type}</div>
+                <div class="evolution-item-desc">${p.description}</div>
+              </div>
+              <span class="evolution-item-status evolution-status-${p.severity === 'high' ? 'pending' : 'idle'}">${p.severity}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  },
+  
+  getLearningContent() {
+    const stats = ContinuousLearning.getLearningStats();
+    
+    return `
+      <div class="evolution-metrics-grid">
+        <div class="evolution-metric-card">
+          <div class="evolution-metric-icon">📚</div>
+          <div class="evolution-metric-value">${stats.totalRecords}</div>
+          <div class="evolution-metric-label">学习记录</div>
+        </div>
+        <div class="evolution-metric-card">
+          <div class="evolution-metric-icon">💡</div>
+          <div class="evolution-metric-value">${stats.knowledgeItems}</div>
+          <div class="evolution-metric-label">知识条目</div>
+        </div>
+        <div class="evolution-metric-card">
+          <div class="evolution-metric-icon">🔄</div>
+          <div class="evolution-metric-value">${stats.patterns}</div>
+          <div class="evolution-metric-label">工作流模式</div>
+        </div>
+        <div class="evolution-metric-card">
+          <div class="evolution-metric-icon">👤</div>
+          <div class="evolution-metric-value">${stats.behaviorProfileCount}</div>
+          <div class="evolution-metric-label">行为画像</div>
+        </div>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">📖 学习历史</div>
+        <div class="evolution-changelog">
+          ${ContinuousLearning.learningHistory.slice(-10).reverse().map(h => `
+            <div class="evolution-changelog-item">
+              <div class="evolution-changelog-version">${h.eventType}</div>
+              <div class="evolution-changelog-date">${new Date(h.timestamp).toLocaleString()}</div>
+              <div class="evolution-changelog-desc">${h.outcome === 'success' ? '✅ 成功' : '❌ 失败'}</div>
+            </div>
+          `).join('')}
+          ${ContinuousLearning.learningHistory.length === 0 ? '<div style="padding:20px;text-align:center;color:var(--text-dim);">暂无学习记录</div>' : ''}
+        </div>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">💡 知识库</div>
+        <div class="evolution-list">
+          ${ContinuousLearning.knowledgeBase.slice(-8).reverse().map(k => `
+            <div class="evolution-knowledge-item">
+              <span class="evolution-knowledge-type">📝</span>
+              <span class="evolution-knowledge-label">${k.type}</span>
+              <span class="evolution-knowledge-count">${Math.round(k.confidence * 100)}%</span>
+            </div>
+          `).join('')}
+          ${ContinuousLearning.knowledgeBase.length === 0 ? '<div style="padding:12px;text-align:center;color:var(--text-dim);">知识库为空</div>' : ''}
+        </div>
+      </div>
+    `;
+  },
+  
+  getModelContent() {
+    return `
+      <div class="evolution-section">
+        <div class="evolution-section-title">🤖 当前模型版本</div>
+        <div class="evolution-item">
+          <div class="evolution-item-icon">📦</div>
+          <div class="evolution-item-content">
+            <div class="evolution-item-title">AICreator H5 Model</div>
+            <div class="evolution-item-desc">当前版本: v${ModelUpdater.currentVersion}</div>
+          </div>
+          <span class="evolution-item-status evolution-status-active">运行中</span>
+        </div>
+        ${ModelUpdater.availableVersion ? `
+        <div class="evolution-item" style="border-left-color:var(--success);">
+          <div class="evolution-item-icon">🆕</div>
+          <div class="evolution-item-content">
+            <div class="evolution-item-title">可用更新</div>
+            <div class="evolution-item-desc">v${ModelUpdater.availableVersion}</div>
+          </div>
+          <button class="evolution-btn-small" onclick="ModelUpdater.downloadUpdate('${ModelUpdater.availableVersion}')">下载</button>
+        </div>
+        ` : ''}
+        <button class="evolution-btn-small" onclick="ModelUpdater.checkForUpdates()" style="margin-top:12px;" ${ModelUpdater.isChecking ? 'disabled' : ''}>
+          ${ModelUpdater.isChecking ? '检查中...' : '检查更新'}
+        </button>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">📜 版本历史</div>
+        <div class="evolution-changelog">
+          ${ModelUpdater.updateChangelog.slice().reverse().map(c => `
+            <div class="evolution-changelog-item">
+              <div class="evolution-changelog-version">v${c.version}</div>
+              <div class="evolution-changelog-date">${c.date}</div>
+              <div class="evolution-changelog-desc">${c.changes.join(', ')}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">🔄 回滚</div>
+        <div class="evolution-list">
+          ${ModelUpdater.rollbackVersions.length === 0 ? '<div style="color:var(--text-dim);padding:12px;text-align:center;">没有可回滚的版本</div>' : ''}
+          ${ModelUpdater.rollbackVersions.map(v => `
+            <div class="evolution-item">
+              <div class="evolution-item-icon">↩️</div>
+              <div class="evolution-item-content">
+                <div class="evolution-item-title">v${v.version}</div>
+                <div class="evolution-item-desc">${new Date(v.timestamp).toLocaleString()}</div>
+              </div>
+              <button class="evolution-btn-small" onclick="ModelUpdater.rollback()">回滚</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  },
+  
+  getSettingsContent() {
+    return `
+      <div class="evolution-section">
+        <div class="evolution-section-title">🧬 进化策略</div>
+        <div class="evolution-list">
+          ${EvolutionStrategies.strategies.map(s => `
+            <div class="evolution-item">
+              <div class="evolution-item-icon">${s.active ? '✅' : '⬜'}</div>
+              <div class="evolution-item-content">
+                <div class="evolution-item-title">${s.name}</div>
+                <div class="evolution-item-desc">${s.description}</div>
+              </div>
+              <div class="evolution-toggle ${s.active ? 'active' : ''}" onclick="EvolutionStrategies.setActive('${s.id}', ${!s.active}); EvolutionPanel.refresh();"></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">⚙️ 自动更新设置</div>
+        <div class="evolution-toggle-row">
+          <div>
+            <div class="evolution-toggle-label">自动检查更新</div>
+            <div class="evolution-toggle-desc">启动时自动检查模型更新</div>
+          </div>
+          <div class="evolution-toggle ${ModelUpdater.autoUpdateEnabled ? 'active' : ''}" onclick="ModelUpdater.setAutoUpdate(!ModelUpdater.autoUpdateEnabled); EvolutionPanel.refresh();"></div>
+        </div>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">🧠 学习设置</div>
+        <div class="evolution-toggle-row">
+          <div>
+            <div class="evolution-toggle-label">持续学习</div>
+            <div class="evolution-toggle-desc">自动学习用户行为和工作流模式</div>
+          </div>
+          <div class="evolution-toggle active" id="continuous-learning-toggle" onclick="toggleContinuousLearning()"></div>
+        </div>
+        <div class="evolution-toggle-row">
+          <div>
+            <div class="evolution-toggle-label">模式检测</div>
+            <div class="evolution-toggle-desc">自动检测并记录工作流模式</div>
+          </div>
+          <div class="evolution-toggle active" id="pattern-detection-toggle" onclick="togglePatternDetection()"></div>
+        </div>
+      </div>
+      
+      <div class="evolution-section">
+        <div class="evolution-section-title">🔄 进化控制</div>
+        <div style="display:flex;gap:12px;margin-top:12px;">
+          <button class="evolution-btn-small" onclick="startEvolution()" ${EvolutionState.isActive ? 'disabled' : ''}>
+            ${EvolutionState.isActive ? '进化中...' : '🚀 启动进化'}
+          </button>
+          <button class="evolution-btn-small" onclick="pauseEvolution()" ${!EvolutionState.isActive ? 'disabled' : ''}>
+            ⏸ 暂停进化
+          </button>
+          <button class="evolution-btn-small" onclick="resetEvolutionState()" style="background:var(--error);">
+            🔄 重置状态
+          </button>
+        </div>
+      </div>
+    `;
+  },
+  
+  showAddGoalForm() {
+    const content = document.getElementById('evolution-content');
+    const goalsTab = document.querySelector('.evolution-tab[data-tab="status"]');
+    if (goalsTab) goalsTab.click();
+    
+    // Insert form
+    const section = content.querySelector('.evolution-section');
+    if (section) {
+      const formHtml = `
+        <div class="evolution-form-group">
+          <label class="evolution-form-label">目标名称</label>
+          <input type="text" class="evolution-form-input" id="goal-title" placeholder="例如：提升性能到90%">
+        </div>
+        <div class="evolution-form-row">
+          <div>
+            <label class="evolution-form-label">目标维度</label>
+            <select class="evolution-form-select" id="goal-dimension">
+              <option value="performance">性能</option>
+              <option value="accuracy">准确率</option>
+              <option value="efficiency">效率</option>
+              <option value="adaptability">适应性</option>
+            </select>
+          </div>
+          <div>
+            <label class="evolution-form-label">目标值 (%)</label>
+            <input type="number" class="evolution-form-input" id="goal-value" min="1" max="100" value="90">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="evolution-btn-small" onclick="EvolutionPanel.addGoal()">保存</button>
+          <button class="evolution-btn-small" onclick="EvolutionPanel.refresh()">取消</button>
+        </div>
+      `;
+      
+      // Find the "添加目标" button and insert form before it
+      const addBtn = section.querySelector('button');
+      if (addBtn) {
+        const formDiv = document.createElement('div');
+        formDiv.id = 'add-goal-form';
+        formDiv.innerHTML = formHtml;
+        formDiv.style.cssText = 'background:var(--bg-dark);border-radius:8px;padding:16px;margin-bottom:12px;';
+        section.insertBefore(formDiv, addBtn);
+      }
+    }
+  },
+  
+  addGoal() {
+    const title = document.getElementById('goal-title')?.value;
+    const dimension = document.getElementById('goal-dimension')?.value;
+    const value = parseInt(document.getElementById('goal-value')?.value);
+    
+    if (title && dimension && value) {
+      EvolutionGoals.addGoal(title, dimension, value, Date.now() + 7 * 24 * 60 * 60 * 1000);
+      showToast('目标已添加');
+      this.refresh();
+    }
+  },
+  
+  drawTrendChart() {
+    const canvas = document.getElementById('trend-chart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width = canvas.offsetWidth * 2;
+    const height = canvas.height = canvas.offsetHeight * 2;
+    ctx.scale(2, 2);
+    
+    const w = canvas.offsetWidth;
+    const h = canvas.offsetHeight;
+    
+    // Clear
+    ctx.fillStyle = 'var(--bg-dark)';
+    ctx.fillRect(0, 0, w, h);
+    
+    // Draw lines
+    const perf = EvolutionState.trends.performance.slice(-20);
+    const acc = EvolutionState.trends.accuracy.slice(-20);
+    const eff = EvolutionState.trends.efficiency.slice(-20);
+    
+    if (perf.length > 1) {
+      // Performance line
+      ctx.strokeStyle = '#6366F1';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      perf.forEach((p, i) => {
+        const x = (i / (perf.length - 1)) * w;
+        const y = h - (p.value / 100) * h;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+  }
+};
+
+// Global toggle function
+function toggleEvolutionPanel() {
+  EvolutionPanel.toggle();
+}
+
+// Evolution Cycle
+let evolutionInterval = null;
+
+function startEvolution() {
+  if (EvolutionState.isActive) return;
+  EvolutionState.isActive = true;
+  showToast('进化系统已启动');
+  
+  // Run assessment every 30 seconds
+  evolutionInterval = setInterval(async () => {
+    await SelfAssessment.assess();
+    await ContinuousLearning.learn('evolution_cycle', { metrics: EvolutionState.metrics });
+    
+    // Update goal progress
+    EvolutionGoals.getActiveGoals().forEach(goal => {
+      const currentValue = EvolutionState.metrics[goal.targetDimension];
+      if (currentValue) {
+        const progress = (currentValue / goal.targetValue) * 100;
+        EvolutionGoals.updateGoalProgress(goal.id, progress);
+      }
+    });
+    
+    // Refresh panel if open
+    const panel = document.getElementById('evolution-panel');
+    if (panel && panel.classList.contains('active')) {
+      EvolutionPanel.refresh();
+    }
+  }, 30000);
+  
+  // Initial assessment
+  SelfAssessment.assess();
+}
+
+function pauseEvolution() {
+  EvolutionState.isActive = false;
+  if (evolutionInterval) {
+    clearInterval(evolutionInterval);
+    evolutionInterval = null;
+  }
+  showToast('进化系统已暂停');
+}
+
+function resetEvolutionState() {
+  if (confirm('确定要重置进化状态吗？')) {
+    EvolutionState.isActive = false;
+    EvolutionState.metrics = { performance: 0, accuracy: 0, efficiency: 0, adaptability: 0 };
+    EvolutionState.trends = { performance: [], accuracy: [], efficiency: [] };
+    EvolutionGoals.goals = [];
+    EvolutionGoals.saveToStorage();
+    ContinuousLearning.learningHistory = [];
+    ContinuousLearning.knowledgeBase = [];
+    ContinuousLearning.userBehaviorProfile = {};
+    ContinuousLearning.workflowPatterns = [];
+    AdaptationEngine.adaptations = [];
+    
+    if (evolutionInterval) {
+      clearInterval(evolutionInterval);
+      evolutionInterval = null;
+    }
+    
+    showToast('进化状态已重置');
+    EvolutionPanel.refresh();
+  }
+}
+
+let continuousLearningEnabled = true;
+let patternDetectionEnabled = true;
+
+function toggleContinuousLearning() {
+  continuousLearningEnabled = !continuousLearningEnabled;
+  const toggle = document.getElementById('continuous-learning-toggle');
+  if (toggle) toggle.classList.toggle('active', continuousLearningEnabled);
+  showToast(`持续学习已${continuousLearningEnabled ? '启用' : '禁用'}`);
+}
+
+function togglePatternDetection() {
+  patternDetectionEnabled = !patternDetectionEnabled;
+  const toggle = document.getElementById('pattern-detection-toggle');
+  if (toggle) toggle.classList.toggle('active', patternDetectionEnabled);
+  showToast(`模式检测已${patternDetectionEnabled ? '启用' : '禁用'}`);
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+  // Load saved data
+  EvolutionGoals.loadFromStorage();
+  EvolutionStrategies.loadFromStorage();
+  ModelUpdater.loadSettings();
+  
+  // Load learning history from IndexedDB
+  ContinuousLearning.loadFromIndexedDB();
+  
+  // Initial assessment
+  setTimeout(() => {
+    SelfAssessment.assess();
+  }, 2000);
+  
+  // Auto-refresh evolution panel
+  setInterval(() => {
+    const panel = document.getElementById('evolution-panel');
+    if (panel && panel.classList.contains('active')) {
+      EvolutionPanel.refresh();
+      EvolutionPanel.drawTrendChart();
+    }
+  }, 5000);
+});
+
+// ============ End v30 AI Self-Evolution System ============
+
 // ============ End v19 Mobile, PWA & Offline Features ============
-  </script>
+</script>
 </body>
 </html>
