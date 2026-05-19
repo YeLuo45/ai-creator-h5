@@ -6545,6 +6545,849 @@
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
     /* ========== End v24 Enterprise SSO + Multi-Tenancy CSS ========== */
+
+    /* Collaboration Panel v28 */
+    .collab-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 900px;
+      max-height: 85vh;
+      z-index: 1005;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .collab-panel.active {
+      display: block;
+    }
+
+    .collab-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .collab-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .collab-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .collab-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: collabPulse 2s infinite;
+    }
+
+    @keyframes collabPulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    }
+
+    .collab-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .collab-close:hover {
+      color: var(--text);
+    }
+
+    .collab-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .collab-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .collab-tab:hover {
+      color: var(--text);
+    }
+
+    .collab-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .collab-tab .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      background: var(--error);
+      border-radius: 9px;
+      font-size: 10px;
+      color: white;
+      margin-left: 6px;
+    }
+
+    .collab-content {
+      padding: 16px 20px;
+      max-height: calc(85vh - 130px);
+      overflow-y: auto;
+    }
+
+    .collab-toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .collab-tool-btn {
+      padding: 8px 14px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .collab-tool-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .collab-tool-btn.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .collab-tool-btn.primary:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Online Users Grid */
+    .collab-users-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .collab-user-card {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      transition: all 0.2s;
+    }
+
+    .collab-user-card:hover {
+      border-color: var(--primary);
+    }
+
+    .collab-user-card.is-you {
+      border-color: var(--success);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .collab-user-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .collab-user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      position: relative;
+    }
+
+    .collab-user-avatar::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--success);
+      border: 2px solid var(--bg-node);
+    }
+
+    .collab-user-avatar.away::after {
+      background: var(--warning);
+    }
+
+    .collab-user-avatar.offline::after {
+      background: var(--text-dim);
+    }
+
+    .collab-user-info {
+      flex: 1;
+    }
+
+    .collab-user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .collab-user-you-badge {
+      font-size: 9px;
+      padding: 2px 5px;
+      background: var(--success);
+      border-radius: 4px;
+      color: white;
+    }
+
+    .collab-user-role {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .collab-user-location {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .collab-user-location-icon {
+      font-size: 12px;
+    }
+
+    .collab-user-intent {
+      font-size: 11px;
+      padding: 4px 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .collab-user-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .collab-user-action {
+      padding: 4px 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 10px;
+      transition: all 0.2s;
+    }
+
+    .collab-user-action:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Cursor Overlay */
+    .collab-cursors-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 100;
+    }
+
+    .collab-cursor {
+      position: absolute;
+      pointer-events: none;
+      transition: all 0.1s ease-out;
+      z-index: 101;
+    }
+
+    .collab-cursor-icon {
+      font-size: 16px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+    }
+
+    .collab-cursor-label {
+      position: absolute;
+      top: 18px;
+      left: 8px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      color: white;
+      white-space: nowrap;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Comments Panel */
+    .collab-comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .collab-comment {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .collab-comment-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .collab-comment-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .collab-comment-author {
+      flex: 1;
+    }
+
+    .collab-comment-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .collab-comment-time {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .collab-comment-body {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .collab-comment-mention {
+      color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .collab-comment-node {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--text-dim);
+      cursor: pointer;
+      margin-right: 6px;
+    }
+
+    .collab-comment-node:hover {
+      background: var(--bg-panel);
+      color: var(--primary);
+    }
+
+    .collab-comment-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .collab-comment-action {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 2px 4px;
+      transition: color 0.2s;
+    }
+
+    .collab-comment-action:hover {
+      color: var(--primary);
+    }
+
+    .collab-comment-reply {
+      margin-left: 36px;
+      padding-left: 12px;
+      border-left: 2px solid var(--border);
+    }
+
+    /* Comment Input */
+    .collab-comment-input-container {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+
+    .collab-comment-input {
+      width: 100%;
+      padding: 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      resize: none;
+      min-height: 60px;
+    }
+
+    .collab-comment-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .collab-comment-input-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .collab-comment-hints {
+      display: flex;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .collab-comment-hint {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Activity Log */
+    .collab-activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .collab-activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px;
+      background: var(--bg-node);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .collab-activity-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .collab-activity-content {
+      flex: 1;
+    }
+
+    .collab-activity-text {
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .collab-activity-text strong {
+      color: var(--primary);
+    }
+
+    .collab-activity-time {
+      color: var(--text-dim);
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    /* Stats Panel */
+    .collab-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .collab-stat-card {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .collab-stat-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .collab-stat-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .collab-stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .collab-stat-change {
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .collab-stat-change.positive {
+      color: var(--success);
+    }
+
+    .collab-stat-change.negative {
+      color: var(--error);
+    }
+
+    /* Lock indicator */
+    .collab-lock-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--error);
+    }
+
+    .collab-lock-indicator.locked {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .collab-lock-icon {
+      font-size: 16px;
+    }
+
+    /* Settings Form */
+    .collab-settings-section {
+      margin-bottom: 20px;
+    }
+
+    .collab-settings-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .collab-settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .collab-settings-label {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .collab-settings-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .collab-toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      background: var(--bg-dark);
+      border-radius: 11px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .collab-toggle.active {
+      background: var(--primary);
+    }
+
+    .collab-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .collab-toggle.active::after {
+      transform: translateX(18px);
+    }
+
+    .collab-select {
+      padding: 6px 10px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .collab-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Permission list */
+    .collab-permission-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .collab-permission-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      background: var(--bg-node);
+      border-radius: 6px;
+    }
+
+    .collab-permission-user {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .collab-permission-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .collab-permission-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .collab-permission-email {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .collab-permission-select {
+      padding: 4px 8px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-size: 11px;
+    }
+
+    .collab-permission-remove {
+      padding: 4px 8px;
+      background: transparent;
+      border: 1px solid var(--error);
+      border-radius: 4px;
+      color: var(--error);
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    /* History Timeline */
+    .collab-history-timeline {
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .collab-history-timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .collab-history-item {
+      position: relative;
+      padding: 8px 0;
+    }
+
+    .collab-history-item::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 14px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 2px solid var(--bg-panel);
+    }
+
+    .collab-history-time {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .collab-history-text {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* Mention autocomplete */
+    .collab-mention-dropdown {
+      position: absolute;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 1000;
+      min-width: 200px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .collab-mention-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+
+    .collab-mention-item:hover,
+    .collab-mention-item.selected {
+      background: var(--bg-node);
+    }
+
+    .collab-mention-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .collab-mention-name {
+      flex: 1;
+      color: var(--text);
+    }
+
+    .collab-mention-role {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    /* Toolbar button for v28 */
+    .toolbar-btn.collab-btn { border-color: var(--success); color: var(--success); }
+    .toolbar-btn.collab-btn:hover { background: rgba(16, 185, 129, 0.1); }
+
+    /* ========== End v28 Collaboration CSS ========== */
   </style>
 </head>
 <body>
@@ -6731,6 +7574,7 @@
       <button class="toolbar-btn prediction-btn" id="btn-prediction" title="AI预测" onclick="showPredictionPanel()">🔮 预测</button>
       <button class="toolbar-btn" id="btn-edge" title="边缘节点管理" onclick="showEdgePanel()">🖥️ 边缘</button>
       <button class="toolbar-btn" id="btn-knowledge" title="知识图谱" onclick="toggleKnowledgePanel()">🕸️ 知识</button>
+      <button class="toolbar-btn collab-btn" id="btn-collab" title="实时协作" onclick="toggleCollabPanel()">🤝 协作</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -18024,6 +18868,1044 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============ End v26 Edge Computing ============
+
+// ============ Begin v28 Real-Time Collaboration ============
+
+// Collaboration State
+const collabState = {
+  isActive: false,
+  currentUser: {
+    id: 'user_self',
+    name: '当前用户',
+    avatar: null,
+    color: '#6366F1',
+    role: 'owner',
+    location: { nodeId: null, nodeName: null },
+    intent: null,
+    status: 'online',
+    cursor: { x: 0, y: 0 }
+  },
+  users: [
+    { id: 'user_1', name: '张伟', avatar: null, color: '#EF4444', role: 'editor', location: { nodeId: 'node_2', nodeName: 'AI生成' }, intent: '正在编辑', status: 'online', cursor: { x: 320, y: 240 } },
+    { id: 'user_2', name: '李娜', avatar: null, color: '#10B981', role: 'viewer', location: { nodeId: 'node_5', nodeName: '条件判断' }, intent: '查看中', status: 'online', cursor: { x: 580, y: 180 } },
+    { id: 'user_3', name: '王强', avatar: null, color: '#F59E0B', role: 'editor', location: null, intent: null, status: 'away', cursor: null },
+    { id: 'user_4', name: '陈静', avatar: null, color: '#8B5CF6', role: 'editor', location: null, intent: null, status: 'offline', cursor: null }
+  ],
+  comments: [
+    { id: 'c1', userId: 'user_1', nodeId: 'node_2', content: '@李娜 这个AI生成节点可以优化一下提示词', time: Date.now() - 300000, replies: [] },
+    { id: 'c2', userId: 'user_2', nodeId: 'node_5', content: '同意，这个条件判断逻辑需要调整', time: Date.now() - 180000, replies: [
+      { id: 'r1', userId: 'user_1', content: '我来修改', time: Date.now() - 120000 }
+    ] }
+  ],
+  activities: [
+    { id: 'a1', userId: 'user_1', type: 'edit', target: '节点: AI生成', time: Date.now() - 60000 },
+    { id: 'a2', userId: 'user_2', type: 'comment', target: '评论', time: Date.now() - 180000 },
+    { id: 'a3', userId: 'user_1', type: 'lock', target: '节点: 条件判断', time: Date.now() - 300000 },
+    { id: 'a4', userId: 'user_3', type: 'join', target: '', time: Date.now() - 600000 },
+    { id: 'a5', userId: 'user_2', type: 'view', target: '画布', time: Date.now() - 900000 }
+  ],
+  history: [
+    { time: Date.now() - 3600000, text: '张伟 创建了工作流' },
+    { time: Date.now() - 2400000, text: '王强 加入协作' },
+    { time: Date.now() - 1800000, text: '张伟 添加了节点 "AI生成"' },
+    { time: Date.now() - 1200000, text: '李娜 添加了评论' },
+    { time: Date.now() - 600000, text: '张伟 修改了节点配置' }
+  ],
+  lockedNodes: new Map([
+    ['node_5', { userId: 'user_1', userName: '张伟', time: Date.now() - 300000 }]
+  ]),
+  settings: {
+    realTimeCursor: true,
+    showUserNames: true,
+    mentionNotifications: true,
+    autoSave: true,
+    conflictResolution: 'auto'
+  },
+  stats: {
+    activeUsers: 3,
+    commentsToday: 5,
+    editsToday: 12,
+    viewTime: 45
+  },
+  mentionDropdownVisible: false,
+  mentionSearchText: '',
+  selectedMentionIndex: 0,
+  commentTargetNode: null
+};
+
+// Avatar colors palette
+const avatarColors = ['#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#06B6D4'];
+
+// Generate avatar from name
+function getAvatarColor(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return avatarColors[Math.abs(hash) % avatarColors.length];
+}
+
+function getAvatarInitial(name) {
+  return name.charAt(0).toUpperCase();
+}
+
+// Toggle Collaboration Panel
+function toggleCollabPanel() {
+  const panel = document.getElementById('collab-panel');
+  if (!panel) {
+    createCollabPanel();
+    return;
+  }
+  collabState.isActive = !collabState.isActive;
+  if (collabState.isActive) {
+    panel.classList.add('active');
+    loadCollabPanel();
+  } else {
+    panel.classList.remove('active');
+  }
+}
+
+function createCollabPanel() {
+  const panel = document.createElement('div');
+  panel.id = 'collab-panel';
+  panel.className = 'collab-panel active';
+  panel.innerHTML = getCollabPanelHTML();
+  document.body.appendChild(panel);
+  collabState.isActive = true;
+  loadCollabPanel();
+  attachCollabEventListeners();
+}
+
+function getCollabPanelHTML() {
+  const unreadCount = collabState.comments.filter(c => !c.replies || c.replies.length === 0).length;
+  return `
+    <div class="collab-header">
+      <div class="collab-title">
+        <span>🤝</span>
+        <span>实时协作</span>
+      </div>
+      <div class="collab-status">
+        <div class="collab-status-dot"></div>
+        <span>${collabState.stats.activeUsers} 人在线</span>
+      </div>
+      <button class="collab-close" onclick="toggleCollabPanel()">×</button>
+    </div>
+    <div class="collab-tabs">
+      <button class="collab-tab active" data-tab="users" onclick="switchCollabTab('users')">👥 在线用户</button>
+      <button class="collab-tab" data-tab="comments" onclick="switchCollabTab('comments')">💬 评论${unreadCount > 0 ? `<span class="badge">${unreadCount}</span>` : ''}</button>
+      <button class="collab-tab" data-tab="activity" onclick="switchCollabTab('activity')">📋 活动</button>
+      <button class="collab-tab" data-tab="stats" onclick="switchCollabTab('stats')">📊 统计</button>
+      <button class="collab-tab" data-tab="permissions" onclick="switchCollabTab('permissions')">🔐 权限</button>
+      <button class="collab-tab" data-tab="history" onclick="switchCollabTab('history')">📜 历史</button>
+      <button class="collab-tab" data-tab="settings" onclick="switchCollabTab('settings')">⚙️ 设置</button>
+    </div>
+    <div class="collab-content" id="collab-content">
+      ${getCollabUsersContent()}
+    </div>
+  `;
+}
+
+function attachCollabEventListeners() {
+  const commentInput = document.getElementById('collab-comment-input');
+  if (commentInput) {
+    commentInput.addEventListener('input', handleCommentInput);
+    commentInput.addEventListener('keydown', handleCommentKeydown);
+    commentInput.addEventListener('blur', () => setTimeout(() => hideMentionDropdown(), 200));
+  }
+}
+
+function switchCollabTab(tab) {
+  document.querySelectorAll('.collab-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  
+  const content = document.getElementById('collab-content');
+  switch(tab) {
+    case 'users': content.innerHTML = getCollabUsersContent(); break;
+    case 'comments': content.innerHTML = getCollabCommentsContent(); attachCollabEventListeners(); break;
+    case 'activity': content.innerHTML = getCollabActivityContent(); break;
+    case 'stats': content.innerHTML = getCollabStatsContent(); break;
+    case 'permissions': content.innerHTML = getCollabPermissionsContent(); break;
+    case 'history': content.innerHTML = getCollabHistoryContent(); break;
+    case 'settings': content.innerHTML = getCollabSettingsContent(); break;
+  }
+}
+
+function loadCollabPanel() {
+  const content = document.getElementById('collab-content');
+  if (content) {
+    content.innerHTML = getCollabUsersContent();
+  }
+  updateCollabCursorOverlay();
+}
+
+// Online Users Tab
+function getCollabUsersContent() {
+  const allUsers = [collabState.currentUser, ...collabState.users];
+  return `
+    <div class="collab-toolbar">
+      <button class="collab-tool-btn primary" onclick="inviteUser()">➕ 邀请用户</button>
+      <button class="collab-tool-btn" onclick="refreshCollabUsers()">🔄 刷新</button>
+    </div>
+    ${collabState.lockedNodes.size > 0 ? `
+      <div class="collab-lock-indicator locked">
+        <span class="collab-lock-icon">🔒</span>
+        <span>${collabState.lockedNodes.size} 个节点已被锁定</span>
+      </div>
+    ` : ''}
+    <div class="collab-users-grid">
+      ${allUsers.map(user => getUserCardHTML(user, user.id === 'user_self')).join('')}
+    </div>
+    <div id="collab-cursors-overlay"></div>
+  `;
+}
+
+function getUserCardHTML(user, isYou) {
+  const statusClass = user.status === 'away' ? 'away' : user.status === 'offline' ? 'offline' : '';
+  const locationText = user.location?.nodeName ? `📍 ${user.location.nodeName}` : '📍 未选择';
+  const intentText = user.intent || '⚡ 无操作';
+  return `
+    <div class="collab-user-card ${isYou ? 'is-you' : ''}">
+      <div class="collab-user-header">
+        <div class="collab-user-avatar ${statusClass}" style="background: ${user.color}">
+          ${getAvatarInitial(user.name)}
+        </div>
+        <div class="collab-user-info">
+          <div class="collab-user-name">
+            ${escHtml(user.name)}
+            ${isYou ? '<span class="collab-user-you-badge">你</span>' : ''}
+          </div>
+          <div class="collab-user-role">${getRoleText(user.role)}</div>
+        </div>
+      </div>
+      <div class="collab-user-location">
+        <span class="collab-user-location-icon">${locationText}</span>
+      </div>
+      <div class="collab-user-intent">
+        ${intentText}
+      </div>
+      <div class="collab-user-actions">
+        ${!isYou ? `
+          <button class="collab-user-action" onclick="followUser('${user.id}')">👁️ 关注</button>
+          <button class="collab-user-action" onclick="messageUser('${user.id}')">💬 消息</button>
+        ` : ''}
+        ${!isYou && user.status !== 'offline' ? `
+          <button class="collab-user-action" onclick="requestControl('${user.id}')">🖱️ 控制</button>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function getRoleText(role) {
+  const roles = { owner: '👑 所有者', editor: '✏️ 编辑者', viewer: '👁️ 查看者', admin: '🔧 管理员' };
+  return roles[role] || role;
+}
+
+// Comments Tab
+function getCollabCommentsContent() {
+  const sortedComments = [...collabState.comments].sort((a, b) => b.time - a.time);
+  return `
+    <div class="collab-toolbar">
+      <button class="collab-tool-btn primary" onclick="addNewComment()">➕ 添加评论</button>
+      <button class="collab-tool-btn" onclick="filterComments()">🔍 筛选</button>
+    </div>
+    <div class="collab-comments-list" id="collab-comments-list">
+      ${sortedComments.length === 0 ? `
+        <div style="text-align:center;padding:40px;color:var(--text-dim);">
+          <div style="font-size:32px;margin-bottom:8px;">💬</div>
+          <div>暂无评论</div>
+        </div>
+      ` : sortedComments.map(comment => getCommentHTML(comment)).join('')}
+    </div>
+    <div class="collab-comment-input-container" style="position:relative;">
+      <textarea class="collab-comment-input" id="collab-comment-input" placeholder="输入评论，使用 @ 提及用户..."></textarea>
+      <div class="collab-comment-input-footer">
+        <div class="collab-comment-hints">
+          <span class="collab-comment-hint">@ 提及用户</span>
+          <span class="collab-comment-hint"># 关联节点</span>
+        </div>
+        <button class="collab-tool-btn primary" onclick="submitComment()">发送</button>
+      </div>
+      <div class="collab-mention-dropdown" id="collab-mention-dropdown" style="display:none;position:absolute;bottom:60px;left:12px;"></div>
+    </div>
+  `;
+}
+
+function getCommentHTML(comment) {
+  const user = findUserById(comment.userId);
+  if (!user) return '';
+  const timeAgo = getTimeAgo(comment.time);
+  const repliesHTML = comment.replies?.map(reply => {
+    const replyUser = findUserById(reply.userId);
+    return `
+      <div class="collab-comment-reply">
+        <div class="collab-comment-header">
+          <div class="collab-comment-avatar" style="background:${replyUser?.color || '#666'}">${getAvatarInitial(replyUser?.name || '?')}</div>
+          <div class="collab-comment-author">
+            <div class="collab-comment-name">${escHtml(replyUser?.name || '未知')}</div>
+            <div class="collab-comment-time">${getTimeAgo(reply.time)}</div>
+          </div>
+        </div>
+        <div class="collab-comment-body">${formatCommentContent(reply.content)}</div>
+      </div>
+    `;
+  }).join('') || '';
+  
+  return `
+    <div class="collab-comment" data-comment-id="${comment.id}">
+      <div class="collab-comment-header">
+        <div class="collab-comment-avatar" style="background:${user.color}">${getAvatarInitial(user.name)}</div>
+        <div class="collab-comment-author">
+          <div class="collab-comment-name">${escHtml(user.name)}</div>
+          <div class="collab-comment-time">${timeAgo}</div>
+        </div>
+      </div>
+      ${comment.nodeId ? `<div class="collab-comment-node" onclick="focusNode('${comment.nodeId}')">📍 节点</div>` : ''}
+      <div class="collab-comment-body">${formatCommentContent(comment.content)}</div>
+      <div class="collab-comment-actions">
+        <button class="collab-comment-action" onclick="likeComment('${comment.id}')">👍 赞</button>
+        <button class="collab-comment-action" onclick="replyToComment('${comment.id}')">💬 回复</button>
+        <button class="collab-comment-action" onclick="resolveComment('${comment.id}')">✓ 解决</button>
+      </div>
+      ${repliesHTML}
+    </div>
+  `;
+}
+
+function formatCommentContent(content) {
+  return escHtml(content).replace(/@(\w+)/g, '<span class="collab-comment-mention">@$1</span>');
+}
+
+function findUserById(userId) {
+  if (userId === 'user_self') return collabState.currentUser;
+  return collabState.users.find(u => u.id === userId);
+}
+
+function getTimeAgo(timestamp) {
+  const seconds = Math.floor((Date.now() - timestamp) / 1000);
+  if (seconds < 60) return '刚刚';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} 分钟前`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} 小时前`;
+  const days = Math.floor(hours / 24);
+  return `${days} 天前`;
+}
+
+function handleCommentInput(e) {
+  const text = e.target.value;
+  const cursorPos = e.target.selectionStart;
+  const textBeforeCursor = text.substring(0, cursorPos);
+  
+  // Check for @ mention
+  const atMatch = textBeforeCursor.match(/@(\w*)$/);
+  if (atMatch) {
+    collabState.mentionSearchText = atMatch[1];
+    showMentionDropdown(atMatch[1], cursorPos - atMatch[0].length);
+  } else {
+    hideMentionDropdown();
+  }
+}
+
+function handleCommentKeydown(e) {
+  const dropdown = document.getElementById('collab-mention-dropdown');
+  if (!dropdown || dropdown.style.display === 'none') return;
+  
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    collabState.selectedMentionIndex = Math.min(collabState.selectedMentionIndex + 1, collabState.mentionSearchResults.length - 1);
+    updateMentionDropdownSelection();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    collabState.selectedMentionIndex = Math.max(collabState.selectedMentionIndex - 1, 0);
+    updateMentionDropdownSelection();
+  } else if (e.key === 'Enter' || e.key === 'Tab') {
+    e.preventDefault();
+    if (collabState.mentionSearchResults[collabState.selectedMentionIndex]) {
+      insertMention(collabState.mentionSearchResults[collabState.selectedMentionIndex]);
+    }
+  } else if (e.key === 'Escape') {
+    hideMentionDropdown();
+  }
+}
+
+function showMentionDropdown(search, position) {
+  const dropdown = document.getElementById('collab-mention-dropdown');
+  if (!dropdown) return;
+  
+  const allUsers = [collabState.currentUser, ...collabState.users].filter(u => u.status !== 'offline');
+  collabState.mentionSearchResults = allUsers.filter(u => u.name.toLowerCase().includes(search.toLowerCase()));
+  collabState.selectedMentionIndex = 0;
+  
+  if (collabState.mentionSearchResults.length === 0) {
+    dropdown.style.display = 'none';
+    return;
+  }
+  
+  dropdown.innerHTML = collabState.mentionSearchResults.map((user, i) => `
+    <div class="collab-mention-item ${i === 0 ? 'selected' : ''}" data-user-id="${user.id}">
+      <div class="collab-mention-avatar" style="background:${user.color}">${getAvatarInitial(user.name)}</div>
+      <div class="collab-mention-name">${escHtml(user.name)}</div>
+      <div class="collab-mention-role">${getRoleText(user.role)}</div>
+    </div>
+  `).join('');
+  
+  dropdown.style.display = 'block';
+  
+  // Attach click handlers
+  dropdown.querySelectorAll('.collab-mention-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const user = collabState.mentionSearchResults.find(u => u.id === item.dataset.userId);
+      if (user) insertMention(user);
+    });
+  });
+}
+
+function updateMentionDropdownSelection() {
+  const dropdown = document.getElementById('collab-mention-dropdown');
+  if (!dropdown) return;
+  dropdown.querySelectorAll('.collab-mention-item').forEach((item, i) => {
+    item.classList.toggle('selected', i === collabState.selectedMentionIndex);
+  });
+}
+
+function hideMentionDropdown() {
+  const dropdown = document.getElementById('collab-mention-dropdown');
+  if (dropdown) dropdown.style.display = 'none';
+  collabState.mentionDropdownVisible = false;
+}
+
+function insertMention(user) {
+  const input = document.getElementById('collab-comment-input');
+  if (!input) return;
+  
+  const text = input.value;
+  const cursorPos = input.selectionStart;
+  const textBeforeCursor = text.substring(0, cursorPos);
+  const textAfterCursor = text.substring(cursorPos);
+  const atIndex = textBeforeCursor.lastIndexOf('@');
+  
+  input.value = textBeforeCursor.substring(0, atIndex) + '@' + user.name + ' ' + textAfterCursor;
+  input.focus();
+  hideMentionDropdown();
+}
+
+function submitComment() {
+  const input = document.getElementById('collab-comment-input');
+  if (!input || !input.value.trim()) {
+    showToast('请输入评论内容');
+    return;
+  }
+  
+  const newComment = {
+    id: 'c_' + Date.now(),
+    userId: 'user_self',
+    nodeId: collabState.commentTargetNode,
+    content: input.value.trim(),
+    time: Date.now(),
+    replies: []
+  };
+  
+  collabState.comments.unshift(newComment);
+  addActivity('comment', '评论');
+  
+  // Check for mentions and notify
+  const mentions = input.value.match(/@(\w+)/g);
+  if (mentions && collabState.settings.mentionNotifications) {
+    mentions.forEach(mention => {
+      const mentionedUser = mention.substring(1);
+      showToast(`已通知 ${mentionedUser}`);
+    });
+  }
+  
+  input.value = '';
+  collabState.commentTargetNode = null;
+  switchCollabTab('comments');
+  showToast('评论已发送');
+}
+
+function replyToComment(commentId) {
+  const input = document.getElementById('collab-comment-input');
+  if (input) {
+    input.focus();
+    input.placeholder = '回复评论...';
+    collabState.replyingTo = commentId;
+  }
+}
+
+function likeComment(commentId) {
+  showToast('已点赞');
+}
+
+function resolveComment(commentId) {
+  collabState.comments = collabState.comments.filter(c => c.id !== commentId);
+  switchCollabTab('comments');
+  showToast('评论已标记为已解决');
+}
+
+function addNewComment() {
+  const input = document.getElementById('collab-comment-input');
+  if (input) {
+    input.focus();
+    collabState.commentTargetNode = null;
+  }
+}
+
+// Activity Tab
+function getCollabActivityContent() {
+  return `
+    <div class="collab-toolbar">
+      <button class="collab-tool-btn" onclick="filterActivity()">🔍 筛选</button>
+      <button class="collab-tool-btn" onclick="exportActivity()">📥 导出</button>
+    </div>
+    <div class="collab-activity-list">
+      ${collabState.activities.map(activity => getActivityItemHTML(activity)).join('')}
+    </div>
+  `;
+}
+
+function getActivityItemHTML(activity) {
+  const user = findUserById(activity.userId);
+  if (!user) return '';
+  
+  const icons = { edit: '✏️', comment: '💬', lock: '🔒', join: '👋', leave: '👋', view: '👁️', create: '➕', delete: '🗑️' };
+  const iconColors = { edit: 'var(--primary)', comment: 'var(--success)', lock: 'var(--warning)', join: 'var(--primary)', leave: 'var(--error)', view: 'var(--text-dim)', create: 'var(--success)', delete: 'var(--error)' };
+  
+  return `
+    <div class="collab-activity-item">
+      <div class="collab-activity-icon" style="background:${iconColors[activity.type] || 'var(--text-dim)'}20;color:${iconColors[activity.type] || 'var(--text-dim)'}">
+        ${icons[activity.type] || '📌'}
+      </div>
+      <div class="collab-activity-content">
+        <div class="collab-activity-text">
+          <strong>${escHtml(user.name)}</strong> ${getActivityText(activity)}
+        </div>
+        <div class="collab-activity-time">${getTimeAgo(activity.time)}</div>
+      </div>
+    </div>
+  `;
+}
+
+function getActivityText(activity) {
+  const texts = {
+    edit: `编辑了 <strong>${activity.target}</strong>`,
+    comment: `评论了 <strong>${activity.target}</strong>`,
+    lock: `锁定了 <strong>${activity.target}</strong>`,
+    unlock: `解锁了 <strong>${activity.target}</strong>`,
+    join: `加入了协作`,
+    leave: `离开了协作`,
+    view: `查看了 <strong>${activity.target}</strong>`,
+    create: `创建了 <strong>${activity.target}</strong>`,
+    delete: `删除了 <strong>${activity.target}</strong>`
+  };
+  return texts[activity.type] || activity.target;
+}
+
+function addActivity(type, target) {
+  collabState.activities.unshift({
+    id: 'a_' + Date.now(),
+    userId: 'user_self',
+    type,
+    target,
+    time: Date.now()
+  });
+}
+
+// Stats Tab
+function getCollabStatsContent() {
+  return `
+    <div class="collab-stats-grid">
+      <div class="collab-stat-card">
+        <div class="collab-stat-icon">👥</div>
+        <div class="collab-stat-value">${collabState.stats.activeUsers}</div>
+        <div class="collab-stat-label">在线用户</div>
+      </div>
+      <div class="collab-stat-card">
+        <div class="collab-stat-icon">💬</div>
+        <div class="collab-stat-value">${collabState.stats.commentsToday}</div>
+        <div class="collab-stat-label">今日评论</div>
+        <div class="collab-stat-change positive">↑ 2</div>
+      </div>
+      <div class="collab-stat-card">
+        <div class="collab-stat-icon">✏️</div>
+        <div class="collab-stat-value">${collabState.stats.editsToday}</div>
+        <div class="collab-stat-label">今日编辑</div>
+        <div class="collab-stat-change positive">↑ 5</div>
+      </div>
+      <div class="collab-stat-card">
+        <div class="collab-stat-icon">⏱️</div>
+        <div class="collab-stat-value">${collabState.stats.viewTime}m</div>
+        <div class="collab-stat-label">在线时长</div>
+      </div>
+    </div>
+    <div class="collab-toolbar">
+      <button class="collab-tool-btn" onclick="refreshCollabStats()">🔄 刷新统计</button>
+      <button class="collab-tool-btn" onclick="exportCollabReport()">📥 导出报告</button>
+    </div>
+  `;
+}
+
+// Permissions Tab
+function getCollabPermissionsContent() {
+  const allUsers = [collabState.currentUser, ...collabState.users];
+  return `
+    <div class="collab-toolbar">
+      <button class="collab-tool-btn primary" onclick="inviteUser()">➕ 添加用户</button>
+      <button class="collab-tool-btn" onclick="manageRoles()">👥 角色管理</button>
+    </div>
+    <div class="collab-permission-list">
+      ${allUsers.map(user => `
+        <div class="collab-permission-item">
+          <div class="collab-permission-user">
+            <div class="collab-permission-avatar" style="background:${user.color}">${getAvatarInitial(user.name)}</div>
+            <div>
+              <div class="collab-permission-name">${escHtml(user.name)}</div>
+              <div class="collab-permission-email">${user.id === 'user_self' ? 'current@user.com' : user.name.toLowerCase() + '@example.com'}</div>
+            </div>
+          </div>
+          <select class="collab-permission-select" onchange="changePermission('${user.id}', this.value)" ${user.id === 'user_self' ? 'disabled' : ''}>
+            <option value="owner" ${user.role === 'owner' ? 'selected' : ''}>👑 所有者</option>
+            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>🔧 管理员</option>
+            <option value="editor" ${user.role === 'editor' ? 'selected' : ''}>✏️ 编辑者</option>
+            <option value="viewer" ${user.role === 'viewer' ? 'selected' : ''}>👁️ 查看者</option>
+          </select>
+          ${user.id !== 'user_self' ? `
+            <button class="collab-permission-remove" onclick="removeUser('${user.id}')">移除</button>
+          ` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function changePermission(userId, newRole) {
+  const user = collabState.users.find(u => u.id === userId);
+  if (user) {
+    user.role = newRole;
+    showToast(`已将 ${user.name} 设为 ${getRoleText(newRole)}`);
+  }
+}
+
+function removeUser(userId) {
+  const user = collabState.users.find(u => u.id === userId);
+  if (user) {
+    collabState.users = collabState.users.filter(u => u.id !== userId);
+    addActivity('leave', '');
+    switchCollabTab('permissions');
+    showToast(`已移除 ${user.name}`);
+  }
+}
+
+// History Tab
+function getCollabHistoryContent() {
+  const sortedHistory = [...collabState.history].sort((a, b) => b.time - a.time);
+  return `
+    <div class="collab-toolbar">
+      <button class="collab-tool-btn" onclick="filterHistory()">🔍 筛选</button>
+      <button class="collab-tool-btn" onclick="clearHistory()">🗑️ 清空</button>
+    </div>
+    <div class="collab-history-timeline">
+      ${sortedHistory.map(item => `
+        <div class="collab-history-item">
+          <div class="collab-history-time">${formatTime(item.time)}</div>
+          <div class="collab-history-text">${item.text}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function formatTime(timestamp) {
+  const date = new Date(timestamp);
+  return date.toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+// Settings Tab
+function getCollabSettingsContent() {
+  return `
+    <div class="collab-settings-section">
+      <div class="collab-settings-title">⚠️ 协作设置</div>
+      <div class="collab-settings-row">
+        <div>
+          <div class="collab-settings-label">实时光标同步</div>
+          <div class="collab-settings-desc">在其他用户移动时显示其光标位置</div>
+        </div>
+        <div class="collab-toggle ${collabState.settings.realTimeCursor ? 'active' : ''}" onclick="toggleCollabSetting('realTimeCursor')"></div>
+      </div>
+      <div class="collab-settings-row">
+        <div>
+          <div class="collab-settings-label">显示用户名标签</div>
+          <div class="collab-settings-desc">在光标旁显示用户名称</div>
+        </div>
+        <div class="collab-toggle ${collabState.settings.showUserNames ? 'active' : ''}" onclick="toggleCollabSetting('showUserNames')"></div>
+      </div>
+      <div class="collab-settings-row">
+        <div>
+          <div class="collab-settings-label">@提及通知</div>
+          <div class="collab-settings-desc">当被提及时时收到通知</div>
+        </div>
+        <div class="collab-toggle ${collabState.settings.mentionNotifications ? 'active' : ''}" onclick="toggleCollabSetting('mentionNotifications')"></div>
+      </div>
+      <div class="collab-settings-row">
+        <div>
+          <div class="collab-settings-label">自动保存</div>
+          <div class="collab-settings-desc">协作时自动保存更改</div>
+        </div>
+        <div class="collab-toggle ${collabState.settings.autoSave ? 'active' : ''}" onclick="toggleCollabSetting('autoSave')"></div>
+      </div>
+    </div>
+    <div class="collab-settings-section">
+      <div class="collab-settings-title">🔐 冲突解决</div>
+      <div class="collab-settings-row">
+        <div>
+          <div class="collab-settings-label">冲突解决策略</div>
+          <div class="collab-settings-desc">当多人同时编辑同一节点时的处理方式</div>
+        </div>
+        <select class="collab-select" onchange="changeConflictStrategy(this.value)">
+          <option value="auto" ${collabState.settings.conflictResolution === 'auto' ? 'selected' : ''}>🤖 自动合并</option>
+          <option value="manual" ${collabState.settings.conflictResolution === 'manual' ? 'selected' : ''}>👤 手动确认</option>
+          <option value="last" ${collabState.settings.conflictResolution === 'last' ? 'selected' : ''}>⏰ 最后保存优先</option>
+          <option value="lock" ${collabState.settings.conflictResolution === 'lock' ? 'selected' : ''}>🔒 锁定节点</option>
+        </select>
+      </div>
+    </div>
+    <div class="collab-settings-section">
+      <div class="collab-settings-title">🎨 显示设置</div>
+      <div class="collab-settings-row">
+        <div>
+          <div class="collab-settings-label">光标动画</div>
+          <div class="collab-settings-desc">显示平滑光标移动动画</div>
+        </div>
+        <select class="collab-select" onchange="changeCursorAnimation(this.value)">
+          <option value="smooth">平滑</option>
+          <option value="instant">即时</option>
+        </select>
+      </div>
+      <div class="collab-settings-row">
+        <div>
+          <div class="collab-settings-label">用户名显示时长</div>
+          <div class="collab-settings-desc">光标旁用户名标签的显示时间</div>
+        </div>
+        <select class="collab-select" onchange="changeLabelDuration(this.value)">
+          <option value="3">3 秒</option>
+          <option value="5">5 秒</option>
+          <option value="10">10 秒</option>
+          <option value="always">始终显示</option>
+        </select>
+      </div>
+    </div>
+  `;
+}
+
+function toggleCollabSetting(setting) {
+  collabState.settings[setting] = !collabState.settings[setting];
+  switchCollabTab('settings');
+  showToast(`已${collabState.settings[setting] ? '开启' : '关闭'} ${setting}`);
+}
+
+function changeConflictStrategy(strategy) {
+  collabState.settings.conflictResolution = strategy;
+  showToast(`冲突解决策略已更新为 ${strategy}`);
+}
+
+function changeCursorAnimation(value) {
+  showToast(`光标动画已设置为 ${value}`);
+}
+
+function changeLabelDuration(value) {
+  showToast(`用户名显示时长已设置为 ${value}`);
+}
+
+// Cursor overlay on canvas
+function updateCollabCursorOverlay() {
+  if (!collabState.settings.realTimeCursor) return;
+  
+  const canvas = document.getElementById('main-canvas');
+  if (!canvas) return;
+  
+  let container = canvas.parentElement.querySelector('.collab-cursors-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'collab-cursors-container';
+    canvas.parentElement.style.position = 'relative';
+    canvas.parentElement.appendChild(container);
+  }
+  
+  container.innerHTML = collabState.users
+    .filter(u => u.status !== 'offline' && u.cursor)
+    .map(user => `
+      <div class="collab-cursor" style="left:${user.cursor.x}px;top:${user.cursor.y}px;">
+        <span class="collab-cursor-icon" style="color:${user.color}">↖</span>
+        ${collabState.settings.showUserNames ? `
+          <span class="collab-cursor-label" style="background:${user.color}">${escHtml(user.name)}</span>
+        ` : ''}
+      </div>
+    `).join('');
+}
+
+// User actions
+function followUser(userId) {
+  showToast('已开始关注该用户');
+}
+
+function messageUser(userId) {
+  showToast('打开消息窗口');
+}
+
+function requestControl(userId) {
+  showToast('已发送控制请求');
+}
+
+function inviteUser() {
+  showToast('打开邀请用户面板');
+}
+
+function refreshCollabUsers() {
+  loadCollabPanel();
+  showToast('用户列表已刷新');
+}
+
+function filterActivity() {
+  showToast('打开活动筛选面板');
+}
+
+function exportActivity() {
+  showToast('正在导出活动记录...');
+}
+
+function refreshCollabStats() {
+  collabState.stats.activeUsers = [collabState.currentUser, ...collabState.users].filter(u => u.status !== 'offline').length;
+  switchCollabTab('stats');
+  showToast('统计数据已刷新');
+}
+
+function exportCollabReport() {
+  showToast('正在生成协作报告...');
+}
+
+function manageRoles() {
+  showToast('打开角色管理面板');
+}
+
+function filterHistory() {
+  showToast('打开历史筛选面板');
+}
+
+function clearHistory() {
+  collabState.history = [];
+  switchCollabTab('history');
+  showToast('历史记录已清空');
+}
+
+function focusNode(nodeId) {
+  // Deselect current
+  document.querySelectorAll('.node.selected').forEach(n => n.classList.remove('selected'));
+  const node = document.querySelector(`[data-id="${nodeId}"]`);
+  if (node) {
+    node.classList.add('selected');
+    centerOnNode(nodeId);
+  }
+}
+
+function centerOnNode(nodeId) {
+  showToast(`已定位到节点`);
+}
+
+// OT Algorithm simulation
+const OTEngine = {
+  pendingOps: [],
+  version: 0,
+  
+  // Transform operation against concurrent operation
+  transform(op1, op2) {
+    // If op2 affects different position, both apply
+    // If op2 affects same position, op1 wins (last-writer-wins for simulation)
+    if (op1.pos !== op2.pos) {
+      return op1;
+    }
+    // Same position conflict
+    if (op1.type === 'update' && op2.type === 'update') {
+      return { ...op1, value: op1.value, priority: 'local' };
+    }
+    return op1;
+  },
+  
+  // Apply local operation
+  applyOp(op) {
+    this.pendingOps.push({ ...op, version: ++this.version });
+    this.broadcastOp(op);
+  },
+  
+  // Receive remote operation
+  receiveOp(op) {
+    // Transform against pending local ops
+    let transformedOp = op;
+    this.pendingOps.forEach(pending => {
+      transformedOp = this.transform(transformedOp, pending);
+    });
+    this.applyRemotely(transformedOp);
+  },
+  
+  // Apply operation from remote
+  applyRemotely(op) {
+    // Actual application would modify node state
+    console.log('Applying remote op:', op);
+  },
+  
+  // Broadcast to other users (simulation)
+  broadcastOp(op) {
+    // In real app, would send via WebSocket
+    console.log('Broadcasting op:', op);
+  }
+};
+
+// Lock mechanism
+const CollabLock = {
+  lockNode(nodeId, userId) {
+    if (collabState.lockedNodes.has(nodeId)) {
+      const lock = collabState.lockedNodes.get(nodeId);
+      if (lock.userId !== userId) {
+        return { success: false, lockedBy: lock.userName };
+      }
+    }
+    const user = findUserById(userId);
+    collabState.lockedNodes.set(nodeId, {
+      userId,
+      userName: user?.name || 'Unknown',
+      time: Date.now()
+    });
+    addActivity('lock', `节点: ${nodeId}`);
+    return { success: true };
+  },
+  
+  unlockNode(nodeId, userId) {
+    const lock = collabState.lockedNodes.get(nodeId);
+    if (lock && lock.userId === userId) {
+      collabState.lockedNodes.delete(nodeId);
+      addActivity('unlock', `节点: ${nodeId}`);
+      return { success: true };
+    }
+    return { success: false };
+  },
+  
+  isLocked(nodeId) {
+    return collabState.lockedNodes.has(nodeId);
+  },
+  
+  getLockInfo(nodeId) {
+    return collabState.lockedNodes.get(nodeId);
+  },
+  
+  // Check if user can edit node
+  canEdit(nodeId, userId) {
+    if (!this.isLocked(nodeId)) return true;
+    const lock = this.lockedNodes.get(nodeId);
+    return lock.userId === userId;
+  }
+};
+
+// Real-time cursor sync (simulation)
+function startCursorSync() {
+  const canvas = document.getElementById('main-canvas');
+  if (!canvas) return;
+  
+  let lastSent = 0;
+  const sendInterval = 50; // Send every 50ms max
+  
+  canvas.addEventListener('mousemove', (e) => {
+    const now = Date.now();
+    if (now - lastSent < sendInterval) return;
+    lastSent = now;
+    
+    const rect = canvas.getBoundingClientRect();
+    collabState.currentUser.cursor = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+    
+    // Simulate broadcast to other users
+    OTEngine.applyOp({
+      type: 'cursor',
+      userId: collabState.currentUser.id,
+      pos: collabState.currentUser.cursor
+    });
+  });
+  
+  // Simulate receiving cursor updates from other users
+  setInterval(() => {
+    collabState.users.forEach(user => {
+      if (user.status !== 'offline') {
+        user.cursor = {
+          x: user.cursor.x + (Math.random() - 0.5) * 2,
+          y: user.cursor.y + (Math.random() - 0.5) * 2
+        };
+      }
+    });
+    updateCollabCursorOverlay();
+  }, 100);
+}
+
+// Simulate real-time updates
+function startCollabSimulation() {
+  // Random user status changes
+  setInterval(() => {
+    const statuses = ['online', 'away', 'offline'];
+    collabState.users.forEach(user => {
+      if (Math.random() > 0.9) {
+        user.status = statuses[Math.floor(Math.random() * 2)]; // Don't set offline randomly
+      }
+    });
+    collabState.stats.activeUsers = [collabState.currentUser, ...collabState.users].filter(u => u.status !== 'offline').length;
+  }, 10000);
+  
+  // Random intent updates
+  setInterval(() => {
+    const intents = ['正在编辑', '查看中', '选择节点', null];
+    collabState.users.forEach(user => {
+      if (user.status === 'online' && Math.random() > 0.7) {
+        user.intent = intents[Math.floor(Math.random() * intents.length)];
+      }
+    });
+  }, 5000);
+}
+
+// Node lock hooks
+function checkNodeLock(nodeId) {
+  if (CollabLock.isLocked(nodeId)) {
+    const lock = CollabLock.getLockInfo(nodeId);
+    if (lock.userId !== collabState.currentUser.id) {
+      showToast(`该节点已被 ${lock.userName} 锁定`);
+      return false;
+    }
+  }
+  return true;
+}
+
+function lockCurrentNode(nodeId) {
+  const result = CollabLock.lockNode(nodeId, collabState.currentUser.id);
+  if (result.success) {
+    showToast('节点已锁定');
+  } else {
+    showToast(`该节点已被 ${result.lockedBy} 锁定`);
+  }
+  return result.success;
+}
+
+function unlockCurrentNode(nodeId) {
+  const result = CollabLock.unlockNode(nodeId, collabState.currentUser.id);
+  if (result.success) {
+    showToast('节点已解锁');
+  }
+  return result.success;
+}
+
+// Initialize collaboration on load
+document.addEventListener('DOMContentLoaded', () => {
+  startCursorSync();
+  startCollabSimulation();
+});
+
+// ============ End v28 Real-Time Collaboration ============
 
     // ============ End v19 Mobile, PWA & Offline Features ============
   </script>
