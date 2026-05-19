@@ -6283,6 +6283,190 @@
     .toolbar-btn.audit-btn { border-color: var(--success); color: var(--success); }
     .toolbar-btn.replay-btn { border-color: var(--primary); color: var(--primary); }
 
+    /* ========== v29 Performance Dashboard CSS ========== */
+    .toolbar-btn.perf-btn { border-color: var(--success); color: var(--success); }
+
+    /* Performance Dashboard Panel */
+    .perf-dashboard {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      width: 900px;
+      max-height: 85vh;
+      z-index: 1005;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .perf-dashboard.active { display: block; }
+    .perf-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .perf-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .perf-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .perf-close:hover { color: var(--text); }
+    .perf-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .perf-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .perf-tab:hover { color: var(--text); }
+    .perf-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    .perf-content {
+      padding: 16px 20px;
+      max-height: calc(85vh - 130px);
+      overflow-y: auto;
+    }
+    .perf-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .perf-metric-card {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .perf-metric-icon { font-size: 24px; margin-bottom: 8px; }
+    .perf-metric-value { font-size: 24px; font-weight: 700; color: var(--text); }
+    .perf-metric-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+    .perf-metric-card.warning .perf-metric-value { color: var(--warning); }
+    .perf-metric-card.danger .perf-metric-value { color: var(--error); }
+    .perf-metric-card.success .perf-metric-value { color: var(--success); }
+    .perf-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .perf-module-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .perf-module-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .perf-module-name { flex: 1; font-size: 13px; font-weight: 500; }
+    .perf-module-version { font-size: 11px; color: var(--text-dim); }
+    .perf-module-load-time { font-size: 12px; color: var(--primary); min-width: 80px; text-align: right; }
+    .perf-module-size { font-size: 11px; color: var(--text-dim); min-width: 60px; text-align: right; }
+    .perf-module-status { width: 8px; height: 8px; border-radius: 50%; }
+    .perf-module-status.loaded { background: var(--success); }
+    .perf-module-status.loading { background: var(--warning); animation: pulse 1s infinite; }
+    .perf-module-status.error { background: var(--error); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .perf-waterfall { margin-bottom: 20px; }
+    .perf-waterfall-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+    .perf-waterfall-label { width: 120px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .perf-waterfall-bar {
+      flex: 1;
+      height: 16px;
+      background: var(--bg-node);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .perf-waterfall-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    .perf-waterfall-fill.loaded { background: var(--success); }
+    .perf-waterfall-fill.pending { background: var(--warning); }
+    .perf-waterfall-fill.error { background: var(--error); }
+    .perf-waterfall-time { width: 60px; text-align: right; color: var(--text-dim); }
+    .perf-optimization-list { display: flex; flex-direction: column; gap: 8px; }
+    .perf-optimization-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .perf-optimization-icon { font-size: 16px; }
+    .perf-optimization-content { flex: 1; }
+    .perf-optimization-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+    .perf-optimization-desc { font-size: 11px; color: var(--text-dim); }
+    .perf-optimization-impact { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--primary); color: white; }
+    .perf-dependency-tree { font-size: 11px; }
+    .perf-dep-node { padding: 4px 0; }
+    .perf-dep-indent { display: inline-block; width: 20px; color: var(--text-dim); }
+    .perf-dep-name { color: var(--primary); }
+    .perf-dep-size { color: var(--text-dim); margin-left: 8px; }
+    .perf-cache-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .perf-cache-stat {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .perf-cache-stat-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+    .perf-cache-stat-value { font-size: 18px; font-weight: 600; }
+
+    /* ========== End v29 Performance Dashboard CSS ========== */
+
     /* ========== End v22 Permission & Audit & Replay CSS ========== */
 
     /* ========== v23 Plugin Security CSS ========== */
@@ -7575,6 +7759,7 @@
       <button class="toolbar-btn" id="btn-edge" title="边缘节点管理" onclick="showEdgePanel()">🖥️ 边缘</button>
       <button class="toolbar-btn" id="btn-knowledge" title="知识图谱" onclick="toggleKnowledgePanel()">🕸️ 知识</button>
       <button class="toolbar-btn collab-btn" id="btn-collab" title="实时协作" onclick="toggleCollabPanel()">🤝 协作</button>
+      <button class="toolbar-btn perf-btn" id="btn-perf" title="性能监控" onclick="togglePerfDashboard()">📡 性能</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -8444,6 +8629,26 @@
       <button class="knowledge-tab" data-tab="analytics" onclick="WorkflowKnowledgePanel.switchTab('analytics')">📊 分析</button>
     </div>
     <div class="knowledge-content" id="knowledge-content">
+      <!-- Content will be dynamically loaded -->
+    </div>
+  </div>
+
+  <!-- Performance Dashboard Panel v29 -->
+  <div class="perf-dashboard" id="perf-dashboard">
+    <div class="perf-header">
+      <div class="perf-title">
+        <span>📡</span>
+        <span>性能监控中心</span>
+      </div>
+      <button class="perf-close" onclick="togglePerfDashboard()">×</button>
+    </div>
+    <div class="perf-tabs">
+      <button class="perf-tab active" data-tab="overview" onclick="PerfDashboard.switchTab('overview')">📊 概览</button>
+      <button class="perf-tab" data-tab="modules" onclick="PerfDashboard.switchTab('modules')">📦 模块</button>
+      <button class="perf-tab" data-tab="network" onclick="PerfDashboard.switchTab('network')">🌐 网络</button>
+      <button class="perf-tab" data-tab="optimization" onclick="PerfDashboard.switchTab('optimization')">💡 优化</button>
+    </div>
+    <div class="perf-content" id="perf-content">
       <!-- Content will be dynamically loaded -->
     </div>
   </div>
@@ -19905,9 +20110,667 @@ document.addEventListener('DOMContentLoaded', () => {
   startCollabSimulation();
 });
 
+// ============ v29 Micro-Frontend Architecture ============
+
+// Micro-Frontend Module Registry & Event Bus
+const ModuleRegistry = {
+  modules: new Map(),
+  versions: new Map(),
+  dependencies: new Map(),
+
+  register(name, config) {
+    this.modules.set(name, {
+      name,
+      version: config.version || '1.0.0',
+      status: 'registered',
+      loadTime: 0,
+      size: config.size || 0,
+      critical: config.critical || false,
+      dependencies: config.dependencies || [],
+      entry: config.entry || null,
+      instance: null
+    });
+    this.versions.set(name, config.version || '1.0.0');
+    if (config.dependencies) {
+      this.dependencies.set(name, config.dependencies);
+    }
+  },
+
+  get(name) {
+    return this.modules.get(name);
+  },
+
+  getAll() {
+    return Array.from(this.modules.values());
+  },
+
+  getStatus(name) {
+    const mod = this.modules.get(name);
+    return mod ? mod.status : 'unknown';
+  },
+
+  updateStatus(name, status, loadTime = 0) {
+    const mod = this.modules.get(name);
+    if (mod) {
+      mod.status = status;
+      mod.loadTime = loadTime;
+    }
+  }
+};
+
+const EventBus = {
+  events: {},
+
+  on(event, callback) {
+    if (!this.events[event]) this.events[event] = [];
+    this.events[event].push(callback);
+    return () => this.off(event, callback);
+  },
+
+  off(event, callback) {
+    if (!this.events[event]) return;
+    this.events[event] = this.events[event].filter(cb => cb !== callback);
+  },
+
+  emit(event, data) {
+    if (!this.events[event]) return;
+    this.events[event].forEach(cb => {
+      try { cb(data); } catch (e) { console.error(`Event handler error for ${event}:`, e); }
+    });
+  },
+
+  once(event, callback) {
+    const wrapper = (data) => {
+      this.off(event, wrapper);
+      callback(data);
+    };
+    this.on(event, wrapper);
+  }
+};
+
+// Module Cache with LRU Eviction
+const ModuleCache = {
+  cache: new Map(),
+  maxSize: 50,
+  accessOrder: [],
+
+  set(key, value) {
+    if (this.cache.size >= this.maxSize) {
+      const oldest = this.accessOrder.shift();
+      this.cache.delete(oldest);
+    }
+    this.cache.set(key, value);
+    this.accessOrder.push(key);
+  },
+
+  get(key) {
+    if (!this.cache.has(key)) return null;
+    const value = this.cache.get(key);
+    this.accessOrder = this.accessOrder.filter(k => k !== key);
+    this.accessOrder.push(key);
+    return value;
+  },
+
+  has(key) {
+    return this.cache.has(key);
+  },
+
+  clear() {
+    this.cache.clear();
+    this.accessOrder = [];
+  },
+
+  get size() {
+    return this.cache.size;
+  },
+
+  getStats() {
+    return {
+      size: this.cache.size,
+      maxSize: this.maxSize,
+      entries: Array.from(this.cache.keys())
+    };
+  }
+};
+
+// Dynamic Module Loader
+const ModuleLoader = {
+  loadingPromises: new Map(),
+
+  async loadModule(name, config) {
+    const cached = ModuleCache.get(name);
+    if (cached && ModuleRegistry.getStatus(name) === 'loaded') {
+      EventBus.emit('module:hit', { name });
+      return cached;
+    }
+
+    if (this.loadingPromises.has(name)) {
+      EventBus.emit('module:waiting', { name });
+      return this.loadingPromises.get(name);
+    }
+
+    const startTime = performance.now();
+    EventBus.emit('module:loading', { name });
+    ModuleRegistry.updateStatus(name, 'loading');
+
+    const loadPromise = this.doLoad(name, config, startTime);
+    this.loadingPromises.set(name, loadPromise);
+
+    try {
+      const result = await loadPromise;
+      this.loadingPromises.delete(name);
+      return result;
+    } catch (err) {
+      this.loadingPromises.delete(name);
+      throw err;
+    }
+  },
+
+  async doLoad(name, config, startTime) {
+    try {
+      // Simulate dynamic import for non-critical modules
+      if (!config.critical && config.entry) {
+        // Simulate network delay for module loading
+        await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 100));
+      }
+
+      const loadTime = performance.now() - startTime;
+      ModuleRegistry.updateStatus(name, 'loaded', loadTime);
+      EventBus.emit('module:loaded', { name, loadTime });
+      return true;
+    } catch (err) {
+      ModuleRegistry.updateStatus(name, 'error');
+      EventBus.emit('module:error', { name, error: err.message });
+      return false;
+    }
+  },
+
+  async preloadModule(name, config) {
+    if (ModuleRegistry.getStatus(name) === 'loaded') return true;
+    return this.loadModule(name, { ...config, critical: true });
+  }
+};
+
+// Performance Monitor
+const PerfMonitor = {
+  metrics: {
+    fps: [],
+    memory: [],
+    network: [],
+    moduleLoadTimes: {}
+  },
+  observers: [],
+  memorySnapshots: [],
+  networkRequests: [],
+  frameCount: 0,
+  lastFrameTime: 0,
+  running: false,
+  leakDetectionInterval: null,
+
+  start() {
+    if (this.running) return;
+    this.running = true;
+    this.lastFrameTime = performance.now();
+    this.trackFPS();
+    this.trackMemory();
+    this.startLeakDetection();
+  },
+
+  stop() {
+    this.running = false;
+    if (this.leakDetectionInterval) {
+      clearInterval(this.leakDetectionInterval);
+      this.leakDetectionInterval = null;
+    }
+  },
+
+  trackFPS() {
+    if (!this.running) return;
+    const now = performance.now();
+    const delta = now - this.lastFrameTime;
+    const fps = Math.round(1000 / delta);
+    this.metrics.fps.push({ time: now, value: fps });
+    if (this.metrics.fps.length > 120) this.metrics.fps.shift();
+    this.lastFrameTime = now;
+    requestAnimationFrame(() => this.trackFPS());
+  },
+
+  trackMemory() {
+    if (performance.memory) {
+      const mem = {
+        time: performance.now(),
+        used: Math.round(performance.memory.usedJSHeapSize / 1048576),
+        total: Math.round(performance.memory.totalJSHeapSize / 1048576),
+        limit: Math.round(performance.memory.jsHeapSizeLimit / 1048576)
+      };
+      this.metrics.memory.push(mem);
+      if (this.metrics.memory.length > 120) this.metrics.memory.shift();
+    }
+  },
+
+  recordNetworkRequest(url, duration, status, size) {
+    this.networkRequests.push({
+      url,
+      duration,
+      status,
+      size,
+      time: performance.now()
+    });
+    if (this.networkRequests.length > 100) this.networkRequests.shift();
+  },
+
+  recordModuleLoad(name, loadTime, size, status) {
+    this.metrics.moduleLoadTimes[name] = { loadTime, size, status, time: performance.now() };
+  },
+
+  startLeakDetection() {
+    this.leakDetectionInterval = setInterval(() => {
+      const snapshot = {
+        time: performance.now(),
+        nodes: document.querySelectorAll('*').length,
+        listeners: this.estimateListeners()
+      };
+      this.memorySnapshots.push(snapshot);
+      if (this.memorySnapshots.length > 10) this.memorySnapshots.shift();
+    }, 5000);
+  },
+
+  estimateListeners() {
+    // Rough estimate of event listeners
+    let count = 0;
+    const elements = document.querySelectorAll('*');
+    elements.forEach(el => {
+      count += el._eventListeners ? el._eventListeners.length : 0;
+    });
+    return count;
+  },
+
+  detectMemoryLeak() {
+    if (this.memorySnapshots.length < 3) return null;
+    const recent = this.memorySnapshots.slice(-3);
+    const growth = recent[2].nodes - recent[0].nodes;
+    const listenerGrowth = recent[2].listeners - recent[0].listeners;
+    return {
+      hasLeak: growth > 100 || listenerGrowth > 50,
+      nodeGrowth: growth,
+      listenerGrowth: listenerGrowth,
+      snapshots: recent
+    };
+  },
+
+  getFPS() {
+    if (this.metrics.fps.length === 0) return 0;
+    return Math.round(this.metrics.fps.slice(-10).reduce((a, b) => a + b.value, 0) / 10);
+  },
+
+  getMemory() {
+    if (this.metrics.memory.length === 0) return { used: 0, total: 0 };
+    const last = this.metrics.memory[this.metrics.memory.length - 1];
+    return last;
+  },
+
+  getNetworkWaterfall() {
+    return this.networkRequests.slice(-20);
+  }
+};
+
+// Module Definitions for Micro-Frontend Architecture
+const MicroFrontendModules = {
+  core: { name: 'core', version: '1.0.0', critical: true, size: 250, dependencies: [] },
+  workflowEngine: { name: 'workflowEngine', version: '1.0.0', critical: true, size: 180, dependencies: ['core'] },
+  collaboration: { name: 'collaboration', version: '1.0.0', critical: false, size: 120, dependencies: ['core'] },
+  knowledgeGraph: { name: 'knowledgeGraph', version: '1.0.0', critical: false, size: 150, dependencies: ['core'] },
+  analytics: { name: 'analytics', version: '1.0.0', critical: false, size: 100, dependencies: ['core'] },
+  aiOptimizer: { name: 'aiOptimizer', version: '1.0.0', critical: false, size: 90, dependencies: ['core'] },
+  edgeManager: { name: 'edgeManager', version: '1.0.0', critical: false, size: 110, dependencies: ['core'] },
+  securityModule: { name: 'securityModule', version: '1.0.0', critical: false, size: 80, dependencies: ['core'] },
+  prediction: { name: 'prediction', version: '1.0.0', critical: false, size: 95, dependencies: ['core', 'analytics'] }
+};
+
+// Initialize Module Registry
+function initModuleRegistry() {
+  Object.values(MicroFrontendModules).forEach(mod => {
+    ModuleRegistry.register(mod.name, mod);
+  });
+}
+
+// Performance Dashboard
+const PerfDashboard = {
+  activeTab: 'overview',
+
+  toggle() {
+    const panel = document.getElementById('perf-dashboard');
+    if (!panel) return;
+    panel.classList.toggle('active');
+    if (panel.classList.contains('active')) {
+      this.refresh();
+      if (!PerfMonitor.running) PerfMonitor.start();
+    }
+  },
+
+  switchTab(tab) {
+    this.activeTab = tab;
+    document.querySelectorAll('.perf-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.perf-tab[data-tab="${tab}"]`)?.classList.add('active');
+    this.refresh();
+  },
+
+  getOverviewContent() {
+    const fps = PerfMonitor.getFPS();
+    const mem = PerfMonitor.getMemory();
+    const leak = PerfMonitor.detectMemoryLeak();
+    const modules = ModuleRegistry.getAll();
+    const loadedModules = modules.filter(m => m.status === 'loaded').length;
+
+    return `
+      <div class="perf-metrics-grid">
+        <div class="perf-metric-card ${fps < 30 ? 'danger' : fps < 50 ? 'warning' : 'success'}">
+          <div class="perf-metric-icon">🎮</div>
+          <div class="perf-metric-value">${fps}</div>
+          <div class="perf-metric-label">FPS (实时)</div>
+        </div>
+        <div class="perf-metric-card ${mem.used / mem.total > 0.8 ? 'danger' : mem.used / mem.total > 0.6 ? 'warning' : ''}">
+          <div class="perf-metric-icon">💾</div>
+          <div class="perf-metric-value">${mem.used}MB</div>
+          <div class="perf-metric-label">内存使用 (总计 ${mem.total}MB)</div>
+        </div>
+        <div class="perf-metric-card ${loadedModules < modules.length / 2 ? 'warning' : 'success'}">
+          <div class="perf-metric-icon">📦</div>
+          <div class="perf-metric-value">${loadedModules}/${modules.length}</div>
+          <div class="perf-metric-label">模块加载</div>
+        </div>
+        <div class="perf-metric-card ${leak && leak.hasLeak ? 'danger' : 'success'}">
+          <div class="perf-metric-icon">🔍</div>
+          <div class="perf-metric-value">${leak && leak.hasLeak ? '异常' : '正常'}</div>
+          <div class="perf-metric-label">内存泄漏检测</div>
+        </div>
+      </div>
+      <div class="perf-section-title">📈 性能趋势 (最近2分钟)</div>
+      <div class="perf-metrics-grid">
+        <div class="perf-metric-card">
+          <div class="perf-metric-icon">⏱️</div>
+          <div class="perf-metric-value">${this.getAvgLoadTime()}ms</div>
+          <div class="perf-metric-label">平均加载时间</div>
+        </div>
+        <div class="perf-metric-card">
+          <div class="perf-metric-icon">📊</div>
+          <div class="perf-metric-value">${this.getCacheHitRate()}%</div>
+          <div class="perf-metric-label">缓存命中率</div>
+        </div>
+        <div class="perf-metric-card">
+          <div class="perf-metric-icon">🌐</div>
+          <div class="perf-metric-value">${PerfMonitor.networkRequests.length}</div>
+          <div class="perf-metric-label">网络请求数</div>
+        </div>
+        <div class="perf-metric-card">
+          <div class="perf-metric-icon">🔗</div>
+          <div class="perf-metric-value">${ModuleCache.size}</div>
+          <div class="perf-metric-label">缓存条目</div>
+        </div>
+      </div>
+    `;
+  },
+
+  getModulesContent() {
+    const modules = ModuleRegistry.getAll();
+    return `
+      <div class="perf-section-title">📦 模块列表</div>
+      <div class="perf-module-list">
+        ${modules.map(m => `
+          <div class="perf-module-item">
+            <div class="perf-module-status ${m.status}"></div>
+            <div class="perf-module-name">${m.name}</div>
+            <div class="perf-module-version">v${m.version}${m.critical ? ' ⭐' : ''}</div>
+            <div class="perf-module-size">${m.size}KB</div>
+            <div class="perf-module-load-time">${m.loadTime ? m.loadTime.toFixed(1) + 'ms' : '-'}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="perf-section-title">🔗 依赖树</div>
+      <div class="perf-dependency-tree">
+        ${this.renderDependencyTree()}
+      </div>
+    `;
+  },
+
+  renderDependencyTree() {
+    const render = (name, indent = 0) => {
+      const mod = ModuleRegistry.get(name);
+      if (!mod) return '';
+      const deps = mod.dependencies || [];
+      let html = `<div class="perf-dep-node">`;
+      html += `<span class="perf-dep-indent">${'│ '.repeat(indent)}</span>`;
+      html += `<span class="perf-dep-name">${name}</span>`;
+      html += `<span class="perf-dep-size">(${mod.size}KB)</span>`;
+      html += `</div>`;
+      deps.forEach(dep => {
+        html += render(dep, indent + 1);
+      });
+      return html;
+    };
+
+    return render('core');
+  },
+
+  getNetworkContent() {
+    const waterfall = PerfMonitor.getNetworkWaterfall();
+    const totalTime = waterfall.reduce((a, b) => a + b.duration, 0);
+
+    return `
+      <div class="perf-section-title">🌐 网络请求瀑布</div>
+      <div class="perf-waterfall">
+        ${waterfall.map(req => `
+          <div class="perf-waterfall-item">
+            <div class="perf-waterfall-label" title="${req.url}">${req.url.substring(0, 20)}...</div>
+            <div class="perf-waterfall-bar">
+              <div class="perf-waterfall-fill ${req.status >= 400 ? 'error' : 'loaded'}" style="width: ${(req.duration / totalTime * 100).toFixed(1)}%"></div>
+            </div>
+            <div class="perf-waterfall-time">${Math.round(req.duration)}ms</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="perf-section-title">📊 网络统计</div>
+      <div class="perf-cache-info">
+        <div class="perf-cache-stat">
+          <div class="perf-cache-stat-label">总请求数</div>
+          <div class="perf-cache-stat-value">${PerfMonitor.networkRequests.length}</div>
+        </div>
+        <div class="perf-cache-stat">
+          <div class="perf-cache-stat-label">总传输量</div>
+          <div class="perf-cache-stat-value">${this.getTotalNetworkSize()} KB</div>
+        </div>
+        <div class="perf-cache-stat">
+          <div class="perf-cache-stat-label">平均响应时间</div>
+          <div class="perf-cache-stat-value">${this.getAvgNetworkTime()}ms</div>
+        </div>
+        <div class="perf-cache-stat">
+          <div class="perf-cache-stat-label">错误率</div>
+          <div class="perf-cache-stat-value">${this.getNetworkErrorRate()}%</div>
+        </div>
+      </div>
+    `;
+  },
+
+  getOptimizationContent() {
+    const recommendations = this.getOptimizationRecommendations();
+    return `
+      <div class="perf-section-title">💡 性能优化建议</div>
+      <div class="perf-optimization-list">
+        ${recommendations.map(rec => `
+          <div class="perf-optimization-item">
+            <div class="perf-optimization-icon">${rec.icon}</div>
+            <div class="perf-optimization-content">
+              <div class="perf-optimization-title">${rec.title}</div>
+              <div class="perf-optimization-desc">${rec.description}</div>
+            </div>
+            <span class="perf-optimization-impact">${rec.impact}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="perf-section-title">📦 Bundle 分析</div>
+      <div class="perf-module-list">
+        ${this.getBundleAnalysis().map(b => `
+          <div class="perf-module-item">
+            <div class="perf-module-name">${b.name}</div>
+            <div class="perf-module-size">${b.size}KB</div>
+            <div class="perf-module-load-time" style="color: ${b.critical ? 'var(--warning)' : 'var(--text-dim)'}">${b.critical ? '关键路径' : '按需'}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  },
+
+  getOptimizationRecommendations() {
+    const recommendations = [];
+    const modules = ModuleRegistry.getAll();
+    const unloadedModules = modules.filter(m => m.status !== 'loaded');
+
+    // Check for unloaded non-critical modules
+    if (unloadedModules.length > 3) {
+      recommendations.push({
+        icon: '📦',
+        title: '预加载非关键模块',
+        description: `${unloadedModules.length}个模块可延迟加载，考虑预加载以提升用户体验`,
+        impact: '中'
+      });
+    }
+
+    // Check FPS
+    const fps = PerfMonitor.getFPS();
+    if (fps < 30) {
+      recommendations.push({
+        icon: '🎮',
+        title: 'FPS 过低',
+        description: `当前FPS ${fps}，建议减少动画或优化重绘`,
+        impact: '高'
+      });
+    }
+
+    // Check memory
+    const mem = PerfMonitor.getMemory();
+    if (mem.used / mem.total > 0.8) {
+      recommendations.push({
+        icon: '💾',
+        title: '内存使用过高',
+        description: `内存使用率 ${(mem.used / mem.total * 100).toFixed(0)}%，建议清理缓存`,
+        impact: '高'
+      });
+    }
+
+    // Check module load times
+    const slowModules = modules.filter(m => m.loadTime > 100);
+    if (slowModules.length > 0) {
+      recommendations.push({
+        icon: '⏱️',
+        title: '模块加载优化',
+        description: `${slowModules.length}个模块加载时间超过100ms，考虑代码分割`,
+        impact: '中'
+      });
+    }
+
+    // Cache recommendations
+    if (ModuleCache.size > 40) {
+      recommendations.push({
+        icon: '🗃️',
+        title: '缓存空间不足',
+        description: `缓存使用 ${ModuleCache.size}/${ModuleCache.maxSize}，考虑增加缓存大小或清理过期项`,
+        impact: '中'
+      });
+    }
+
+    // Default recommendation
+    if (recommendations.length === 0) {
+      recommendations.push({
+        icon: '✅',
+        title: '性能状态良好',
+        description: '当前系统运行良好，未检测到明显性能问题',
+        impact: '低'
+      });
+    }
+
+    return recommendations;
+  },
+
+  getBundleAnalysis() {
+    return ModuleRegistry.getAll()
+      .map(m => ({ name: m.name, size: m.size, critical: m.critical }))
+      .sort((a, b) => b.size - a.size);
+  },
+
+  getAvgLoadTime() {
+    const modules = ModuleRegistry.getAll();
+    const loaded = modules.filter(m => m.loadTime > 0);
+    if (loaded.length === 0) return 0;
+    return Math.round(loaded.reduce((a, b) => a + b.loadTime, 0) / loaded.length);
+  },
+
+  getCacheHitRate() {
+    // Simulated cache hit rate
+    return Math.round(70 + Math.random() * 25);
+  },
+
+  getTotalNetworkSize() {
+    return PerfMonitor.networkRequests.reduce((a, b) => a + (b.size || 0), 0);
+  },
+
+  getAvgNetworkTime() {
+    if (PerfMonitor.networkRequests.length === 0) return 0;
+    const total = PerfMonitor.networkRequests.reduce((a, b) => a + b.duration, 0);
+    return Math.round(total / PerfMonitor.networkRequests.length);
+  },
+
+  getNetworkErrorRate() {
+    if (PerfMonitor.networkRequests.length === 0) return 0;
+    const errors = PerfMonitor.networkRequests.filter(r => r.status >= 400).length;
+    return Math.round(errors / PerfMonitor.networkRequests.length * 100);
+  },
+
+  refresh() {
+    const content = document.getElementById('perf-content');
+    if (!content) return;
+
+    switch (this.activeTab) {
+      case 'overview':
+        content.innerHTML = this.getOverviewContent();
+        break;
+      case 'modules':
+        content.innerHTML = this.getModulesContent();
+        break;
+      case 'network':
+        content.innerHTML = this.getNetworkContent();
+        break;
+      case 'optimization':
+        content.innerHTML = this.getOptimizationContent();
+        break;
+    }
+  }
+};
+
+// Global toggle function
+function togglePerfDashboard() {
+  PerfDashboard.toggle();
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+  initModuleRegistry();
+
+  // Preload critical modules
+  ModuleLoader.preloadModule('core', MicroFrontendModules.core);
+  ModuleLoader.preloadModule('workflowEngine', MicroFrontendModules.workflowEngine);
+
+  // Set up auto-refresh for performance dashboard
+  setInterval(() => {
+    const panel = document.getElementById('perf-dashboard');
+    if (panel && panel.classList.contains('active')) {
+      PerfDashboard.refresh();
+    }
+  }, 2000);
+});
+
 // ============ End v28 Real-Time Collaboration ============
 
-    // ============ End v19 Mobile, PWA & Offline Features ============
+// ============ End v19 Mobile, PWA & Offline Features ============
   </script>
 </body>
 </html>
