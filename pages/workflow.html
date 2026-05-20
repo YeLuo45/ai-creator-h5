@@ -6292,7 +6292,95 @@
 
     /* ========== v32 Quantum Computing CSS ========== */
     .toolbar-btn.quantum-btn { border-color: #00D9FF; color: #00D9FF; }
+    .toolbar-btn.twin-btn { border-color: #A855F7; color: #A855F7; }
+    .toolbar-btn.twin-btn:hover { background: rgba(168,85,247,0.1); }
     .toolbar-btn.quantum-btn:hover { background: rgba(0,217,255,0.1); }
+
+    /* ========== v33 Digital Twin CSS ========== */
+    .digital-twin-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid #A855F7;
+      border-radius: 12px;
+      width: 400px;
+      max-height: 85vh;
+      z-index: 1010;
+      box-shadow: 0 8px 32px rgba(168,85,247,0.25);
+      overflow: hidden;
+    }
+    .digital-twin-panel.active { display: block; }
+    .twin-panel-content { padding: 16px; max-height: 85vh; overflow-y: auto; }
+    .twin-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .twin-panel-header h3 { color: #A855F7; margin: 0; font-size: 18px; }
+    .twin-close-btn { background: none; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
+    .twin-close-btn:hover { color: var(--text); }
+    .twin-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .twin-tool-btn { padding: 6px 12px; background: var(--bg-node); border: 1px solid var(--border); border-radius: 6px; color: var(--text); cursor: pointer; font-size: 12px; transition: all 0.2s; }
+    .twin-tool-btn:hover { border-color: #A855F7; color: #A855F7; }
+    .twin-config { background: var(--bg-node); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    .twin-config-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .twin-config-row:last-child { margin-bottom: 0; }
+    .twin-config-row label { font-size: 12px; color: var(--text-dim); min-width: 60px; }
+    .twin-config-row input[type="range"] { flex: 1; }
+    .twin-config-row span { font-size: 11px; color: #A855F7; min-width: 50px; text-align: right; }
+    .twin-config-row select { padding: 4px 8px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; }
+    .twin-sync-status { background: var(--bg-node); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    .twin-sync-indicator { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .twin-sync-indicator.active { color: var(--success); }
+    .twin-sync-indicator.paused { color: var(--warning); }
+    .twin-sync-stats { display: flex; gap: 16px; font-size: 11px; color: var(--text-dim); }
+    .twin-sync-time { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+    .twin-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
+    .twin-tab { padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); cursor: pointer; font-size: 12px; transition: all 0.2s; }
+    .twin-tab:hover { color: var(--text); }
+    .twin-tab.active { background: #A855F7; border-color: #A855F7; color: white; }
+    .twin-tab-content { min-height: 200px; }
+    .twin-tab-pane { display: none; }
+    .twin-tab-pane.active { display: block; }
+    .twin-entity-list { max-height: 200px; overflow-y: auto; margin-bottom: 12px; }
+    .twin-entity-item { background: var(--bg-node); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+    .twin-entity-item:hover { border-color: #A855F7; }
+    .twin-entity-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .twin-entity-icon { font-size: 16px; }
+    .twin-entity-name { flex: 1; font-size: 13px; font-weight: 500; }
+    .twin-status-badge { padding: 2px 8px; border-radius: 4px; font-size: 10px; }
+    .twin-status-badge.online { background: rgba(16,185,129,0.2); color: var(--success); }
+    .twin-status-badge.offline { background: rgba(100,100,120,0.2); color: var(--text-dim); }
+    .twin-entity-props { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+    .twin-prop { font-size: 10px; padding: 2px 6px; background: var(--bg-dark); border-radius: 4px; color: var(--text-dim); }
+    .twin-entity-meta { display: flex; gap: 12px; font-size: 10px; color: var(--text-dim); }
+    .twin-entity-detail { background: var(--bg-node); border-radius: 8px; padding: 12px; min-height: 150px; }
+    .twin-detail-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .twin-detail-icon { font-size: 24px; }
+    .twin-detail-name { font-size: 14px; font-weight: 600; }
+    .twin-detail-id { font-size: 10px; color: var(--text-dim); }
+    .twin-detail-section { margin-bottom: 12px; }
+    .twin-detail-title { font-size: 11px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px; }
+    .twin-detail-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px solid var(--border); }
+    .twin-detail-row:last-child { border-bottom: none; }
+    .twin-detail-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .twin-action-btn { padding: 6px 12px; background: var(--primary); border: none; border-radius: 6px; color: white; cursor: pointer; font-size: 11px; transition: background 0.2s; }
+    .twin-action-btn:hover { background: var(--primary-dark); }
+    .twin-sensor-list { display: flex; flex-direction: column; gap: 8px; }
+    .twin-sensor-item { display: flex; align-items: center; gap: 12px; background: var(--bg-node); padding: 10px; border-radius: 8px; }
+    .twin-sensor-name { flex: 1; font-size: 12px; }
+    .twin-sensor-value { font-size: 14px; font-weight: 600; color: #A855F7; }
+    .twin-sensor-loc { font-size: 10px; color: var(--text-dim); }
+    .twin-geo-info { background: var(--bg-node); border-radius: 8px; padding: 12px; }
+    .twin-geo-stat { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
+    .twin-geo-item { display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+    .twin-3d-canvas { background: var(--bg-node); border-radius: 8px; display: block; margin: 0 auto; }
+    .twin-3d-legend { display: flex; justify-content: center; gap: 16px; margin-top: 8px; font-size: 10px; }
+    .twin-legend-item { display: flex; align-items: center; gap: 4px; }
+    .twin-charts { margin-top: 12px; }
+    .twin-chart-section { background: var(--bg-node); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+    .twin-chart-title { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+    .twin-chart { background: var(--bg-dark); border-radius: 6px; display: block; width: 100%; }
+    .twin-empty { text-align: center; color: var(--text-dim); font-size: 12px; padding: 20px; }
 
     /* Quantum Panel */
     .quantum-panel {
@@ -8535,6 +8623,7 @@
       <button class="toolbar-btn evolution-btn" id="btn-evolution" title="AI自我进化" onclick="toggleEvolutionPanel()">🧬 进化</button>
       <button class="toolbar-btn blockchain-btn" id="btn-blockchain" title="区块链管理" onclick="toggleBlockchainPanel()">⛓️ 区块链</button>
       <button class="toolbar-btn quantum-btn" id="btn-quantum" title="量子计算" onclick="toggleQuantumPanel()">⚛️ 量子</button>
+      <button class="toolbar-btn" id="btn-twin" title="数字孪生" onclick="toggleDigitalTwinPanel()">🔄 孪生</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -9449,7 +9538,10 @@
     </div>
   </div>
 
-  <!-- Quantum Computing Panel v32 -->
+  <!-- Digital Twin Panel v33 -->
+  <div class="digital-twin-panel" id="digital-twin-panel"></div>
+
+<!-- Quantum Computing Panel v32 -->
   <div class="quantum-panel" id="quantum-panel">
     <div class="quantum-header">
       <div class="quantum-title">
@@ -24544,7 +24636,567 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ============ End v32 Quantum Computing System ============
 
-// ============ End v19 Mobile, PWA & Offline Features ============
-</script>
+// ============ v33 Digital Twin System ============
+const DigitalTwin = {
+  entities: new Map(),
+  sensors: new Map(),
+  syncInterval: 1000,
+  priority: 'normal',
+  latency: 0,
+  lastSync: Date.now(),
+  syncEnabled: true,
+  _history: [],
+  _3dCanvas: null,
+  _3dCtx: null,
+
+  init() {
+    this._3dCanvas = document.getElementById('twin-3d-canvas');
+    if (this._3dCanvas) {
+      this._3dCtx = this._3dCanvas.getContext('3d');
+    }
+    this._loadFromStorage();
+    this._startSync();
+    this._renderEntityList();
+    this._updateSyncStatus();
+    this._initSampleData();
+  },
+
+  _initSampleData() {
+    if (this.entities.size === 0) {
+      this.createEntity({ name: '工厂设备-A1', type: 'machine', status: 'running', priority: 'high' });
+      this.createEntity({ name: '传感器-温湿度', type: 'sensor', status: 'active', priority: 'normal' });
+      this.createEntity({ name: 'AGV搬运车-01', type: 'vehicle', status: 'idle', priority: 'normal' });
+    }
+  },
+
+  _loadFromStorage() {
+    try {
+      const data = localStorage.getItem('digitalTwinEntities');
+      if (data) {
+        const arr = JSON.parse(data);
+        arr.forEach(e => this.entities.set(e.id, e));
+      }
+    } catch (e) {}
+  },
+
+  _saveToStorage() {
+    try {
+      localStorage.setItem('digitalTwinEntities', JSON.stringify([...this.entities.values()]));
+    } catch (e) {}
+  },
+
+  createEntity(opts = {}) {
+    const id = 'twin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const entity = {
+      id,
+      name: opts.name || '新实体',
+      type: opts.type || 'generic',
+      status: opts.status || 'inactive',
+      priority: opts.priority || 'normal',
+      properties: opts.properties || this._defaultProperties(opts.type),
+      state: { ...this._defaultState() },
+      physicalProps: {},
+      virtualProps: {},
+      lastSync: Date.now(),
+      syncCount: 0,
+      createdAt: Date.now()
+    };
+    this.entities.set(id, entity);
+    this._saveToStorage();
+    this._renderEntityList();
+    this._update3DVisualization();
+    this._addHistory('create', entity);
+    showToast(`数字孪生实体 ${entity.name} 创建成功`);
+    return entity;
+  },
+
+  _defaultProperties(type) {
+    const base = { temperature: 25, pressure: 101.325, humidity: 50 };
+    switch(type) {
+      case 'machine': return { ...base, vibration: 0.5, speed: 0, power: 0, efficiency: 100 };
+      case 'sensor': return { ...base, reading: 0, accuracy: 99.5, battery: 85 };
+      case 'vehicle': return { ...base, speed: 0, position: { x: 0, y: 0, z: 0 }, battery: 90, load: 0 };
+      case 'robot': return { ...base, jointAngles: [0,0,0,0,0,0], taskProgress: 0, errorCount: 0 };
+      default: return base;
+    }
+  },
+
+  _defaultState() {
+    return {
+      online: false,
+      alertLevel: 'normal',
+      lastUpdate: Date.now(),
+      latency: 0,
+      syncPending: false
+    };
+  },
+
+  updateEntity(id, updates) {
+    const entity = this.entities.get(id);
+    if (!entity) return;
+    Object.assign(entity, updates);
+    entity.lastSync = Date.now();
+    entity.state.lastUpdate = Date.now();
+    this.entities.set(id, entity);
+    this._saveToStorage();
+    this._renderEntityList();
+    this._update3DVisualization();
+    this._addHistory('update', entity);
+  },
+
+  deleteEntity(id) {
+    const entity = this.entities.get(id);
+    if (!entity) return;
+    this.entities.delete(id);
+    this._saveToStorage();
+    this._renderEntityList();
+    this._update3DVisualization();
+    this._addHistory('delete', entity);
+    showToast(`数字孪生实体 ${entity.name} 已删除`);
+  },
+
+  mapPhysicalToVirtual(physicalId, virtualId, mapping) {
+    const entity = this.entities.get(virtualId);
+    if (!entity) return;
+    entity.physicalProps[physicalId] = mapping;
+    this.entities.set(virtualId, entity);
+    this._saveToStorage();
+    this._renderEntityList();
+  },
+
+  _simulatePhysicalUpdate(entity) {
+    const now = Date.now();
+    const dt = (now - (entity.lastSync || now)) / 1000;
+    if (entity.type === 'machine') {
+      entity.properties.temperature += (Math.random() - 0.5) * 2;
+      entity.properties.temperature = Math.max(15, Math.min(80, entity.properties.temperature));
+      entity.properties.vibration = Math.random() * 2;
+      entity.properties.speed = 50 + Math.random() * 50;
+      entity.properties.efficiency = 80 + Math.random() * 20;
+    } else if (entity.type === 'sensor') {
+      entity.properties.temperature += (Math.random() - 0.5) * 0.5;
+      entity.properties.humidity += (Math.random() - 0.5) * 1;
+      entity.properties.temperature = Math.max(-20, Math.min(60, entity.properties.temperature));
+      entity.properties.humidity = Math.max(10, Math.min(95, entity.properties.humidity));
+    } else if (entity.type === 'vehicle') {
+      entity.properties.speed = Math.random() > 0.3 ? 10 + Math.random() * 20 : 0;
+      entity.properties.position.x += (Math.random() - 0.5) * 0.1;
+      entity.properties.position.y += (Math.random() - 0.5) * 0.1;
+    }
+    entity.state.lastUpdate = now;
+    entity.lastSync = now;
+    entity.state.latency = this.latency + Math.random() * 20;
+    return entity;
+  },
+
+  _syncEntity(entity) {
+    const physicalEntity = this._getPhysicalCounterpart(entity);
+    if (!physicalEntity) return entity;
+    if (Math.random() < 0.1) {
+      entity.state.syncPending = true;
+      setTimeout(() => { entity.state.syncPending = false; }, 200);
+    }
+    return this._resolveConflict(entity, physicalEntity);
+  },
+
+  _getPhysicalCounterpart(entity) {
+    if (entity.priority === 'high' && Math.random() > 0.3) {
+      return { ...entity.properties, source: 'physical' };
+    }
+    return null;
+  },
+
+  _resolveConflict(virtual, physical) {
+    if (!physical) return virtual;
+    const tsVirtual = virtual.lastSync || 0;
+    const tsPhysical = Date.now() - Math.random() * 100;
+    if (tsPhysical > tsVirtual || virtual.priority === 'high') {
+      Object.assign(virtual.properties, physical);
+    }
+    return virtual;
+  },
+
+  _startSync() {
+    if (this._syncTimer) clearInterval(this._syncTimer);
+    this._syncTimer = setInterval(() => {
+      if (!this.syncEnabled) return;
+      this.latency = 10 + Math.random() * 50;
+      this.entities.forEach((entity, id) => {
+        if (entity.status === 'running' || entity.status === 'active') {
+          const updated = this._simulatePhysicalUpdate(entity);
+          const synced = this._syncEntity(updated);
+          this.entities.set(id, synced);
+        }
+      });
+      this.lastSync = Date.now();
+      this._renderEntityList();
+      this._updateSyncStatus();
+      this._updateCharts();
+    }, this.syncInterval);
+  },
+
+  setSyncInterval(ms) {
+    this.syncInterval = Math.max(100, Math.min(10000, ms));
+    this._startSync();
+  },
+
+  setPriority(p) {
+    this.priority = p;
+  },
+
+  toggleSync() {
+    this.syncEnabled = !this.syncEnabled;
+    this._updateSyncStatus();
+  },
+
+  _renderEntityList() {
+    const list = document.getElementById('twin-entity-list');
+    if (!list) return;
+    let html = '';
+    this.entities.forEach((entity, id) => {
+      const statusClass = entity.status === 'running' || entity.status === 'active' ? 'online' : 'offline';
+      const syncIcon = entity.state.syncPending ? '🔄' : (entity.state.online ? '✓' : '✗');
+      html += `
+        <div class="twin-entity-item" onclick="DigitalTwin.selectEntity('${id}')">
+          <div class="twin-entity-header">
+            <span class="twin-entity-icon">${this._getTypeIcon(entity.type)}</span>
+            <span class="twin-entity-name">${entity.name}</span>
+            <span class="twin-status-badge ${statusClass}">${entity.status}</span>
+          </div>
+          <div class="twin-entity-props">
+            ${Object.entries(entity.properties).slice(0, 3).map(([k, v]) => 
+              `<span class="twin-prop">${k}: ${typeof v === 'number' ? v.toFixed(1) : v}</span>`
+            ).join('')}
+          </div>
+          <div class="twin-entity-meta">
+            <span>优先级: ${entity.priority}</span>
+            <span>同步: ${syncIcon}</span>
+            <span>延迟: ${entity.state.latency?.toFixed(0) || 0}ms</span>
+          </div>
+        </div>
+      `;
+    });
+    list.innerHTML = html || '<div class="twin-empty">暂无实体，点击上方按钮创建</div>';
+  },
+
+  _getTypeIcon(type) {
+    const icons = { machine: '⚙️', sensor: '📡', vehicle: '🚗', robot: '🤖', generic: '📦' };
+    return icons[type] || icons.generic;
+  },
+
+  _updateSyncStatus() {
+    const status = document.getElementById('twin-sync-status');
+    if (!status) return;
+    const entityCount = this.entities.size;
+    const activeCount = [...this.entities.values()].filter(e => e.status === 'running' || e.status === 'active').length;
+    status.innerHTML = `
+      <div class="twin-sync-indicator ${this.syncEnabled ? 'active' : 'paused'}">
+        ${this.syncEnabled ? '●' : '⏸'} ${this.syncEnabled ? '同步中' : '已暂停'}
+      </div>
+      <div class="twin-sync-stats">
+        <span>实体: ${entityCount}</span>
+        <span>活跃: ${activeCount}</span>
+        <span>延迟: ${this.latency.toFixed(0)}ms</span>
+      </div>
+      <div class="twin-sync-time">上次同步: ${new Date(this.lastSync).toLocaleTimeString()}</div>
+    `;
+  },
+
+  _updateCharts() {
+    this._updatePropertyChart();
+    this._updateSyncChart();
+  },
+
+  _updatePropertyChart() {
+    const canvas = document.getElementById('twin-property-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    const entities = [...this.entities.values()].slice(0, 4);
+    const colors = ['#A855F7', '#00D9FF', '#10B981', '#F59E0B'];
+    entities.forEach((entity, i) => {
+      const temps = entity.properties.temperature || 25;
+      const y = 30 + i * 35;
+      ctx.fillStyle = colors[i];
+      ctx.fillRect(20, y, (temps / 100) * (w - 40), 20);
+      ctx.fillStyle = '#fff';
+      ctx.font = '11px Inter';
+      ctx.fillText(`${entity.name}: ${temps.toFixed(1)}°C`, 25, y + 14);
+    });
+  },
+
+  _updateSyncChart() {
+    const canvas = document.getElementById('twin-sync-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    if (!this._history.length) return;
+    const data = this._history.slice(-30);
+    ctx.strokeStyle = '#A855F7';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    data.forEach((v, i) => {
+      const x = (i / (data.length - 1)) * w;
+      const y = h - (v / 150) * (h - 10);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  },
+
+  _addHistory(type, entity) {
+    this._history.push(this.latency + Math.random() * 20);
+    if (this._history.length > 100) this._history.shift();
+  },
+
+  _update3DVisualization() {
+    const canvas = document.getElementById('twin-3d-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#1A1A2E';
+    ctx.fillRect(0, 0, w, h);
+    const entities = [...this.entities.values()];
+    entities.forEach((entity, i) => {
+      const angle = (i / entities.length) * Math.PI * 2 + Date.now() * 0.001;
+      const radius = Math.min(w, h) * 0.3;
+      const cx = w / 2 + Math.cos(angle) * radius;
+      const cy = h / 2 + Math.sin(angle) * radius * 0.6;
+      const size = entity.type === 'machine' ? 20 : entity.type === 'sensor' ? 12 : 15;
+      const colors = { machine: '#00D9FF', sensor: '#10B981', vehicle: '#F59E0B', robot: '#A855F7', generic: '#888' };
+      ctx.fillStyle = colors[entity.type] || colors.generic;
+      ctx.beginPath();
+      ctx.arc(cx, cy, size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = '10px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(entity.name.substring(0, 8), cx, cy + size + 12);
+      ctx.strokeStyle = 'rgba(168,85,247,0.3)';
+      ctx.beginPath();
+      ctx.moveTo(w / 2, h / 2);
+      ctx.lineTo(cx, cy);
+      ctx.stroke();
+    });
+    ctx.fillStyle = '#A855F7';
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '10px Inter';
+    ctx.fillText('云端', w / 2, h / 2 + 20);
+  },
+
+  selectEntity(id) {
+    const entity = this.entities.get(id);
+    if (!entity) return;
+    const detail = document.getElementById('twin-entity-detail');
+    if (!detail) return;
+    detail.innerHTML = `
+      <div class="twin-detail-header">
+        <span class="twin-detail-icon">${this._getTypeIcon(entity.type)}</span>
+        <div>
+          <div class="twin-detail-name">${entity.name}</div>
+          <div class="twin-detail-id">${entity.id}</div>
+        </div>
+      </div>
+      <div class="twin-detail-section">
+        <div class="twin-detail-title">属性</div>
+        ${Object.entries(entity.properties).map(([k, v]) => `
+          <div class="twin-detail-row">
+            <span>${k}</span>
+            <span>${typeof v === 'object' ? JSON.stringify(v) : v}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="twin-detail-section">
+        <div class="twin-detail-title">状态</div>
+        <div class="twin-detail-row"><span>在线</span><span>${entity.state.online ? '是' : '否'}</span></div>
+        <div class="twin-detail-row"><span>告警</span><span>${entity.state.alertLevel}</span></div>
+        <div class="twin-detail-row"><span>延迟</span><span>${entity.state.latency?.toFixed(1) || 0}ms</span></div>
+        <div class="twin-detail-row"><span>同步次数</span><span>${entity.syncCount}</span></div>
+      </div>
+      <div class="twin-detail-actions">
+        <button class="twin-action-btn" onclick="DigitalTwin.controlEntity('${id}', 'start')">▶ 启动</button>
+        <button class="twin-action-btn" onclick="DigitalTwin.controlEntity('${id}', 'stop')">⏹ 停止</button>
+        <button class="twin-action-btn" onclick="DigitalTwin.controlEntity('${id}', 'reset')">🔄 重置</button>
+      </div>
+    `;
+  },
+
+  controlEntity(id, action) {
+    const entity = this.entities.get(id);
+    if (!entity) return;
+    switch(action) {
+      case 'start': entity.status = 'running'; entity.state.online = true; break;
+      case 'stop': entity.status = 'stopped'; entity.state.online = false; break;
+      case 'reset':
+        entity.properties = this._defaultProperties(entity.type);
+        entity.state = this._defaultState();
+        break;
+    }
+    entity.lastSync = Date.now();
+    this.entities.set(id, entity);
+    this._saveToStorage();
+    this._renderEntityList();
+    this.selectEntity(id);
+    showToast(`设备 ${entity.name} 已${action === 'start' ? '启动' : action === 'stop' ? '停止' : '重置'}`);
+  },
+
+  createSensor(opts = {}) {
+    const id = 'sensor_' + Date.now();
+    const sensor = {
+      id,
+      name: opts.name || '传感器-' + id.substring(7, 12),
+      type: opts.type || 'temperature',
+      value: opts.value || 20 + Math.random() * 10,
+      unit: opts.unit || '°C',
+      location: opts.location || { lat: 39.9 + Math.random() * 0.1, lng: 116.4 + Math.random() * 0.1, region: 'A区' },
+      threshold: opts.threshold || { min: 15, max: 35 },
+      status: 'active',
+      lastUpdate: Date.now()
+    };
+    this.sensors.set(id, sensor);
+    this._renderEntityList();
+    return sensor;
+  },
+
+  sendCommand(deviceId, command) {
+    const entity = this.entities.get(deviceId);
+    if (!entity) return;
+    const cmdId = 'cmd_' + Date.now();
+    showToast(`命令已发送: ${command} -> ${entity.name}`);
+    setTimeout(() => {
+      if (command === 'restart') {
+        entity.status = 'running';
+        entity.properties = this._defaultProperties(entity.type);
+      }
+      this.entities.set(deviceId, entity);
+      this._renderEntityList();
+    }, 500);
+    return { cmdId, status: 'sent', target: entity.name, command };
+  },
+
+  renderPanel() {
+    return `
+      <div class="twin-panel-content">
+        <div class="twin-panel-header">
+          <h3>🔄 数字孪生</h3>
+          <button class="twin-close-btn" onclick="toggleDigitalTwinPanel()">×</button>
+        </div>
+        <div class="twin-toolbar">
+          <button class="twin-tool-btn" onclick="DigitalTwin.createEntity()">➕ 创建实体</button>
+          <button class="twin-tool-btn" onclick="DigitalTwin.createSensor()">📡 添加传感器</button>
+          <button class="twin-tool-btn" onclick="DigitalTwin.toggleSync()">${this.syncEnabled ? '⏸ 暂停同步' : '▶ 恢复同步'}</button>
+        </div>
+        <div class="twin-config">
+          <div class="twin-config-row">
+            <label>同步间隔</label>
+            <input type="range" min="100" max="5000" step="100" value="${this.syncInterval}" 
+              onchange="DigitalTwin.setSyncInterval(+this.value)" />
+            <span>${this.syncInterval}ms</span>
+          </div>
+          <div class="twin-config-row">
+            <label>优先级</label>
+            <select onchange="DigitalTwin.setPriority(this.value)">
+              <option value="low" ${this.priority === 'low' ? 'selected' : ''}>低</option>
+              <option value="normal" ${this.priority === 'normal' ? 'selected' : ''}>普通</option>
+              <option value="high" ${this.priority === 'high' ? 'selected' : ''}>高</option>
+            </select>
+          </div>
+        </div>
+        <div id="twin-sync-status" class="twin-sync-status"></div>
+        <div class="twin-tabs">
+          <button class="twin-tab active" data-tab="entities" onclick="DigitalTwin.switchTab('entities')">实体</button>
+          <button class="twin-tab" data-tab="sensors" onclick="DigitalTwin.switchTab('sensors')">传感器</button>
+          <button class="twin-tab" data-tab="geo" onclick="DigitalTwin.switchTab('geo')">地理</button>
+          <button class="twin-tab" data-tab="visual" onclick="DigitalTwin.switchTab('visual')">3D视图</button>
+        </div>
+        <div class="twin-tab-content">
+          <div id="twin-tab-entities" class="twin-tab-pane active">
+            <div id="twin-entity-list" class="twin-entity-list"></div>
+            <div id="twin-entity-detail" class="twin-entity-detail"></div>
+          </div>
+          <div id="twin-tab-sensors" class="twin-tab-pane">
+            <div class="twin-sensor-list">
+              ${[...this.sensors.values()].map(s => `
+                <div class="twin-sensor-item">
+                  <div class="twin-sensor-name">${s.name}</div>
+                  <div class="twin-sensor-value">${s.value.toFixed(1)}${s.unit}</div>
+                  <div class="twin-sensor-loc">${s.location.region}</div>
+                </div>
+              `).join('') || '<div class="twin-empty">暂无传感器</div>'}
+            </div>
+          </div>
+          <div id="twin-tab-geo" class="twin-tab-pane">
+            <div class="twin-geo-info">
+              <div class="twin-geo-stat">地理区域: ${this.sensors.size || 3}个</div>
+              <div class="twin-geo-stat">坐标范围: 39.9°N - 40.0°N, 116.4°E - 116.5°E</div>
+              ${[...this.sensors.values()].map(s => `
+                <div class="twin-geo-item">
+                  <span>${s.name}</span>
+                  <span>${s.location.lat.toFixed(4)}, ${s.location.lng.toFixed(4)}</span>
+                </div>
+              `).join('') || '<div class="twin-empty">暂无位置数据</div>'}
+            </div>
+          </div>
+          <div id="twin-tab-visual" class="twin-tab-pane">
+            <canvas id="twin-3d-canvas" class="twin-3d-canvas" width="280" height="200"></canvas>
+            <div class="twin-3d-legend">
+              <span class="twin-legend-item"><i style="color:#00D9FF">●</i> 机器</span>
+              <span class="twin-legend-item"><i style="color:#10B981">●</i> 传感器</span>
+              <span class="twin-legend-item"><i style="color:#F59E0B">●</i> 车辆</span>
+              <span class="twin-legend-item"><i style="color:#A855F7">●</i> 机器人</span>
+            </div>
+          </div>
+        </div>
+        <div class="twin-charts">
+          <div class="twin-chart-section">
+            <div class="twin-chart-title">📊 实体属性监控</div>
+            <canvas id="twin-property-chart" class="twin-chart" width="280" height="120"></canvas>
+          </div>
+          <div class="twin-chart-section">
+            <div class="twin-chart-title">📈 同步延迟历史</div>
+            <canvas id="twin-sync-chart" class="twin-chart" width="280" height="80"></canvas>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  switchTab(tab) {
+    document.querySelectorAll('.twin-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.twin-tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.twin-tab[data-tab="${tab}"]`)?.classList.add('active');
+    document.getElementById(`twin-tab-${tab}`)?.classList.add('active');
+    if (tab === 'visual') {
+      setTimeout(() => this._update3DVisualization(), 50);
+    }
+  },
+
+  toggle() {
+    const panel = document.getElementById('digital-twin-panel');
+    if (!panel) return;
+    if (panel.classList.contains('active')) {
+      panel.classList.remove('active');
+    } else {
+      panel.innerHTML = this.renderPanel();
+      panel.classList.add('active');
+      this.init();
+    }
+  }
+};
+
+function toggleDigitalTwinPanel() {
+  DigitalTwin.toggle();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  DigitalTwin.init();
+});
+
 </body>
 </html>
