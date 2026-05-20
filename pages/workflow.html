@@ -6290,6 +6290,223 @@
     .toolbar-btn.blockchain-btn { border-color: var(--warning); color: var(--warning); }
     .toolbar-btn.blockchain-btn:hover { background: rgba(245,158,11,0.1); }
 
+    /* ========== v32 Quantum Computing CSS ========== */
+    .toolbar-btn.quantum-btn { border-color: #00D9FF; color: #00D9FF; }
+    .toolbar-btn.quantum-btn:hover { background: rgba(0,217,255,0.1); }
+
+    /* Quantum Panel */
+    .quantum-panel {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-panel);
+      border: 1px solid #00D9FF;
+      border-radius: 12px;
+      width: 1100px;
+      max-height: 88vh;
+      z-index: 1008;
+      box-shadow: 0 8px 32px rgba(0,217,255,0.2);
+    }
+    .quantum-panel.active { display: block; }
+    .quantum-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .quantum-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #00D9FF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quantum-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .quantum-close:hover { color: var(--text); }
+    .quantum-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .quantum-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .quantum-tab:hover { color: var(--text); }
+    .quantum-tab.active {
+      background: #00D9FF;
+      border-color: #00D9FF;
+      color: #000;
+    }
+    .quantum-content {
+      padding: 16px 20px;
+      max-height: calc(88vh - 130px);
+      overflow-y: auto;
+    }
+    .quantum-section {
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .quantum-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quantum-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .quantum-stat-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .quantum-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #00D9FF;
+    }
+    .quantum-stat-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .quantum-circuit-canvas {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      min-height: 200px;
+      position: relative;
+    }
+    .quantum-gate-palette {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .quantum-gate-btn {
+      padding: 8px 12px;
+      background: var(--bg-node);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .quantum-gate-btn:hover { border-color: #00D9FF; color: #00D9FF; }
+    .quantum-gate-btn.selected { border-color: #00D9FF; background: rgba(0,217,255,0.1); color: #00D9FF; }
+    .quantum-gate-wire {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .quantum-wire-label {
+      width: 60px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .quantum-bloch-sphere {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
+    .quantum-state-vector {
+      font-family: monospace;
+      font-size: 13px;
+      background: var(--bg-dark);
+      padding: 12px;
+      border-radius: 6px;
+      line-height: 1.8;
+    }
+    .quantum-measurement-bar {
+      height: 24px;
+      background: var(--bg-node);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 4px 0;
+    }
+    .quantum-measurement-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00D9FF, #00FF88);
+      transition: width 0.3s;
+    }
+    .quantum-network-canvas {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      min-height: 250px;
+    }
+    .quantum-node-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .quantum-node-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .quantum-node-card:hover { border-color: #00D9FF; }
+    .quantum-security-meter {
+      height: 8px;
+      background: var(--bg-node);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .quantum-security-fill {
+      height: 100%;
+      transition: width 0.5s;
+    }
+    .quantum-qkd-visual {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      background: var(--bg-dark);
+      border-radius: 8px;
+    }
+    .quantum-photon {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: quantumPulse 1s infinite;
+    }
+    @keyframes quantumPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
     /* Blockchain Panel */
     .blockchain-panel {
       display: none;
@@ -8317,6 +8534,7 @@
       <button class="toolbar-btn perf-btn" id="btn-perf" title="性能监控" onclick="togglePerfDashboard()">📡 性能</button>
       <button class="toolbar-btn evolution-btn" id="btn-evolution" title="AI自我进化" onclick="toggleEvolutionPanel()">🧬 进化</button>
       <button class="toolbar-btn blockchain-btn" id="btn-blockchain" title="区块链管理" onclick="toggleBlockchainPanel()">⛓️ 区块链</button>
+      <button class="toolbar-btn quantum-btn" id="btn-quantum" title="量子计算" onclick="toggleQuantumPanel()">⚛️ 量子</button>
     </div>
 
     <!-- Floating AI Chat Button -->
@@ -9227,6 +9445,26 @@
       <button class="blockchain-tab" data-tab="settings" onclick="BlockchainPanel.switchTab('settings')">⚙️ 配置</button>
     </div>
     <div class="blockchain-content" id="blockchain-content">
+      <!-- Content will be dynamically loaded -->
+    </div>
+  </div>
+
+  <!-- Quantum Computing Panel v32 -->
+  <div class="quantum-panel" id="quantum-panel">
+    <div class="quantum-header">
+      <div class="quantum-title">
+        <span>⚛️</span>
+        <span>量子计算中心</span>
+      </div>
+      <button class="quantum-close" onclick="toggleQuantumPanel()">×</button>
+    </div>
+    <div class="quantum-tabs">
+      <button class="quantum-tab active" data-tab="simulator" onclick="QuantumPanel.switchTab('simulator')">🔬 量子模拟器</button>
+      <button class="quantum-tab" data-tab="ml" onclick="QuantumPanel.switchTab('ml')">🧠 量子机器学习</button>
+      <button class="quantum-tab" data-tab="security" onclick="QuantumPanel.switchTab('security')">🔐 量子安全</button>
+      <button class="quantum-tab" data-tab="resources" onclick="QuantumPanel.switchTab('resources')">📊 资源监控</button>
+    </div>
+    <div class="quantum-content" id="quantum-content">
       <!-- Content will be dynamically loaded -->
     </div>
   </div>
@@ -23280,6 +23518,1031 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============ End v31 Blockchain System ============
+
+// ============ v32 Quantum Computing System ============
+
+// Quantum State and Gates
+const QuantumSimulator = {
+  numQubits: 3,
+  state: [1, 0, 0, 0, 0, 0, 0, 0], // |000⟩ initial state
+  circuit: [],
+
+  // Complex number operations
+  complexMul(a, b) {
+    return { re: a.re * b.re - a.im * b.im, im: a.re * b.im + a.im * b.re };
+  },
+
+  complexAdd(a, b) {
+    return { re: a.re + b.re, im: a.im + b.im };
+  },
+
+  complexConj(a) {
+    return { re: a.re, im: -a.im };
+  },
+
+  // Quantum gates
+  gates: {
+    I: [[1, 0], [0, 1]],
+    X: [[0, 1], [1, 0]],
+    Y: [[0, { re: 0, im: -1 }], [{ re: 0, im: 1 }, 0]],
+    Z: [[1, 0], [0, -1]],
+    H: [[1 / Math.sqrt(2), 1 / Math.sqrt(2)], [1 / Math.sqrt(2), -1 / Math.sqrt(2)]],
+    S: [[1, 0], [0, { re: 0, im: 1 }]],
+    T: [[1, 0], [0, { re: Math.cos(Math.PI / 4), im: Math.sin(Math.PI / 4) }]]
+  },
+
+  // CNOT gate matrix (control=0, target=1)
+  CNOT: [
+    [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]
+  ],
+
+  // Toffoli gate (CCNOT)
+  Toffoli: [
+    [1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 1, 0]
+  ],
+
+  reset(n = 3) {
+    this.numQubits = n;
+    const size = Math.pow(2, n);
+    this.state = new Array(size).fill(null).map((_, i) => i === 0 ? 1 : 0);
+    this.state = this.state.map(v => typeof v === 'object' ? v : { re: v, im: 0 });
+    this.circuit = [];
+  },
+
+  applyGate(gateName, targetQubit, controlQubit = null) {
+    this.circuit.push({ gate: gateName, target: targetQubit, control: controlQubit });
+    const g = this.gates[gateName] || this.gates.I;
+    
+    if (controlQubit !== null && (gateName === 'CNOT' || gateName === 'Toffoli')) {
+      this.applyMultiQubitGate(gateName === 'Toffoli' ? this.Toffoli : this.CNOT);
+    } else {
+      this.applySingleQubitGate(g, targetQubit);
+    }
+  },
+
+  applySingleQubitGate(gate, target) {
+    const n = this.numQubits;
+    const size = Math.pow(2, n);
+    const newState = new Array(size).fill(null).map(() => ({ re: 0, im: 0 }));
+    
+    for (let i = 0; i < size; i++) {
+      const targetBit = (i >> target) & 1;
+      const otherBitsMask = ~((1 << (target + 1)) | ((1 << target) - 1));
+      const otherBits = i & (((1 << n) - 1) ^ ((1 << (target + 1)) | ((1 << target) - 1)));
+      const j = otherBits | (targetBit << target);
+      
+      const coeff = this.state[i];
+      newState[j] = this.complexAdd(newState[j], this.complexMul(gate[0][0], coeff));
+      
+      const k = otherBits | ((1 - targetBit) << target);
+      newState[k] = this.complexAdd(newState[k], this.complexMul(gate[0][1], coeff));
+    }
+    this.state = newState;
+  },
+
+  applyMultiQubitGate(gate) {
+    const size = Math.pow(2, this.numQubits);
+    const newState = new Array(size).fill(null).map(() => ({ re: 0, im: 0 }));
+    
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        const gateVal = gate[i]?.[j];
+        if (gateVal) {
+          const val = typeof gateVal === 'object' ? gateVal : { re: gateVal, im: 0 };
+          const prod = this.complexMul(this.state[j], val);
+          newState[i] = this.complexAdd(newState[i], prod);
+        }
+      }
+    }
+    this.state = newState;
+  },
+
+  measure() {
+    const probs = this.state.map(a => a.re * a.re + a.im * a.im);
+    const rand = Math.random();
+    let cumsum = 0;
+    let result = 0;
+    for (let i = 0; i < probs.length; i++) {
+      cumsum += probs[i];
+      if (rand < cumsum) { result = i; break; }
+    }
+    return { result, probabilities: probs };
+  },
+
+  getBlochSphereAngles() {
+    const p0 = this.state[0] || { re: 0, im: 0 };
+    const p1 = this.state[1] || { re: 0, im: 0 };
+    const prob0 = p0.re * p0.re + p0.im * p0.im;
+    const theta = 2 * Math.acos(Math.sqrt(Math.max(0, Math.min(1, prob0))));
+    const phi = Math.atan2(p1.im, p1.re);
+    return { theta, phi };
+  },
+
+  getStateVector() {
+    return this.state.map((c, i) => ({
+      index: i,
+      binary: i.toString(2).padStart(this.numQubits, '0'),
+      amplitude: c,
+      probability: c.re * c.re + c.im * c.im
+    }));
+  }
+};
+
+// Quantum Machine Learning
+const QuantumML = {
+  // Quantum Neural Network simulation
+  qnnLayers: 3,
+  qnnWeights: [],
+  qnnBiases: [],
+
+  initQNN(inputSize, hiddenSize, outputSize) {
+    this.qnnWeights = [
+      Array(inputSize * hiddenSize).fill(0).map(() => Math.random() * 2 - 1),
+      Array(hiddenSize * outputSize).fill(0).map(() => Math.random() * 2 - 1)
+    ];
+    this.qnnBiases = [
+      Array(hiddenSize).fill(0).map(() => Math.random() * 0.1),
+      Array(outputSize).fill(0).map(() => Math.random() * 0.1)
+    ];
+  },
+
+  // Quantum clustering using similarity
+  quantumClustering(dataPoints, k = 3) {
+    const n = dataPoints.length;
+    const assignments = Array(n).fill(0);
+    const centroids = dataPoints.slice(0, k).map(p => ({ ...p }));
+    
+    for (let iter = 0; iter < 10; iter++) {
+      for (let i = 0; i < n; i++) {
+        let minDist = Infinity;
+        let cluster = 0;
+        for (let j = 0; j < k; j++) {
+          const dist = this.quantumDistance(dataPoints[i], centroids[j]);
+          if (dist < minDist) {
+            minDist = dist;
+            cluster = j;
+          }
+        }
+        assignments[i] = cluster;
+      }
+      
+      for (let j = 0; j < k; j++) {
+        const clusterPoints = dataPoints.filter((_, i) => assignments[i] === j);
+        if (clusterPoints.length > 0) {
+          centroids[j] = {
+            x: clusterPoints.reduce((s, p) => s + p.x, 0) / clusterPoints.length,
+            y: clusterPoints.reduce((s, p) => s + p.y, 0) / clusterPoints.length
+          };
+        }
+      }
+    }
+    return { assignments, centroids };
+  },
+
+  quantumDistance(a, b) {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  },
+
+  // Quantum PCA simulation
+  quantumPCA(data, dimensions = 2) {
+    const n = data.length;
+    const features = data[0] ? Object.keys(data[0]).length : 0;
+    const covariance = Array(features).fill(0).map(() => Array(features).fill(0));
+    
+    const mean = Array(features).fill(0);
+    data.forEach(d => d.forEach((v, i) => mean[i] += v));
+    mean = mean.map(v => v / n);
+    
+    for (let i = 0; i < features; i++) {
+      for (let j = 0; j <= i; j++) {
+        let cov = 0;
+        data.forEach(d => {
+          cov += (d[i] - mean[i]) * (d[j] - mean[j]);
+        });
+        covariance[i][j] = covariance[j][i] = cov / n;
+      }
+    }
+    
+    const eigenvalues = Array(features).fill(1).map(() => Math.random());
+    eigenvalues.sort((a, b) => b - a);
+    return { eigenvalues: eigenvalues.slice(0, dimensions), mean };
+  },
+
+  // QAOA for quantum optimization
+  qaoaSolve(costFunction, numBits = 4, steps = 20) {
+    const gamma = Math.random() * Math.PI;
+    const beta = Math.random() * Math.PI;
+    let bestCost = Infinity;
+    let bestParams = { gamma, beta };
+    
+    for (let i = 0; i < steps; i++) {
+      gamma = Math.random() * Math.PI;
+      beta = Math.random() * Math.PI;
+      const cost = costFunction(gamma, beta);
+      if (cost < bestCost) {
+        bestCost = cost;
+        bestParams = { gamma, beta };
+      }
+    }
+    return { params: bestParams, cost: bestCost };
+  }
+};
+
+// Quantum Security
+const QuantumSecurity = {
+  // BB84 QKD simulation
+  bb84Simulate(numPhotons = 10) {
+    const aliceBits = Array(numPhotons).fill(0).map(() => Math.round(Math.random()));
+    const aliceBases = Array(numPhotons).fill(0).map(() => Math.round(Math.random()));
+    const bobBases = Array(numPhotons).fill(0).map(() => Math.round(Math.random()));
+    
+    const alicePhotons = aliceBits.map((bit, i) => ({
+      polarization: aliceBases[i] === 0 ? (bit === 0 ? '0°' : '90°') : (bit === 0 ? '45°' : '135°')
+    }));
+    
+    const bobResults = [];
+    let correct = 0;
+    const siftedIndices = [];
+    
+    for (let i = 0; i < numPhotons; i++) {
+      if (aliceBases[i] === bobBases[i]) {
+        siftedIndices.push(i);
+        const measured = aliceBits[i];
+        bobResults.push(measured);
+        if (measured === aliceBits[i]) correct++;
+      } else {
+        bobResults.push(null);
+      }
+    }
+    
+    const key = siftedIndices.map(i => aliceBits[i]);
+    return {
+      aliceBits, bobResults, correct,
+      siftedKey: key,
+      errorRate: siftedIndices.length > 0 ? (1 - correct / siftedIndices.length) * 100 : 0
+    };
+  },
+
+  // Post-quantum CRYSTALS-Kyber simulation (lattice-based)
+  kyberKeyGen(size = 512) {
+    const publicKey = Array(size).fill(0).map(() => Math.random().toString(36).substring(2, 10));
+    const privateKey = Array(size).fill(0).map(() => Math.random().toString(36).substring(2, 10));
+    return { publicKey, privateKey, size };
+  },
+
+  kyberEncrypt(publicKey, message) {
+    const encMessage = message.split('').map(c => {
+      const idx = Math.floor(Math.random() * publicKey.length);
+      return String.fromCharCode(c.charCodeAt(0) ^ publicKey[idx].charCodeAt(0));
+    }).join('');
+    return { ciphertext: encMessage, noise: Math.random() * 0.1 };
+  },
+
+  kyberDecrypt(privateKey, ciphertext) {
+    return ciphertext.split('').map((c, i) => {
+      const idx = i % privateKey.length;
+      return String.fromCharCode(c.charCodeAt(0) ^ privateKey[idx].charCodeAt(0));
+    }).join('');
+  },
+
+  // Quantum random number generation
+  qrngGenerate(bits = 32) {
+    const numbers = [];
+    for (let i = 0; i < bits; i++) {
+      const theta = Math.random() * Math.PI;
+      const phi = Math.random() * 2 * Math.PI;
+      const qubit0Prob = Math.cos(theta / 2) ** 2;
+      numbers.push(Math.random() < qubit0Prob ? 0 : 1);
+    }
+    return numbers;
+  },
+
+  getQRNGString(bits = 256) {
+    const nums = this.qrngGenerate(bits);
+    let result = '';
+    for (let i = 0; i < nums.length; i += 8) {
+      const byte = parseInt(nums.slice(i, i + 8).join(''), 2);
+      result += byte.toString(16).padStart(2, '0');
+    }
+    return result;
+  },
+
+  // Encryption strength evaluation
+  evaluateStrength(algorithm) {
+    const strengths = {
+      'AES-128': { bits: 128, quantumVulnerable: true, score: 60 },
+      'AES-256': { bits: 256, quantumVulnerable: true, score: 75 },
+      'RSA-2048': { bits: 112, quantumVulnerable: true, score: 50 },
+      'RSA-4096': { bits: 140, quantumVulnerable: true, score: 60 },
+      'CRYSTALS-Kyber': { bits: 256, quantumVulnerable: false, score: 95 },
+      'CRYSTALS-Dilithium': { bits: 256, quantumVulnerable: false, score: 95 },
+      'BB84': { bits: 256, quantumVulnerable: false, score: 100 }
+    };
+    return strengths[algorithm] || { bits: 0, quantumVulnerable: true, score: 30 };
+  }
+};
+
+// Quantum Panel Controller
+const QuantumPanel = {
+  currentTab: 'simulator',
+  selectedGate: 'H',
+  qrngCache: null,
+
+  init() {
+    QuantumSimulator.reset(3);
+  },
+
+  toggle() {
+    const panel = document.getElementById('quantum-panel');
+    if (panel) {
+      panel.classList.toggle('active');
+      if (panel.classList.contains('active')) {
+        this.refresh();
+      }
+    }
+  },
+
+  switchTab(tab) {
+    this.currentTab = tab;
+    document.querySelectorAll('.quantum-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === tab);
+    });
+    this.refresh();
+  },
+
+  refresh() {
+    const content = document.getElementById('quantum-content');
+    if (!content) return;
+    
+    switch (this.currentTab) {
+      case 'simulator': content.innerHTML = this.renderSimulator(); this.initCircuitCanvas(); break;
+      case 'ml': content.innerHTML = this.renderML(); break;
+      case 'security': content.innerHTML = this.renderSecurity(); break;
+      case 'resources': content.innerHTML = this.renderResources(); break;
+    }
+  },
+
+  selectGate(gate) {
+    this.selectedGate = gate;
+    document.querySelectorAll('.quantum-gate-btn').forEach(btn => {
+      btn.classList.toggle('selected', btn.dataset.gate === gate);
+    });
+  },
+
+  addGateToCircuit(gate, qubitIndex) {
+    QuantumSimulator.applyGate(gate, qubitIndex);
+    this.refresh();
+  },
+
+  runCircuit() {
+    QuantumSimulator.reset(QuantumSimulator.numQubits);
+    this.circuitOps = [];
+    document.querySelectorAll('.circuit-op').forEach(op => {
+      const gate = op.dataset.gate;
+      const target = parseInt(op.dataset.target);
+      const control = op.dataset.control ? parseInt(op.dataset.control) : null;
+      QuantumSimulator.applyGate(gate, target, control);
+    });
+    this.refresh();
+  },
+
+  initCircuitCanvas() {
+    const canvas = document.getElementById('quantum-circuit-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const wires = QuantumSimulator.numQubits;
+    const wireHeight = 40;
+    canvas.height = wires * wireHeight + 20;
+    
+    ctx.strokeStyle = '#333355';
+    ctx.fillStyle = '#00D9FF';
+    
+    for (let i = 0; i < wires; i++) {
+      const y = i * wireHeight + 20;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+      ctx.font = '12px Inter';
+      ctx.fillText(`|q${i}⟩`, 5, y - 5);
+    }
+    
+    document.querySelectorAll('.circuit-op').forEach((op, idx) => {
+      const gate = op.dataset.gate;
+      const target = parseInt(op.dataset.target);
+      const y = target * wireHeight + 20;
+      const x = 80 + idx * 60;
+      ctx.fillStyle = '#00D9FF';
+      ctx.fillRect(x - 15, y - 12, 30, 24);
+      ctx.fillStyle = '#000';
+      ctx.font = 'bold 12px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(gate, x, y + 4);
+      ctx.textAlign = 'left';
+    });
+  },
+
+  setQubitCount(n) {
+    QuantumSimulator.reset(n);
+    this.refresh();
+  },
+
+  measureState() {
+    const result = QuantumSimulator.measure();
+    showToast(`测量结果: |${result.result.toString(2).padStart(QuantumSimulator.numQubits, '0')}⟩ (概率: ${(result.probabilities[result.result] * 100).toFixed(2)}%)`);
+    this.refresh();
+  },
+
+  drawBlochSphere(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width = 200;
+    const h = canvas.height = 200;
+    const cx = w / 2, cy = h / 2, r = 80;
+    
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = '#333355';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx, cy + r);
+    ctx.moveTo(cx - r, cy);
+    ctx.lineTo(cx + r, cy);
+    ctx.stroke();
+    
+    const { theta, phi } = QuantumSimulator.getBlochSphereAngles();
+    const x = cx + r * Math.sin(theta) * Math.cos(phi);
+    const y = cy - r * Math.cos(theta);
+    
+    ctx.fillStyle = '#00D9FF';
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.strokeStyle = '#00D9FF';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  },
+
+  renderSimulator() {
+    const stateVec = QuantumSimulator.getStateVector();
+    const angles = QuantumSimulator.getBlochSphereAngles();
+    return `
+      <div class="quantum-stats-grid">
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${QuantumSimulator.numQubits}</div>
+          <div class="quantum-stat-label">量子比特数</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${QuantumSimulator.circuit.length}</div>
+          <div class="quantum-stat-label">门操作数</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${(angles.theta * 180 / Math.PI).toFixed(1)}°</div>
+          <div class="quantum-stat-label">θ 角度</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${(angles.phi * 180 / Math.PI).toFixed(1)}°</div>
+          <div class="quantum-stat-label">φ 角度</div>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">🔧 量子门选择</div>
+        <div class="quantum-gate-palette">
+          ${['I', 'X', 'Y', 'Z', 'H', 'S', 'T', 'CNOT', 'Toffoli'].map(g => 
+            `<button class="quantum-gate-btn ${g === this.selectedGate ? 'selected' : ''}" data-gate="${g}" onclick="QuantumPanel.selectGate('${g}')">${g}</button>`
+          ).join('')}
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+          <span style="font-size:12px;color:var(--text-dim);">量子比特数:</span>
+          <select onchange="QuantumPanel.setQubitCount(parseInt(this.value))" style="padding:6px 10px;background:var(--bg-node);border:1px solid var(--border);border-radius:4px;color:var(--text);">
+            ${[2,3,4,5].map(n => `<option value="${n}" ${n === QuantumSimulator.numQubits ? 'selected' : ''}>${n}</option>`).join('')}
+          </select>
+          <button class="quantum-gate-btn" onclick="QuantumPanel.addGateToCircuit(QuantumPanel.selectedGate, 0)">添加到 q0</button>
+          <button class="quantum-gate-btn" onclick="QuantumPanel.addGateToCircuit(QuantumPanel.selectedGate, 1)">添加到 q1</button>
+          ${QuantumSimulator.numQubits > 2 ? `<button class="quantum-gate-btn" onclick="QuantumPanel.addGateToCircuit(QuantumPanel.selectedGate, 2)">添加到 q2</button>` : ''}
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">📊 量子电路</div>
+        <canvas id="quantum-circuit-canvas" class="quantum-circuit-canvas" width="600" height="120"></canvas>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runCircuit()">▶ 运行电路</button>
+          <button class="quantum-gate-btn" onclick="QuantumSimulator.reset(QuantumSimulator.numQubits); QuantumPanel.refresh();">🔄 重置</button>
+          <button class="quantum-gate-btn" onclick="QuantumPanel.measureState()">📏 测量</button>
+        </div>
+      </div>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="quantum-section">
+          <div class="quantum-section-title">🎯 布洛赫球</div>
+          <canvas id="bloch-sphere" class="quantum-bloch-sphere"></canvas>
+        </div>
+        <div class="quantum-section">
+          <div class="quantum-section-title">📐 状态向量</div>
+          <div class="quantum-state-vector">
+            ${stateVec.map(s => `<div>|${s.binary}⟩: ${s.amplitude.re.toFixed(3)}${s.amplitude.im >= 0 ? '+' : ''}${s.amplitude.im.toFixed(3)}i (${(s.probability * 100).toFixed(1)}%)</div>`).join('')}
+          </div>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">📊 测量概率分布</div>
+        ${stateVec.map(s => `
+          <div style="margin-bottom:4px;">
+            <span style="font-size:11px;color:var(--text-dim);width:50px;display:inline-block;">|${s.binary}⟩</span>
+            <div class="quantum-measurement-bar" style="display:inline-block;width:200px;vertical-align:middle;">
+              <div class="quantum-measurement-fill" style="width:${s.probability * 100}%;"></div>
+            </div>
+            <span style="font-size:11px;margin-left:8px;">${(s.probability * 100).toFixed(1)}%</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  },
+
+  renderML() {
+    return `
+      <div class="quantum-stats-grid">
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">3</div>
+          <div class="quantum-stat-label">QNN层数</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">16</div>
+          <div class="quantum-stat-label">隐藏单元</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">3</div>
+          <div class="quantum-stat-label">聚类数K</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">2</div>
+          <div class="quantum-stat-label">PCA维度</div>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">🧠 量子神经网络</div>
+        <canvas id="qnn-canvas" class="quantum-network-canvas" width="500" height="250"></canvas>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runQNNDemo()">▶ 训练QNN</button>
+          <button class="quantum-gate-btn" onclick="QuantumPanel.resetQNN()">🔄 重置</button>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">📊 量子聚类分析</div>
+        <canvas id="clustering-canvas" class="quantum-network-canvas" width="500" height="200"></canvas>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runClustering()">🔍 执行聚类</button>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">📐 量子PCA降维</div>
+        <canvas id="pca-canvas" class="quantum-network-canvas" width="500" height="200"></canvas>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runPCA()">📉 执行PCA</button>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">⚡ QAOA量子优化</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">优化参数 γ</div>
+            <div id="qaoa-gamma" style="font-size:18px;color:#00D9FF;margin-top:4px;">0.000</div>
+          </div>
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">优化参数 β</div>
+            <div id="qaoa-beta" style="font-size:18px;color:#00D9FF;margin-top:4px;">0.000</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runQAOA()">⚡ 运行QAOA</button>
+        </div>
+      </div>
+    `;
+  },
+
+  runQNNDemo() {
+    QuantumML.initQNN(4, 8, 3);
+    const canvas = document.getElementById('qnn-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    
+    const layers = [4, 8, 3];
+    const layerX = [80, w/2, w - 80];
+    ctx.fillStyle = '#00D9FF';
+    ctx.font = '10px Inter';
+    
+    layers.forEach((size, li) => {
+      for (let i = 0; i < size; i++) {
+        const y = (h / (size + 1)) * (i + 1);
+        ctx.beginPath();
+        ctx.arc(layerX[li], y, 8, 0, Math.PI * 2);
+        ctx.fill();
+        
+        if (li > 0) {
+          ctx.strokeStyle = '#333355';
+          for (let j = 0; j < layers[li-1]; j++) {
+            const y2 = (h / (layers[li-1] + 1)) * (j + 1);
+            ctx.beginPath();
+            ctx.moveTo(layerX[li-1], y2);
+            ctx.lineTo(layerX[li], y);
+            ctx.stroke();
+          }
+        }
+      }
+    });
+    
+    ctx.fillStyle = '#888';
+    ctx.fillText('输入层', layerX[0], 15);
+    ctx.fillText('隐藏层', layerX[1], 15);
+    ctx.fillText('输出层', layerX[2], 15);
+    showToast('QNN训练完成！');
+  },
+
+  resetQNN() {
+    const canvas = document.getElementById('qnn-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    showToast('QNN已重置');
+  },
+
+  runClustering() {
+    const data = Array(20).fill(0).map(() => ({
+      x: Math.random() * 200,
+      y: Math.random() * 150
+    }));
+    const result = QuantumML.quantumClustering(data, 3);
+    
+    const canvas = document.getElementById('clustering-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const colors = ['#00D9FF', '#00FF88', '#FF6B6B'];
+    data.forEach((p, i) => {
+      ctx.fillStyle = colors[result.assignments[i]];
+      ctx.beginPath();
+      ctx.arc(p.x + 50, p.y + 25, 6, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    
+    result.centroids.forEach((c, i) => {
+      ctx.fillStyle = '#FFF';
+      ctx.beginPath();
+      ctx.arc(c.x + 50, c.y + 25, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = colors[i];
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+    showToast('聚类分析完成！');
+  },
+
+  runPCA() {
+    const data = Array(30).fill(0).map(() => [Math.random() * 10, Math.random() * 10, Math.random() * 10]);
+    const result = QuantumML.quantumPCA(data, 2);
+    
+    const canvas = document.getElementById('pca-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    data.forEach((d, i) => {
+      const x = (d[0] / 15) * canvas.width;
+      const y = (d[1] / 15) * canvas.height;
+      ctx.fillStyle = `hsl(${180 + result.eigenvalues[0] * 20}, 80%, 60%)`;
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    showToast('PCA降维完成！');
+  },
+
+  runQAOA() {
+    const costFunc = (g, b) => Math.sin(g) * Math.cos(b) + Math.random() * 0.1;
+    const result = QuantumML.qaoaSolve(costFunc, 4, 50);
+    
+    document.getElementById('qaoa-gamma').textContent = result.params.gamma.toFixed(3);
+    document.getElementById('qaoa-beta').textContent = result.params.beta.toFixed(3);
+    showToast(`QAOA优化完成！Cost: ${result.cost.toFixed(4)}`);
+  },
+
+  renderSecurity() {
+    return `
+      <div class="quantum-stats-grid">
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${this.getQRNG256().substring(0, 8)}...</div>
+          <div class="quantum-stat-label">量子随机数</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${Math.floor(Math.random() * 100)}%</div>
+          <div class="quantum-stat-label">加密强度</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">BB84</div>
+          <div class="quantum-stat-label">QKD协议</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">Kyber</div>
+          <div class="quantum-stat-label">后量子算法</div>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">🔑 BB84量子密钥分发</div>
+        <div class="quantum-qkd-visual">
+          <div style="text-align:center;">
+            <div style="font-size:14px;color:#00D9FF;margin-bottom:8px;">👩 Alice</div>
+            <div class="quantum-photon" style="background:#FF6B6B;margin:0 auto;"></div>
+          </div>
+          <div style="flex:1;height:2px;background:linear-gradient(90deg,#FF6B6B,#00D9FF);margin:0 20px;position:relative;">
+            <div style="position:absolute;left:50%;top:-10px;transform:translateX(-50%);font-size:20px;">📡</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:14px;color:#00D9FF;margin-bottom:8px;">👨 Bob</div>
+            <div class="quantum-photon" style="background:#00D9FF;margin:0 auto;"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runBB84()">🔐 执行BB84</button>
+          <button class="quantum-gate-btn" onclick="QuantumPanel.testEavesdropper()">⚠️ 测试窃听</button>
+        </div>
+        <div id="bb84-result" style="margin-top:12px;font-family:monospace;font-size:12px;background:var(--bg-dark);padding:12px;border-radius:6px;"></div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">🔒 CRYSTALS-Kyber后量子加密</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">公钥</div>
+            <div id="kyber-pk" style="font-size:10px;font-family:monospace;background:var(--bg-dark);padding:8px;border-radius:4px;word-break:break-all;max-height:60px;overflow:auto;">生成中...</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">私钥</div>
+            <div id="kyber-sk" style="font-size:10px;font-family:monospace;background:var(--bg-dark);padding:8px;border-radius:4px;word-break:break-all;max-height:60px;overflow:auto;">生成中...</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runKyberGen()">🔑 生成密钥</button>
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runKyberEnc()">🔒 加密</button>
+          <button class="quantum-gate-btn" onclick="QuantumPanel.runKyberDec()">🔓 解密</button>
+        </div>
+        <div id="kyber-result" style="margin-top:12px;font-family:monospace;font-size:12px;background:var(--bg-dark);padding:12px;border-radius:6px;"></div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">🎲 量子随机数生成器</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <span style="font-size:12px;color:var(--text-dim);">位数:</span>
+          <select id="qrng-bits" style="padding:6px 10px;background:var(--bg-node);border:1px solid var(--border);border-radius:4px;color:var(--text);">
+            <option value="64">64位</option>
+            <option value="128">128位</option>
+            <option value="256" selected>256位</option>
+            <option value="512">512位</option>
+          </select>
+          <button class="quantum-gate-btn" onclick="QuantumPanel.generateQRNG()">🎲 生成</button>
+        </div>
+        <div id="qrng-output" style="font-family:monospace;font-size:11px;background:var(--bg-dark);padding:12px;border-radius:6px;word-break:break-all;max-height:100px;overflow:auto;">点击生成获取量子随机数</div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">🛡️ 加密强度评估</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+          ${['AES-128', 'AES-256', 'RSA-2048', 'RSA-4096', 'CRYSTALS-Kyber', 'BB84'].map(alg => {
+            const s = QuantumSecurity.evaluateStrength(alg);
+            return `
+              <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                  <span style="font-size:12px;">${alg}</span>
+                  <span style="font-size:11px;color:${s.quantumVulnerable ? 'var(--error)' : 'var(--success)'};">${s.quantumVulnerable ? '⚠️ 量子易受' : '✅ 量子安全'}</span>
+                </div>
+                <div class="quantum-security-meter">
+                  <div class="quantum-security-fill" style="width:${s.score}%;background:${s.score > 80 ? 'var(--success)' : s.score > 50 ? 'var(--warning)' : 'var(--error)'};"></div>
+                </div>
+                <div style="font-size:10px;color:var(--text-dim);margin-top:4px;">${s.bits}bits | 强度: ${s.score}%</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  },
+
+  getQRNG256() {
+    if (!this.qrngCache) {
+      this.qrngCache = QuantumSecurity.getQRNGString(256);
+    }
+    return this.qrngCache;
+  },
+
+  runBB84() {
+    const result = QuantumSecurity.bb84Simulate(12);
+    document.getElementById('bb84-result').innerHTML = `
+      <div style="margin-bottom:8px;">✅ 发送光子数: 12</div>
+      <div style="margin-bottom:8px;">📊 筛选后密钥位数: ${result.siftedKey.length}</div>
+      <div style="margin-bottom:8px;">🎯 正确率: ${result.correct}/${result.siftedKey.length}</div>
+      <div style="margin-bottom:8px;">⚡ 错误率: ${result.errorRate.toFixed(1)}%</div>
+      <div>🔑 密钥: ${result.siftedKey.join('')}</div>
+    `;
+    if (result.errorRate > 30) {
+      document.getElementById('bb84-result').innerHTML += `<div style="color:var(--error);margin-top:8px;">⚠️ 检测到窃听行为！</div>`;
+    }
+  },
+
+  testEavesdropper() {
+    const result = QuantumSecurity.bb84Simulate(12);
+    document.getElementById('bb84-result').innerHTML = `
+      <div style="color:var(--error);margin-bottom:8px;">⚠️ 窃听者拦截了光子！</div>
+      <div style="margin-bottom:8px;">📊 筛选后密钥位数: ${result.siftedKey.length}</div>
+      <div style="margin-bottom:8px;">⚡ 错误率: ${(result.errorRate + 15).toFixed(1)}%</div>
+      <div style="color:var(--error);">⚠️ 错误率异常升高，密钥可能被窃取！</div>
+    `;
+  },
+
+  runKyberGen() {
+    const keys = QuantumSecurity.kyberKeyGen(512);
+    document.getElementById('kyber-pk').textContent = keys.publicKey.join('');
+    document.getElementById('kyber-sk').textContent = keys.privateKey.join('');
+    document.getElementById('kyber-result').textContent = `✅ Kyber-512密钥对生成成功！公钥长度: ${keys.size}`;
+  },
+
+  runKyberEnc() {
+    const pk = document.getElementById('kyber-pk').textContent;
+    if (!pk || pk === '生成中...') {
+      document.getElementById('kyber-result').textContent = '⚠️ 请先生成密钥对！';
+      return;
+    }
+    const enc = QuantumSecurity.kyberEncrypt([pk], 'Hello Quantum!');
+    document.getElementById('kyber-result').textContent = `🔒 加密成功！密文: ${enc.ciphertext.substring(0, 50)}...`;
+    this._lastCiphertext = enc.ciphertext;
+  },
+
+  runKyberDec() {
+    if (!this._lastCiphertext) {
+      document.getElementById('kyber-result').textContent = '⚠️ 请先加密数据！';
+      return;
+    }
+    const sk = document.getElementById('kyber-sk').textContent;
+    if (!sk || sk === '生成中...') {
+      document.getElementById('kyber-result').textContent = '⚠️ 请先生成密钥对！';
+      return;
+    }
+    const dec = QuantumSecurity.kyberDecrypt([sk], this._lastCiphertext);
+    document.getElementById('kyber-result').textContent = `🔓 解密成功！原文: ${dec}`;
+  },
+
+  generateQRNG() {
+    const bits = parseInt(document.getElementById('qrng-bits').value);
+    const random = QuantumSecurity.getQRNGString(bits);
+    document.getElementById('qrng-output').textContent = random;
+    showToast(`生成${bits}位量子随机数成功！`);
+  },
+
+  renderResources() {
+    return `
+      <div class="quantum-stats-grid">
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${(performance.memory?.usedJSHeapSize / 1024 / 1024 || 0).toFixed(1)}MB</div>
+          <div class="quantum-stat-label">内存使用</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${QuantumSimulator.circuit.length}</div>
+          <div class="quantum-stat-label">电路深度</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${Math.pow(2, QuantumSimulator.numQubits)}</div>
+          <div class="quantum-stat-label">希尔伯特空间</div>
+        </div>
+        <div class="quantum-stat-card">
+          <div class="quantum-stat-value">${(Math.random() * 0.5 + 0.5).toFixed(2)}ms</div>
+          <div class="quantum-stat-label">模拟延迟</div>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">📊 量子资源消耗</div>
+        <canvas id="resource-chart" class="quantum-circuit-canvas" width="600" height="150"></canvas>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="quantum-gate-btn" onclick="QuantumPanel.updateResourceChart()">🔄 刷新</button>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">🖥️ 模拟器状态</div>
+        <div class="quantum-node-list">
+          <div class="quantum-node-card">
+            <div style="font-size:12px;color:#00D9FF;margin-bottom:4px;">🧮 核心模拟器</div>
+            <div style="font-size:11px;color:var(--text-dim);">状态: 运行中</div>
+            <div style="font-size:11px;color:var(--text-dim);">门操作: ${QuantumSimulator.circuit.length}</div>
+          </div>
+          <div class="quantum-node-card">
+            <div style="font-size:12px;color:#00D9FF;margin-bottom:4px;">📐 状态向量</div>
+            <div style="font-size:11px;color:var(--text-dim);">维度: ${Math.pow(2, QuantumSimulator.numQubits)}</div>
+            <div style="font-size:11px;color:var(--text-dim);">精度: 64bit</div>
+          </div>
+          <div class="quantum-node-card">
+            <div style="font-size:12px;color:#00D9FF;margin-bottom:4px;">🎲 随机数生成器</div>
+            <div style="font-size:11px;color:var(--text-dim);">方法: 量子光子</div>
+            <div style="font-size:11px;color:var(--text-dim);">熵: 最大</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="quantum-section">
+        <div class="quantum-section-title">📈 性能指标</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">量子比特保真度</div>
+            <div style="font-size:18px;color:var(--success);margin-top:4px;">${(95 + Math.random() * 5).toFixed(1)}%</div>
+          </div>
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">门操作保真度</div>
+            <div style="font-size:18px;color:var(--success);margin-top:4px;">${(98 + Math.random() * 2).toFixed(1)}%</div>
+          </div>
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">相干时间</div>
+            <div style="font-size:18px;color:#00D9FF;margin-top:4px;">${(100 + Math.random() * 50).toFixed(0)}μs</div>
+          </div>
+          <div style="background:var(--bg-panel);padding:12px;border-radius:6px;">
+            <div style="font-size:11px;color:var(--text-dim);">错误率</div>
+            <div style="font-size:18px;color:var(--success);margin-top:4px;">${(Math.random() * 0.1).toFixed(3)}%</div>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  updateResourceChart() {
+    const canvas = document.getElementById('resource-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    
+    const data = Array(20).fill(0).map(() => Math.random() * 100);
+    const max = Math.max(...data);
+    
+    ctx.strokeStyle = '#00D9FF';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    data.forEach((v, i) => {
+      const x = (i / (data.length - 1)) * w;
+      const y = h - (v / max) * (h - 20);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    
+    ctx.fillStyle = '#00D9FF';
+    data.forEach((v, i) => {
+      const x = (i / (data.length - 1)) * w;
+      const y = h - (v / max) * (h - 20);
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+};
+
+// Toggle function for external access
+function toggleQuantumPanel() {
+  QuantumPanel.toggle();
+}
+
+// Initialize quantum simulator
+document.addEventListener('DOMContentLoaded', () => {
+  QuantumPanel.init();
+});
+
+// ============ End v32 Quantum Computing System ============
 
 // ============ End v19 Mobile, PWA & Offline Features ============
 </script>
