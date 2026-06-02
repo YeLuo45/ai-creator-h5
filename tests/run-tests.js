@@ -51,6 +51,7 @@ loadService(path.join(__dirname, '..', 'services', 'ContentGeneratorAgent.js'));
 loadService(path.join(__dirname, '..', 'services', 'ReviewOptimizerAgent.js'));
 loadService(path.join(__dirname, '..', 'services', 'MultiModelRouter.js'));
 loadService(path.join(__dirname, '..', 'services', 'CreativePipeline.js'));
+loadService(path.join(__dirname, '..', 'services', 'UserEvolutionSystem.js'));
 
 console.log('\nServices loaded successfully');
 console.log('- MemoryLayer:', typeof global.MemoryLayer);
@@ -83,7 +84,8 @@ const testFiles = [
   'DreamConsolidation.test.js',
   'AgentOrchestrator.test.js',
   'TaskScheduler.test.js',
-  'CreativePipeline.test.js'
+  'CreativePipeline.test.js',
+  'UserEvolutionSystem.test.js'
 ];
 
 testFiles.forEach(testFile => {
