@@ -51,6 +51,10 @@ loadService(path.join(__dirname, '..', 'services', 'ContentGeneratorAgent.js'));
 loadService(path.join(__dirname, '..', 'services', 'ReviewOptimizerAgent.js'));
 loadService(path.join(__dirname, '..', 'services', 'MultiModelRouter.js'));
 loadService(path.join(__dirname, '..', 'services', 'CreativePipeline.js'));
+loadService(path.join(__dirname, '..', 'services', 'UserEvolutionSystem.js'));
+loadService(path.join(__dirname, '..', 'services', 'OfflineQueue.js'));
+loadService(path.join(__dirname, '..', 'services', 'DraftBox.js'));
+loadService(path.join(__dirname, '..', 'services', 'OptimisticPreview.js'));
 
 console.log('\nServices loaded successfully');
 console.log('- MemoryLayer:', typeof global.MemoryLayer);
@@ -62,6 +66,10 @@ console.log('- ContentGeneratorAgent:', typeof global.ContentGeneratorAgent);
 console.log('- ReviewOptimizerAgent:', typeof global.ReviewOptimizerAgent);
 console.log('- MultiModelRouter:', typeof global.MultiModelRouter);
 console.log('- CreativePipeline:', typeof global.CreativePipeline);
+console.log('- UserEvolutionSystem:', typeof global.UserEvolutionSystem);
+console.log('- OfflineQueue:', typeof global.OfflineQueue);
+console.log('- DraftBox:', typeof global.DraftBox);
+console.log('- OptimisticPreview:', typeof global.OptimisticPreview);
 
 // Results collector
 const runResults = [];
@@ -83,7 +91,9 @@ const testFiles = [
   'DreamConsolidation.test.js',
   'AgentOrchestrator.test.js',
   'TaskScheduler.test.js',
-  'CreativePipeline.test.js'
+  'CreativePipeline.test.js',
+  'UserEvolutionSystem.test.js',
+  'OfflineSystem.test.js'
 ];
 
 testFiles.forEach(testFile => {
